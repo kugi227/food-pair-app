@@ -5,8 +5,8 @@
 body {
   margin: 0;
   font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
-  background: #f8f8f6;
-  color: #222;
+  background: #fdf8ef;
+  color: #2f2f2f;
 }
 
 .header {
@@ -14,8 +14,8 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   padding: 24px 32px;
-  border-bottom: 1px solid #ccc;
-  background: #fff;
+  border-bottom: 1px solid #e1d7c7;
+  background: linear-gradient(135deg, #fffaf0, #f7f0dd);
 }
 
 .header-left {
@@ -27,7 +27,8 @@ body {
 .logo-box {
   width: 70px;
   height: 70px;
-  border: 1px solid #aaa;
+  border: 1px solid #b9b0a0;
+  background: #ffffff;
   position: relative;
 }
 
@@ -37,10 +38,9 @@ body {
   position: absolute;
   width: 100%;
   height: 1px;
-  background: #aaa;
+  background: #b9b0a0;
   top: 50%;
   left: 0;
-  transform-origin: center;
 }
 
 .logo-box::before {
@@ -53,13 +53,14 @@ body {
 
 h1 {
   margin: 0;
-  font-size: 36px;
+  font-size: 38px;
+  color: #243224;
 }
 
 .subtitle {
   margin: 8px 0 0;
   font-size: 14px;
-  color: #444;
+  color: #555;
 }
 
 .header-right {
@@ -70,17 +71,19 @@ h1 {
 .header-icon-item {
   text-align: center;
   font-size: 13px;
+  color: #444;
 }
 
 .header-icon {
   width: 42px;
   height: 42px;
-  border: 1px solid #555;
+  border: 1.5px solid #7b8a72;
   border-radius: 50%;
   display: grid;
   place-items: center;
   font-size: 22px;
   margin: 0 auto 6px;
+  background: #fff;
 }
 
 .container {
@@ -96,6 +99,7 @@ h1 {
 .section h2 {
   margin: 0 0 14px;
   font-size: 22px;
+  color: #2f3b2f;
 }
 
 .food-buttons {
@@ -105,22 +109,26 @@ h1 {
 }
 
 .food-button {
-  min-width: 120px;
+  min-width: 140px;
   padding: 12px 22px;
-  border: 1.5px solid #666;
+  border: 2px solid #d7d0c2;
   background: #fff;
   border-radius: 999px;
   cursor: pointer;
   font-size: 16px;
   transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
 .food-button:hover {
-  background: #f2f2f2;
+  transform: translateY(-2px);
+  background: #fffdf8;
 }
 
 .food-button.active {
-  background: #e5e5e5;
+  background: #e8f4e3;
+  border-color: #7bbf6a;
+  color: #2f5f2a;
   font-weight: bold;
 }
 
@@ -131,7 +139,7 @@ h1 {
 }
 
 .rating-card {
-  border: 1.5px solid #666;
+  border: 2px solid #ddd4c5;
   border-radius: 18px;
   background: #fff;
   min-height: 130px;
@@ -141,11 +149,31 @@ h1 {
   align-items: center;
   gap: 10px;
   font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.rating-card:hover {
+  transform: translateY(-2px);
 }
 
 .rating-card.active {
-  background: #ececec;
   border-width: 2px;
+}
+
+.rating-card.active[data-rating="excellent"] {
+  background: #eaf7e4;
+  border-color: #74b65f;
+}
+
+.rating-card.active[data-rating="good"] {
+  background: #fff6dc;
+  border-color: #e0b84f;
+}
+
+.rating-card.active[data-rating="improve"] {
+  background: #fde9df;
+  border-color: #e08d64;
 }
 
 .rating-icon {
@@ -154,16 +182,18 @@ h1 {
 }
 
 .selected-food {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   margin: 0;
+  color: #4d7b3b;
 }
 
 .result-wrapper {
-  border: 1.5px solid #bbb;
+  border: 1.5px solid #e2d8c9;
   border-radius: 24px;
   padding: 18px;
   background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
 .result-top {
@@ -177,31 +207,48 @@ h1 {
   display: grid;
   grid-template-columns: 110px 1fr;
   gap: 18px;
-  border: 1.5px solid #c8c8c8;
+  border: 1.5px solid #ece3d4;
   border-radius: 20px;
   padding: 18px;
+  background: #fffdf9;
 }
 
 .result-main-left-icon {
   width: 110px;
   height: 110px;
-  border: 1.5px solid #bcbcbc;
+  border: 1.5px solid #d8cfbf;
   border-radius: 16px;
   display: grid;
   place-items: center;
   font-size: 54px;
   font-weight: bold;
+  background: #f8f4ea;
+}
+
+.result-main-left-icon.excellent {
+  color: #4d9c38;
+  background: #eaf7e4;
+}
+
+.result-main-left-icon.good {
+  color: #b38710;
+  background: #fff6dc;
+}
+
+.result-main-left-icon.improve {
+  color: #c56b43;
+  background: #fde9df;
 }
 
 .result-main-content h3 {
   margin: 0 0 8px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .small-label {
   margin: 0 0 10px;
   font-size: 14px;
-  color: #444;
+  color: #666;
 }
 
 .pair-row {
@@ -213,17 +260,19 @@ h1 {
 }
 
 .pair-title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
   margin: 0;
+  color: #2e2e2e;
 }
 
 .score-box {
   min-width: 180px;
-  border: 1.5px solid #bcbcbc;
+  border: 1.5px solid #e0d6c8;
   border-radius: 16px;
   padding: 12px;
   text-align: center;
+  background: #fff;
 }
 
 .score-label {
@@ -233,23 +282,25 @@ h1 {
 
 .score-number {
   margin: 0;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
+  color: #2f5f2a;
 }
 
 .boost-box {
-  border: 1.5px solid #bcbcbc;
+  border: 1.5px solid #e0d6c8;
   border-radius: 18px;
   display: grid;
   place-items: center;
   text-align: center;
-  background: #fff;
+  background: linear-gradient(135deg, #fff5d8, #fff0c1);
 }
 
 .boost-rate {
   margin: 0;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
+  color: #a86f00;
 }
 
 .boost-text {
@@ -266,10 +317,11 @@ h1 {
 .tag {
   display: inline-block;
   padding: 8px 16px;
-  border: 1px solid #bcbcbc;
-  border-radius: 12px;
-  background: #fff;
+  border: 1px solid #d7cdbf;
+  border-radius: 999px;
+  background: #fff8ea;
   font-size: 15px;
+  color: #5b5145;
 }
 
 .info-row {
@@ -280,9 +332,9 @@ h1 {
 }
 
 .info-icon {
-  border: 1.5px solid #c8c8c8;
+  border: 1.5px solid #e0d6c8;
   border-radius: 16px;
-  background: #fff;
+  background: #fff9f0;
   min-height: 90px;
   display: grid;
   place-items: center;
@@ -290,7 +342,7 @@ h1 {
 }
 
 .info-content {
-  border: 1.5px solid #c8c8c8;
+  border: 1.5px solid #e0d6c8;
   border-radius: 16px;
   background: #fff;
   padding: 14px 18px;
@@ -299,6 +351,7 @@ h1 {
 .info-content h4 {
   margin: 0 0 10px;
   font-size: 18px;
+  color: #314431;
 }
 
 .info-content p,
@@ -315,7 +368,7 @@ h1 {
 
 .notice-box {
   margin-top: 20px;
-  border: 1.5px solid #bbb;
+  border: 1.5px solid #e0d6c8;
   border-radius: 18px;
   padding: 18px;
   display: grid;
@@ -327,18 +380,20 @@ h1 {
 .notice-icon {
   width: 40px;
   height: 40px;
-  border: 1.5px solid #555;
+  border: 1.5px solid #7b8a72;
   border-radius: 50%;
   display: grid;
   place-items: center;
   font-weight: bold;
   font-size: 22px;
+  color: #4d5d48;
 }
 
 .notice-box p {
   margin: 0 0 6px;
   font-size: 14px;
   line-height: 1.7;
+  color: #555;
 }
 
 @media (max-width: 900px) {
