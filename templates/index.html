@@ -31,16 +31,18 @@
   <main class="container">
     <!-- 食材選択 -->
     <section class="section">
-      <h2>使いたい食材を選んでください</h2>
-      <div class="food-buttons">
-        <button class="food-button" data-food="tomato">🍅 トマト</button>
-        <button class="food-button" data-food="carrot">🥕 にんじん</button>
-        <button class="food-button" data-food="spinach">🥬 ほうれん草</button>
-        <button class="food-button" data-food="egg">🥚 卵</button>
-        <button class="food-button active" data-food="natto">🫘 納豆</button>
-        <button class="food-button" data-food="chicken">🍗 鶏肉</button>
-      </div>
-    </section>
+  <h2>使いたい食材を検索してください</h2>
+
+  <input
+    type="text"
+    id="foodSearch"
+    class="food-search-input"
+    placeholder="例：納豆、トマト、卵"
+    autocomplete="off"
+  >
+
+  <div id="searchResults" class="search-results"></div>
+</section>
 
     <!-- 相性評価 -->
     <section class="section">
