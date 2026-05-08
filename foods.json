@@ -4,9 +4,11 @@
     "nutrients": ["リコピン", "ビタミンC"],
     "best_methods": ["加熱＋油"],
     "good_pairs": [
-      {"food": "オリーブオイル", "effect": "吸収率アップ", "boost": 1.3}
+      {"food": "オリーブオイル", "effect": "リコピン吸収率アップ", "boost": 1.3}
     ],
-    "bad_pairs": [],
+    "bad_pairs": [
+      {"food": "きゅうり", "effect": "ビタミンC分解"}
+    ],
     "tips": [
       {"action": "加熱する", "effect": "リコピンが出やすくなる", "boost": 1.2}
     ]
@@ -19,9 +21,7 @@
       {"food": "油", "effect": "吸収率アップ", "boost": 1.4}
     ],
     "bad_pairs": [],
-    "tips": [
-      {"action": "油で加熱", "effect": "吸収率アップ", "boost": 1.3}
-    ]
+    "tips": []
   },
   {
     "food": "ブロッコリー",
@@ -33,9 +33,7 @@
     "bad_pairs": [
       {"food": "長時間の茹で", "effect": "栄養流出"}
     ],
-    "tips": [
-      {"action": "蒸す", "effect": "栄養保持", "boost": 1.2}
-    ]
+    "tips": []
   },
   {
     "food": "ほうれん草",
@@ -45,7 +43,7 @@
       {"food": "レモン", "effect": "鉄吸収アップ", "boost": 1.3}
     ],
     "bad_pairs": [
-      {"food": "お茶", "effect": "吸収阻害"}
+      {"food": "お茶", "effect": "鉄吸収阻害"}
     ],
     "tips": []
   },
@@ -54,12 +52,10 @@
     "nutrients": ["ビタミンC"],
     "best_methods": ["生"],
     "good_pairs": [
-      {"food": "酢", "effect": "酵素抑制", "boost": 1.1}
+      {"food": "酢", "effect": "栄養保持", "boost": 1.1}
     ],
     "bad_pairs": [],
-    "tips": [
-      {"action": "食べる直前に切る", "effect": "栄養保持"}
-    ]
+    "tips": []
   },
   {
     "food": "ナス",
@@ -69,16 +65,14 @@
       {"food": "油", "effect": "抗酸化保持", "boost": 1.3}
     ],
     "bad_pairs": [],
-    "tips": [
-      {"action": "皮ごと食べる", "effect": "栄養保持"}
-    ]
+    "tips": []
   },
   {
     "food": "玉ねぎ",
     "nutrients": ["アリシン"],
     "best_methods": ["生＋放置"],
     "good_pairs": [
-      {"food": "油", "effect": "成分保持", "boost": 1.1}
+      {"food": "豚肉", "effect": "吸収率アップ", "boost": 1.2}
     ],
     "bad_pairs": [],
     "tips": [
@@ -86,50 +80,14 @@
     ]
   },
   {
-    "food": "ピーマン",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["丸ごと加熱"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": [
-      {"action": "丸ごと調理", "effect": "栄養保持"}
-    ]
-  },
-  {
     "food": "きゅうり",
     "nutrients": ["酵素"],
     "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "酢", "effect": "酵素抑制", "boost": 1.1}
-    ],
+    "good_pairs": [],
     "bad_pairs": [
       {"food": "トマト", "effect": "ビタミンC分解"}
     ],
-    "tips": [
-      {"action": "叩く", "effect": "味なじみ向上"}
-    ]
-  },
-  {
-    "food": "じゃがいも",
-    "nutrients": ["ビタミンC", "カリウム"],
-    "best_methods": ["蒸す"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": [
-      {"action": "皮ごと調理", "effect": "栄養流出防止"}
-    ]
-  },
-  {
-    "food": "ごま",
-    "nutrients": ["セサミン", "ビタミンE"],
-    "best_methods": ["すりごま"],
-    "good_pairs": [
-      {"food": "野菜", "effect": "抗酸化アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": [
-      {"action": "すりつぶす", "effect": "吸収率アップ", "boost": 1.2}
-    ]
+    "tips": []
   },
   {
     "food": "小松菜",
@@ -145,20 +103,12 @@
     "food": "大根",
     "nutrients": ["消化酵素"],
     "best_methods": ["生"],
-    "good_pairs": [],
+    "good_pairs": [
+      {"food": "サバ", "effect": "消化サポート", "boost": 1.2}
+    ],
     "bad_pairs": [
       {"food": "加熱しすぎ", "effect": "酵素消失"}
     ],
-    "tips": []
-  },
-  {
-    "food": "レタス",
-    "nutrients": ["水分"],
-    "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "油", "effect": "栄養吸収サポート", "boost": 1.1}
-    ],
-    "bad_pairs": [],
     "tips": []
   },
   {
@@ -172,135 +122,107 @@
     "tips": []
   },
   {
-    "food": "アスパラガス",
-    "nutrients": ["葉酸"],
+    "food": "ごま",
+    "nutrients": ["セサミン"],
+    "best_methods": ["すりごま"],
+    "good_pairs": [
+      {"food": "小松菜", "effect": "吸収サポート", "boost": 1.2}
+    ],
+    "bad_pairs": [],
+    "tips": []
+  },
+
+
+  {
+    "food": "豚肉",
+    "nutrients": ["ビタミンB1"],
+    "best_methods": ["炒める"],
+    "good_pairs": [
+      {"food": "にんにく", "effect": "疲労回復（吸収アップ）", "boost": 1.4},
+      {"food": "玉ねぎ", "effect": "吸収サポート", "boost": 1.2}
+    ],
+    "bad_pairs": [
+      {"food": "アルコール", "effect": "ビタミンB1消費増加"}
+    ],
+    "tips": []
+  },
+  {
+    "food": "牛肉",
+    "nutrients": ["鉄"],
+    "best_methods": ["焼く"],
+    "good_pairs": [
+      {"food": "ブロッコリー", "effect": "鉄吸収アップ", "boost": 1.2}
+    ],
+    "bad_pairs": [
+      {"food": "コーヒー", "effect": "鉄吸収阻害"},
+      {"food": "緑茶", "effect": "鉄吸収阻害"}
+    ],
+    "tips": []
+  },
+  {
+    "food": "鶏肉",
+    "nutrients": ["たんぱく質"],
     "best_methods": ["蒸す"],
     "good_pairs": [
-      {"food": "ベーコン", "effect": "吸収率アップ", "boost": 1.2}
+      {"food": "レモン", "effect": "消化吸収アップ", "boost": 1.2}
     ],
     "bad_pairs": [],
     "tips": []
   },
   {
-    "food": "ズッキーニ",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["油で焼く"],
+    "food": "レバー",
+    "nutrients": ["鉄"],
+    "best_methods": ["炒める"],
     "good_pairs": [
-      {"food": "オリーブオイル", "effect": "吸収率アップ", "boost": 1.2}
+      {"food": "ニラ", "effect": "造血サポート", "boost": 1.3}
     ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "セロリ",
-    "nutrients": ["香り成分"],
-    "best_methods": ["生"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "春菊",
-    "nutrients": ["βカロテン"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [
-      {"food": "ごま", "effect": "吸収率アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "オクラ",
-    "nutrients": ["食物繊維"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "白菜",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [
-      {"food": "豚肉", "effect": "栄養バランス", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "水菜",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "油", "effect": "吸収率アップ", "boost": 1.1}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ごぼう",
-    "nutrients": ["食物繊維"],
-    "best_methods": ["加熱"],
-    "good_pairs": [],
     "bad_pairs": [
-      {"food": "洗いすぎ", "effect": "栄養流出"}
+      {"food": "緑茶", "effect": "鉄吸収阻害"}
     ],
     "tips": []
   },
+
+
   {
-    "food": "れんこん",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["加熱"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "とうもろこし",
-    "nutrients": ["炭水化物"],
-    "best_methods": ["加熱"],
+    "food": "サーモン",
+    "nutrients": ["DHA"],
+    "best_methods": ["生", "焼く"],
     "good_pairs": [
-      {"food": "バター", "effect": "吸収率アップ", "boost": 1.2}
+      {"food": "アボカド", "effect": "抗酸化アップ", "boost": 1.3}
     ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "もやし",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["短時間加熱"],
-    "good_pairs": [],
     "bad_pairs": [
-      {"food": "長時間加熱", "effect": "栄養減少"}
+      {"food": "高温調理", "effect": "脂質の酸化"}
     ],
     "tips": []
   },
   {
-    "food": "チンゲン菜",
-    "nutrients": ["βカロテン"],
-    "best_methods": ["油で炒める"],
+    "food": "サバ",
+    "nutrients": ["DHA"],
+    "best_methods": ["煮る"],
     "good_pairs": [
-      {"food": "油", "effect": "吸収率アップ", "boost": 1.2}
+      {"food": "大根", "effect": "消化サポート", "boost": 1.2}
+    ],
+    "bad_pairs": [
+      {"food": "揚げすぎ", "effect": "脂質の酸化"}
+    ],
+    "tips": []
+  },
+  {
+    "food": "イワシ",
+    "nutrients": ["カルシウム"],
+    "best_methods": ["煮る"],
+    "good_pairs": [
+      {"food": "梅", "effect": "吸収アップ", "boost": 1.3}
     ],
     "bad_pairs": [],
     "tips": []
   },
   {
-    "food": "ニラ",
-    "nutrients": ["アリシン"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [
-      {"food": "肉", "effect": "吸収率アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "しそ",
-    "nutrients": ["香り成分"],
+    "food": "マグロ",
+    "nutrients": ["たんぱく質"],
     "best_methods": ["生"],
     "good_pairs": [
-      {"food": "魚", "effect": "相性良し", "boost": 1.1}
+      {"food": "山芋", "effect": "消化サポート", "boost": 1.2}
     ],
     "bad_pairs": [],
     "tips": []
