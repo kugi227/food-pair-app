@@ -490,7 +490,6 @@ h1 {
 .search-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
 .food-search-wrapper {
@@ -513,24 +512,6 @@ h1 {
 .food-search-input:focus {
   border-color: #7bbf6a;
   box-shadow: 0 0 0 4px rgba(123, 191, 106, 0.18);
-}
-
-.food-search-ok {
-  min-width: 78px;
-  padding: 15px 20px;
-  border: 2px solid #7bbf6a;
-  border-radius: 999px;
-  background: #e8f4e3;
-  color: #2f5f2a;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.food-search-ok:hover {
-  transform: translateY(-2px);
-  background: #dff0d8;
 }
 
 .search-results {
@@ -619,10 +600,6 @@ h1 {
 
   .food-search-input {
     max-width: none;
-  }
-
-  .food-search-ok {
-    width: 100%;
   }
 
   .food-candidate-panel {

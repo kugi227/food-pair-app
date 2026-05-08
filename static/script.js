@@ -254,7 +254,6 @@ const ratingCards = document.querySelectorAll(".rating-card");
 const resultStatusIcon = document.getElementById("resultStatusIcon");
 const foodSearchWrapper = document.getElementById("foodSearchWrapper");
 const foodSearch = document.getElementById("foodSearch");
-const foodSearchOk = document.getElementById("foodSearchOk");
 const foodCandidatePanel = document.getElementById("foodCandidatePanel");
 const foodCategoryTabs = document.getElementById("foodCategoryTabs");
 const searchResults = document.getElementById("searchResults");
@@ -542,10 +541,6 @@ if (foodSearch) {
       submitSearchFood();
     }
   });
-}
-
-if (foodSearchOk) {
-  foodSearchOk.addEventListener("click", submitSearchFood);
 }
 
 document.addEventListener("mousedown", (event) => {
