@@ -4,227 +4,124 @@
     "nutrients": ["リコピン", "ビタミンC"],
     "best_methods": ["加熱＋油"],
     "good_pairs": [
-      {"food": "オリーブオイル", "effect": "リコピン吸収率アップ", "boost": 1.3}
+      {"food": "オリーブオイル", "effect": "リコピンは脂溶性で油と一緒に摂ると吸収率が上がる", "boost": 1.3},
+      {"food": "チーズ", "effect": "脂質と一緒でリコピン吸収アップ", "boost": 1.2}
     ],
     "bad_pairs": [
-      {"food": "きゅうり", "effect": "ビタミンC分解"}
+      {"food": "きゅうり", "effect": "酵素によりビタミンCが分解されやすい"}
     ],
     "tips": [
-      {"action": "加熱する", "effect": "リコピンが出やすくなる", "boost": 1.2}
+      {"action": "加熱する", "effect": "リコピンが体に吸収されやすくなる", "boost": 1.2}
     ]
   },
   {
     "food": "にんじん",
     "nutrients": ["βカロテン"],
-    "best_methods": ["炒める"],
+    "best_methods": ["油で炒める"],
     "good_pairs": [
-      {"food": "油", "effect": "吸収率アップ", "boost": 1.4}
+      {"food": "油", "effect": "脂溶性ビタミンの吸収率が大幅にアップ", "boost": 1.4}
     ],
     "bad_pairs": [],
-    "tips": []
+    "tips": [
+      {"action": "細かく切る", "effect": "吸収率アップ"}
+    ]
   },
   {
     "food": "ブロッコリー",
     "nutrients": ["ビタミンC", "鉄"],
     "best_methods": ["蒸す"],
     "good_pairs": [
-      {"food": "レモン", "effect": "鉄吸収アップ", "boost": 1.2}
+      {"food": "レモン", "effect": "ビタミンCで鉄の吸収が高まる", "boost": 1.2}
     ],
     "bad_pairs": [
-      {"food": "長時間の茹で", "effect": "栄養流出"}
+      {"food": "長時間の茹で", "effect": "水溶性ビタミンが流れ出る"}
     ],
-    "tips": []
+    "tips": [
+      {"action": "短時間で蒸す", "effect": "栄養を逃がさない"}
+    ]
   },
   {
     "food": "ほうれん草",
     "nutrients": ["鉄"],
     "best_methods": ["軽く加熱"],
     "good_pairs": [
-      {"food": "レモン", "effect": "鉄吸収アップ", "boost": 1.3}
+      {"food": "レモン", "effect": "ビタミンCが鉄の吸収を助ける", "boost": 1.3}
     ],
     "bad_pairs": [
-      {"food": "お茶", "effect": "鉄吸収阻害"}
+      {"food": "お茶", "effect": "タンニンが鉄の吸収を妨げる"}
     ],
-    "tips": []
-  },
-  {
-    "food": "キャベツ",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "酢", "effect": "栄養保持", "boost": 1.1}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ナス",
-    "nutrients": ["ナスニン"],
-    "best_methods": ["油で焼く"],
-    "good_pairs": [
-      {"food": "油", "effect": "抗酸化保持", "boost": 1.3}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "玉ねぎ",
-    "nutrients": ["アリシン"],
-    "best_methods": ["生＋放置"],
-    "good_pairs": [
-      {"food": "豚肉", "effect": "吸収率アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [],
     "tips": [
-      {"action": "切って15分放置", "effect": "成分活性化", "boost": 1.2}
+      {"action": "食後すぐにお茶を飲まない", "effect": "鉄の吸収を保てる"}
     ]
   },
-  {
-    "food": "きゅうり",
-    "nutrients": ["酵素"],
-    "best_methods": ["生"],
-    "good_pairs": [],
-    "bad_pairs": [
-      {"food": "トマト", "effect": "ビタミンC分解"}
-    ],
-    "tips": []
-  },
-  {
-    "food": "小松菜",
-    "nutrients": ["カルシウム"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [
-      {"food": "ごま", "effect": "吸収サポート", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "大根",
-    "nutrients": ["消化酵素"],
-    "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "サバ", "effect": "消化サポート", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "加熱しすぎ", "effect": "酵素消失"}
-    ],
-    "tips": []
-  },
-  {
-    "food": "かぼちゃ",
-    "nutrients": ["βカロテン"],
-    "best_methods": ["加熱＋油"],
-    "good_pairs": [
-      {"food": "バター", "effect": "吸収率アップ", "boost": 1.3}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ごま",
-    "nutrients": ["セサミン"],
-    "best_methods": ["すりごま"],
-    "good_pairs": [
-      {"food": "小松菜", "effect": "吸収サポート", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-
-
   {
     "food": "豚肉",
     "nutrients": ["ビタミンB1"],
     "best_methods": ["炒める"],
     "good_pairs": [
-      {"food": "にんにく", "effect": "疲労回復（吸収アップ）", "boost": 1.4},
-      {"food": "玉ねぎ", "effect": "吸収サポート", "boost": 1.2}
+      {"food": "にんにく", "effect": "アリシンがビタミンB1の吸収を助ける", "boost": 1.4},
+      {"food": "玉ねぎ", "effect": "疲労回復効果アップ", "boost": 1.2}
     ],
     "bad_pairs": [
-      {"food": "アルコール", "effect": "ビタミンB1消費増加"}
+      {"food": "アルコール", "effect": "ビタミンB1が消費されやすくなる"}
     ],
-    "tips": []
+    "tips": [
+      {"action": "にんにくと一緒に調理", "effect": "疲労回復効果が高まる"}
+    ]
   },
   {
     "food": "牛肉",
     "nutrients": ["鉄"],
     "best_methods": ["焼く"],
     "good_pairs": [
-      {"food": "ブロッコリー", "effect": "鉄吸収アップ", "boost": 1.2}
+      {"food": "パプリカ", "effect": "ビタミンCで鉄の吸収が向上", "boost": 1.3}
     ],
     "bad_pairs": [
-      {"food": "コーヒー", "effect": "鉄吸収阻害"},
-      {"food": "緑茶", "effect": "鉄吸収阻害"}
+      {"food": "コーヒー", "effect": "鉄の吸収を阻害する"},
+      {"food": "緑茶", "effect": "タンニンが鉄吸収を妨げる"}
     ],
-    "tips": []
+    "tips": [
+      {"action": "食後にコーヒーを避ける", "effect": "鉄の吸収率を維持"}
+    ]
   },
   {
     "food": "鶏肉",
     "nutrients": ["たんぱく質"],
     "best_methods": ["蒸す"],
     "good_pairs": [
-      {"food": "レモン", "effect": "消化吸収アップ", "boost": 1.2}
+      {"food": "レモン", "effect": "消化が良くなり吸収効率アップ", "boost": 1.2}
     ],
     "bad_pairs": [],
-    "tips": []
+    "tips": [
+      {"action": "蒸し料理にする", "effect": "消化しやすくなる"}
+    ]
   },
-  {
-    "food": "レバー",
-    "nutrients": ["鉄"],
-    "best_methods": ["炒める"],
-    "good_pairs": [
-      {"food": "ニラ", "effect": "造血サポート", "boost": 1.3}
-    ],
-    "bad_pairs": [
-      {"food": "緑茶", "effect": "鉄吸収阻害"}
-    ],
-    "tips": []
-  },
-
-
   {
     "food": "サーモン",
-    "nutrients": ["DHA"],
+    "nutrients": ["DHA", "EPA"],
     "best_methods": ["生", "焼く"],
     "good_pairs": [
-      {"food": "アボカド", "effect": "抗酸化アップ", "boost": 1.3}
+      {"food": "アボカド", "effect": "抗酸化作用で脂質の酸化を防ぐ", "boost": 1.3}
     ],
     "bad_pairs": [
-      {"food": "高温調理", "effect": "脂質の酸化"}
+      {"food": "高温調理", "effect": "良質な脂質が壊れやすい"}
     ],
-    "tips": []
+    "tips": [
+      {"action": "焼きすぎない", "effect": "栄養を守る"}
+    ]
   },
   {
     "food": "サバ",
-    "nutrients": ["DHA"],
+    "nutrients": ["DHA", "EPA"],
     "best_methods": ["煮る"],
     "good_pairs": [
-      {"food": "大根", "effect": "消化サポート", "boost": 1.2}
+      {"food": "大根", "effect": "消化酵素で胃もたれを防ぐ", "boost": 1.2}
     ],
     "bad_pairs": [
-      {"food": "揚げすぎ", "effect": "脂質の酸化"}
+      {"food": "揚げすぎ", "effect": "脂質が酸化する"}
     ],
-    "tips": []
-  },
-  {
-    "food": "イワシ",
-    "nutrients": ["カルシウム"],
-    "best_methods": ["煮る"],
-    "good_pairs": [
-      {"food": "梅", "effect": "吸収アップ", "boost": 1.3}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "マグロ",
-    "nutrients": ["たんぱく質"],
-    "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "山芋", "effect": "消化サポート", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
+    "tips": [
+      {"action": "味噌煮にする", "effect": "栄養を保ちやすい"}
+    ]
   }
 ]
