@@ -231,11 +231,184 @@ const foodData = {
 let selectedFood = "natto";
 let selectedRating = "excellent";
 
-const foodButtons = document.querySelectorAll(".food-button");
+const foodCatalog = {
+  tomato: { label: "トマト", keywords: ["tomato", "とまと"] },
+  carrot: { label: "にんじん", keywords: ["carrot", "人参"] },
+  spinach: { label: "ほうれん草", keywords: ["spinach", "ほうれんそう"] },
+  egg: { label: "卵", keywords: ["egg", "たまご", "玉子"] },
+  chicken: { label: "鶏肉", keywords: ["chicken", "とりにく", "鳥肉"] },
+  natto: { label: "納豆", keywords: ["natto", "なっとう"] }
+};
+
+const foodCategories = [
+  { id: "vegetables", name: "野菜", foods: ["tomato", "carrot", "spinach"] },
+  { id: "fish", name: "魚", foods: ["mackerel", "salmon"] },
+  { id: "meat", name: "肉", foods: ["chicken"] },
+  { id: "fruits", name: "果物", foods: ["lemon", "apple", "banana"] },
+  { id: "drinks", name: "飲み物", foods: ["milk", "greenTea", "coffee"] },
+  { id: "other", name: "その他", foods: ["egg", "natto"] }
+];
+
+let foodButtons = document.querySelectorAll(".food-button");
 const ratingCards = document.querySelectorAll(".rating-card");
 const resultStatusIcon = document.getElementById("resultStatusIcon");
+const foodSearchWrapper = document.getElementById("foodSearchWrapper");
+const foodSearch = document.getElementById("foodSearch");
+const foodSearchOk = document.getElementById("foodSearchOk");
+const foodCandidatePanel = document.getElementById("foodCandidatePanel");
+const foodCategoryTabs = document.getElementById("foodCategoryTabs");
+const searchResults = document.getElementById("searchResults");
+let activeFoodCategory = foodCategories[0].id;
+
+function getFoodLabel(foodKey) {
+  return foodCatalog[foodKey]?.label || foodData[foodKey]?.name || foodKey;
+}
+
+function isSelectableFood(foodKey) {
+  return Boolean(foodData[foodKey]);
+}
+
+function createFoodButton(foodKey) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "food-button";
+  button.dataset.food = foodKey;
+  button.textContent = `${foodData[foodKey].emoji} ${getFoodLabel(foodKey)}`;
+  return button;
+}
+
+function selectFood(foodKey) {
+  if (!isSelectableFood(foodKey)) {
+    return;
+  }
+
+  selectedFood = foodKey;
+  if (foodSearch) {
+    foodSearch.value = getFoodLabel(foodKey);
+  }
+  updateDisplay();
+  closeCandidatePanel();
+}
+
+function openCandidatePanel() {
+  if (!foodCandidatePanel) {
+    return;
+  }
+
+  foodCandidatePanel.classList.add("open");
+  foodCandidatePanel.setAttribute("aria-hidden", "false");
+}
+
+function closeCandidatePanel() {
+  if (!foodCandidatePanel) {
+    return;
+  }
+
+  foodCandidatePanel.classList.remove("open");
+  foodCandidatePanel.setAttribute("aria-hidden", "true");
+}
+
+function renderCategoryTabs() {
+  if (!foodCategoryTabs) {
+    return;
+  }
+
+  foodCategoryTabs.innerHTML = "";
+
+  foodCategories.forEach((category) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "food-category-tab";
+    button.dataset.category = category.id;
+    button.textContent = category.name;
+
+    if (category.id === activeFoodCategory) {
+      button.classList.add("active");
+    }
+
+    button.addEventListener("click", () => {
+      activeFoodCategory = category.id;
+      if (foodSearch) {
+        foodSearch.value = "";
+      }
+      renderCategoryTabs();
+      renderSearchResults();
+      openCandidatePanel();
+    });
+
+    foodCategoryTabs.appendChild(button);
+  });
+}
+
+function getSearchableFoods() {
+  return Object.keys(foodData).map((foodKey) => ({
+    key: foodKey,
+    label: getFoodLabel(foodKey),
+    name: foodData[foodKey].name || "",
+    keywords: foodCatalog[foodKey]?.keywords || []
+  }));
+}
+
+function findMatchingFoods(query) {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) {
+    return [];
+  }
+
+  return getSearchableFoods().filter((food) => {
+    const targets = [food.key, food.label, food.name, ...food.keywords];
+    return targets.some((target) => String(target).toLowerCase().includes(normalizedQuery));
+  });
+}
+
+function renderSearchResults() {
+  if (!searchResults || !foodSearch) {
+    return;
+  }
+
+  const query = foodSearch.value.trim();
+  const activeCategory = foodCategories.find((category) => category.id === activeFoodCategory);
+  const categoryFoods = activeCategory ? activeCategory.foods.filter(isSelectableFood) : [];
+  const matches = query
+    ? findMatchingFoods(query).map((food) => food.key)
+    : categoryFoods;
+
+  searchResults.innerHTML = "";
+
+  if (matches.length === 0) {
+    const noResult = document.createElement("div");
+    noResult.className = "no-result";
+    noResult.textContent = "一致する食材がありません";
+    searchResults.appendChild(noResult);
+    return;
+  }
+
+  matches.forEach((foodKey) => {
+    const button = createFoodButton(foodKey);
+    button.classList.add("search-result-button");
+    searchResults.appendChild(button);
+  });
+
+  foodButtons = document.querySelectorAll(".food-button");
+  updateFoodButtons();
+}
+
+function submitSearchFood() {
+  if (!foodSearch) {
+    return;
+  }
+
+  const [firstMatch] = findMatchingFoods(foodSearch.value);
+
+  if (firstMatch) {
+    selectFood(firstMatch.key);
+  }
+}
 
 function updateFoodButtons() {
+  foodButtons = document.querySelectorAll(".food-button");
+
   foodButtons.forEach((button) => {
     button.classList.remove("active");
     if (button.dataset.food === selectedFood) {
@@ -258,8 +431,47 @@ function updateStatusColor() {
   resultStatusIcon.classList.add(selectedRating);
 }
 
+function parseBoostRate(boostRate) {
+  const parsedValue = parseFloat(String(boostRate || "").replace("%", ""));
+
+  if (Number.isNaN(parsedValue)) {
+    return 0;
+  }
+
+  return Math.max(-20, Math.min(20, parsedValue));
+}
+
+function updateBoostMeter(boostRate) {
+  const positiveBar = document.getElementById("boostMeterPositive");
+  const negativeBar = document.getElementById("boostMeterNegative");
+
+  if (!positiveBar || !negativeBar) {
+    return;
+  }
+
+  const boostValue = parseBoostRate(boostRate);
+  const widthPercent = `${Math.abs(boostValue) / 20 * 50}%`;
+
+  positiveBar.style.width = "0";
+  negativeBar.style.width = "0";
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (boostValue > 0) {
+        positiveBar.style.width = widthPercent;
+      } else if (boostValue < 0) {
+        negativeBar.style.width = widthPercent;
+      }
+    });
+  });
+}
+
 function updateDisplay() {
   const food = foodData[selectedFood];
+  if (!food) {
+    return;
+  }
+
   const data = food[selectedRating];
 
   document.getElementById("selectedFood").textContent = `選んだ食材：${food.emoji} ${food.name}`;
@@ -267,6 +479,7 @@ function updateDisplay() {
   document.getElementById("pairTitle").textContent = data.pairTitle;
   document.getElementById("nutritionScore").textContent = data.nutritionScore;
   document.getElementById("boostRate").textContent = data.boostRate;
+  updateBoostMeter(data.boostRate);
   document.getElementById("suggestion").textContent = data.suggestion;
   document.getElementById("reason").textContent = data.reason;
   document.getElementById("improvement").textContent = data.improvement;
@@ -293,11 +506,56 @@ function updateDisplay() {
   updateStatusColor();
 }
 
-foodButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    selectedFood = button.dataset.food;
-    updateDisplay();
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+
+  const foodButton = event.target.closest(".food-button");
+
+  if (!foodButton) {
+    return;
+  }
+
+  selectFood(foodButton.dataset.food);
+});
+
+if (foodSearch) {
+  foodSearch.addEventListener("focus", () => {
+    renderSearchResults();
+    openCandidatePanel();
   });
+
+  foodSearch.addEventListener("click", () => {
+    renderSearchResults();
+    openCandidatePanel();
+  });
+
+  foodSearch.addEventListener("input", () => {
+    renderSearchResults();
+    openCandidatePanel();
+  });
+
+  foodSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      submitSearchFood();
+    }
+  });
+}
+
+if (foodSearchOk) {
+  foodSearchOk.addEventListener("click", submitSearchFood);
+}
+
+document.addEventListener("mousedown", (event) => {
+  if (!(event.target instanceof Element) || !foodSearchWrapper) {
+    return;
+  }
+
+  if (!foodSearchWrapper.contains(event.target)) {
+    closeCandidatePanel();
+  }
 });
 
 ratingCards.forEach((card) => {
@@ -307,4 +565,6 @@ ratingCards.forEach((card) => {
   });
 });
 
+renderCategoryTabs();
+renderSearchResults();
 updateDisplay();

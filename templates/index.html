@@ -33,15 +33,23 @@
     <section class="section">
   <h2>使いたい食材を検索してください</h2>
 
-  <input
-    type="text"
-    id="foodSearch"
-    class="food-search-input"
-    placeholder="例：納豆、トマト、卵"
-    autocomplete="off"
-  >
+  <div class="food-search-wrapper" id="foodSearchWrapper">
+    <div class="search-controls">
+      <input
+        type="text"
+        id="foodSearch"
+        class="food-search-input"
+        placeholder="例：納豆、トマト、卵"
+        autocomplete="off"
+      >
+      <button type="button" id="foodSearchOk" class="food-search-ok">OK</button>
+    </div>
 
-  <div id="searchResults" class="search-results"></div>
+    <div id="foodCandidatePanel" class="food-candidate-panel" aria-hidden="true">
+      <div id="foodCategoryTabs" class="food-category-tabs"></div>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+  </div>
 </section>
 
     <!-- 相性評価 -->
@@ -103,6 +111,18 @@
         <div class="boost-box">
           <p class="boost-rate" id="boostRate">+20%</p>
           <p class="boost-text">ブースト</p>
+          <div class="boost-meter" aria-label="ブーストメーター">
+            <div class="boost-meter-track">
+              <div class="boost-meter-center"></div>
+              <div class="boost-meter-bar boost-meter-bar-negative" id="boostMeterNegative"></div>
+              <div class="boost-meter-bar boost-meter-bar-positive" id="boostMeterPositive"></div>
+            </div>
+            <div class="boost-meter-labels">
+              <span>-20%</span>
+              <span>0</span>
+              <span>+20%</span>
+            </div>
+          </div>
         </div>
       </div>
 
