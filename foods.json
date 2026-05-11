@@ -1,183 +1,97 @@
 [
   {
+    "id": "tomato",
     "food": "トマト",
+    "emoji": "🍅",
     "nutrients": ["リコピン", "ビタミンC"],
+    "keywords": ["美肌", "アンチエイジング"],
     "best_methods": ["加熱＋油"],
     "good_pairs": [
       {"food": "オリーブオイル", "effect": "リコピンの吸収率アップ", "boost": 1.3}
     ],
     "bad_pairs": [
       {"food": "きゅうり", "effect": "ビタミンCが分解されやすい"}
-    ],
-    "tips": []
+    ]
   },
   {
-    "food": "きゅうり",
-    "nutrients": ["酵素"],
-    "best_methods": ["生"],
+    "id": "natto",
+    "food": "納豆",
+    "emoji": "🫘",
+    "nutrients": ["食物繊維", "たんぱく質", "ビタミンK"],
+    "keywords": ["便秘", "発酵食品", "朝ごはん"],
+    "best_methods": ["そのまま"],
     "good_pairs": [
-      {"food": "酢", "effect": "酵素の働きを安定させる", "boost": 1.1}
+      {"food": "すりごま", "effect": "抗酸化作用の相乗効果", "boost": 1.2}
     ],
-    "bad_pairs": [
-      {"food": "トマト", "effect": "ビタミンCを分解する"}
-    ],
-    "tips": []
+    "bad_pairs": []
   },
   {
-    "food": "にんじん",
-    "nutrients": ["βカロテン"],
-    "best_methods": ["油で炒める"],
-    "good_pairs": [
-      {"food": "油", "effect": "吸収率アップ", "boost": 1.4}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ブロッコリー",
-    "nutrients": ["ビタミンC", "鉄"],
-    "best_methods": ["蒸す"],
-    "good_pairs": [
-      {"food": "レモン", "effect": "鉄吸収アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "長時間の茹で", "effect": "栄養流出"}
-    ],
-    "tips": []
-  },
-  {
-    "food": "ほうれん草",
-    "nutrients": ["鉄"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [
-      {"food": "レモン", "effect": "鉄吸収アップ", "boost": 1.3}
-    ],
-    "bad_pairs": [
-      {"food": "お茶", "effect": "吸収阻害"}
-    ],
-    "tips": []
-  },
-  {
-    "food": "キャベツ",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["生"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ナス",
-    "nutrients": ["ナスニン"],
-    "best_methods": ["油で焼く"],
-    "good_pairs": [
-      {"food": "油", "effect": "抗酸化保持", "boost": 1.3}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "玉ねぎ",
-    "nutrients": ["アリシン"],
-    "best_methods": ["生＋放置"],
-    "good_pairs": [
-      {"food": "豚肉", "effect": "ビタミン吸収アップ", "boost": 1.3}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ピーマン",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["加熱"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "じゃがいも",
-    "nutrients": ["ビタミンC"],
-    "best_methods": ["蒸す"],
-    "good_pairs": [],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "豚肉",
-    "nutrients": ["ビタミンB1"],
-    "best_methods": ["炒める"],
-    "good_pairs": [
-      {"food": "にんにく", "effect": "吸収率アップ", "boost": 1.4},
-      {"food": "玉ねぎ", "effect": "疲労回復効果", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "アルコール", "effect": "栄養消費"}
-    ],
-    "tips": []
-  },
-  {
+    "id": "beef",
     "food": "牛肉",
-    "nutrients": ["鉄"],
+    "emoji": "🥩",
+    "nutrients": ["鉄", "たんぱく質"],
+    "keywords": ["貧血", "疲労回復", "筋力アップ"],
     "best_methods": ["焼く"],
     "good_pairs": [
-      {"food": "レモン", "effect": "鉄吸収アップ", "boost": 1.3}
+      {"food": "レモン", "effect": "鉄吸収率が大幅アップ", "boost": 1.3}
     ],
     "bad_pairs": [
-      {"food": "コーヒー", "effect": "吸収阻害"}
-    ],
-    "tips": []
+      {"food": "コーヒー", "effect": "タンニンが鉄吸収を阻害"}
+    ]
   },
   {
-    "food": "鶏肉",
-    "nutrients": ["たんぱく質"],
+    "id": "pork",
+    "food": "豚肉",
+    "emoji": "🐷",
+    "nutrients": ["ビタミンB1"],
+    "keywords": ["疲労回復", "スタミナ"],
+    "best_methods": ["炒める"],
+    "good_pairs": [
+      {"food": "にんにく", "effect": "ビタミンB1吸収率アップ", "boost": 1.4},
+      {"food": "玉ねぎ", "effect": "疲労回復効果の持続", "boost": 1.2}
+    ],
+    "bad_pairs": [
+      {"food": "アルコール", "effect": "ビタミンを浪費してしまいます"}
+    ]
+  },
+  {
+    "id": "broccoli",
+    "food": "ブロッコリー",
+    "emoji": "🥦",
+    "nutrients": ["ビタミンC", "鉄"],
+    "keywords": ["免疫力", "筋トレ"],
     "best_methods": ["蒸す"],
     "good_pairs": [
-      {"food": "レモン", "effect": "消化促進", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "サーモン",
-    "nutrients": ["DHA", "EPA"],
-    "best_methods": ["生"],
-    "good_pairs": [
-      {"food": "アボカド", "effect": "抗酸化作用", "boost": 1.3}
+      {"food": "レモン", "effect": "ビタミンCが鉄吸収を助ける", "boost": 1.2}
     ],
     "bad_pairs": [
-      {"food": "高温調理", "effect": "脂質劣化"}
-    ],
-    "tips": []
+      {"food": "長時間の茹で", "effect": "水溶性ビタミンが流出します"}
+    ]
   },
   {
-    "food": "サバ",
-    "nutrients": ["DHA", "EPA"],
-    "best_methods": ["煮る"],
+    "id": "carrot",
+    "food": "にんじん",
+    "emoji": "🥕",
+    "nutrients": ["βカロテン", "食物繊維"],
+    "keywords": ["美肌", "目の健康"],
+    "best_methods": ["油で炒める"],
     "good_pairs": [
-      {"food": "大根", "effect": "消化サポート", "boost": 1.2}
+      {"food": "油", "effect": "βカロテンの吸収率が大幅に向上します", "boost": 1.4}
     ],
     "bad_pairs": [
-      {"food": "揚げすぎ", "effect": "酸化"}
-    ],
-    "tips": []
+      {"food": "生レモン", "effect": "酵素の影響が気になる場合は加熱がおすすめ"}
+    ]
   },
   {
-    "food": "オリーブオイル",
-    "nutrients": ["脂質"],
-    "best_methods": ["そのまま"],
+    "id": "chicken",
+    "food": "鶏肉",
+    "emoji": "🍗",
+    "nutrients": ["たんぱく質", "ビタミンA"],
+    "keywords": ["ダイエット", "疲労回復"],
+    "best_methods": ["蒸す", "焼く"],
     "good_pairs": [
-      {"food": "トマト", "effect": "吸収率アップ", "boost": 1.3}
+      {"food": "ブロッコリー", "effect": "筋力アップと疲労回復の最強コンビ", "boost": 1.3}
     ],
-    "bad_pairs": [],
-    "tips": []
-  },
-  {
-    "food": "ヨーグルト",
-    "nutrients": ["乳酸菌"],
-    "best_methods": ["そのまま"],
-    "good_pairs": [
-      {"food": "バナナ", "effect": "腸内環境改善", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": []
+    "bad_pairs": []
   }
 ]
