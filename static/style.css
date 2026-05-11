@@ -506,9 +506,7 @@ h1 {
 }
 
 .info-row {
-  display: grid;
-  grid-template-columns: 78px minmax(0, 1fr);
-  gap: 14px;
+  display: block;
   margin-bottom: 14px;
 }
 
@@ -517,13 +515,18 @@ h1 {
 }
 
 .info-icon {
-  display: grid;
+  display: inline-grid;
   place-items: center;
-  min-height: 82px;
-  border: 1.5px solid #e0d6c8;
-  border-radius: 18px;
-  background: #fff9f0;
-  font-size: 32px;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff7e8;
+  font-size: 18px;
+  line-height: 1;
+  cursor: default;
+  pointer-events: none;
 }
 
 .info-content {
@@ -535,6 +538,8 @@ h1 {
 }
 
 .info-content h4 {
+  display: flex;
+  align-items: center;
   margin: 0 0 8px;
   color: #314431;
   font-size: 17px;
