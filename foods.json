@@ -1,127 +1,197 @@
 [
   {
+    "id": "tomato",
     "food": "トマト",
+    "emoji": "🍅",
     "nutrients": ["リコピン", "ビタミンC"],
+    "keywords": ["美肌", "アンチエイジング"],
     "best_methods": ["加熱＋油"],
-    "good_pairs": [
-      {"food": "オリーブオイル", "effect": "リコピンは脂溶性で油と一緒に摂ると吸収率が上がる", "boost": 1.3},
-      {"food": "チーズ", "effect": "脂質と一緒でリコピン吸収アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "きゅうり", "effect": "酵素によりビタミンCが分解されやすい"}
-    ],
-    "tips": [
-      {"action": "加熱する", "effect": "リコピンが体に吸収されやすくなる", "boost": 1.2}
-    ]
+    "good_pairs": [{"food": "オリーブオイル", "effect": "リコピンの吸収率アップ", "boost": 1.3}],
+    "better_pairs": [{"food": "卵", "effect": "ビタミンとタンパク質をバランス良く補給", "boost": 1.1}],
+    "dressings": ["オリーブオイル", "バルサミコ酢", "青じそドレッシング"],
+    "dressing_logic": "リコピンは油に溶ける性質（脂溶性）があり、油と摂ると吸収率が数倍になります。",
+    "bad_pairs": [{"food": "きゅうり", "effect": "ビタミンCが分解されやすい"}]
   },
   {
-    "food": "にんじん",
-    "nutrients": ["βカロテン"],
-    "best_methods": ["油で炒める"],
-    "good_pairs": [
-      {"food": "油", "effect": "脂溶性ビタミンの吸収率が大幅にアップ", "boost": 1.4}
-    ],
-    "bad_pairs": [],
-    "tips": [
-      {"action": "細かく切る", "effect": "吸収率アップ"}
-    ]
+    "id": "natto",
+    "food": "納豆",
+    "emoji": "🫘",
+    "nutrients": ["食物繊維", "たんぱく質", "ビタミンK"],
+    "keywords": ["便秘", "発酵食品"],
+    "best_methods": ["そのまま"],
+    "good_pairs": [{"food": "すりごま", "effect": "抗酸化作用の相乗効果", "boost": 1.2}],
+    "better_pairs": [{"food": "キムチ", "effect": "ダブルの発酵食品で腸内環境を整える", "boost": 1.1}],
+    "dressings": ["ごま油と塩", "付属のタレ", "酢胡椒"],
+    "dressing_logic": "ビタミンKが脂溶性。油と一緒に摂ることで吸収がスムーズになります。",
+    "bad_pairs": []
   },
   {
-    "food": "ブロッコリー",
-    "nutrients": ["ビタミンC", "鉄"],
-    "best_methods": ["蒸す"],
-    "good_pairs": [
-      {"food": "レモン", "effect": "ビタミンCで鉄の吸収が高まる", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "長時間の茹で", "effect": "水溶性ビタミンが流れ出る"}
-    ],
-    "tips": [
-      {"action": "短時間で蒸す", "effect": "栄養を逃がさない"}
-    ]
-  },
-  {
-    "food": "ほうれん草",
-    "nutrients": ["鉄"],
-    "best_methods": ["軽く加熱"],
-    "good_pairs": [
-      {"food": "レモン", "effect": "ビタミンCが鉄の吸収を助ける", "boost": 1.3}
-    ],
-    "bad_pairs": [
-      {"food": "お茶", "effect": "タンニンが鉄の吸収を妨げる"}
-    ],
-    "tips": [
-      {"action": "食後すぐにお茶を飲まない", "effect": "鉄の吸収を保てる"}
-    ]
-  },
-  {
-    "food": "豚肉",
-    "nutrients": ["ビタミンB1"],
-    "best_methods": ["炒める"],
-    "good_pairs": [
-      {"food": "にんにく", "effect": "アリシンがビタミンB1の吸収を助ける", "boost": 1.4},
-      {"food": "玉ねぎ", "effect": "疲労回復効果アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "アルコール", "effect": "ビタミンB1が消費されやすくなる"}
-    ],
-    "tips": [
-      {"action": "にんにくと一緒に調理", "effect": "疲労回復効果が高まる"}
-    ]
-  },
-  {
+    "id": "beef",
     "food": "牛肉",
-    "nutrients": ["鉄"],
+    "emoji": "🥩",
+    "nutrients": ["鉄", "たんぱく質"],
+    "keywords": ["貧血", "疲労回復"],
     "best_methods": ["焼く"],
-    "good_pairs": [
-      {"food": "パプリカ", "effect": "ビタミンCで鉄の吸収が向上", "boost": 1.3}
-    ],
-    "bad_pairs": [
-      {"food": "コーヒー", "effect": "鉄の吸収を阻害する"},
-      {"food": "緑茶", "effect": "タンニンが鉄吸収を妨げる"}
-    ],
-    "tips": [
-      {"action": "食後にコーヒーを避ける", "effect": "鉄の吸収率を維持"}
-    ]
+    "good_pairs": [{"food": "レモン", "effect": "鉄吸収率が大幅アップ", "boost": 1.3}],
+    "better_pairs": [{"food": "クレソン", "effect": "鉄分の吸収を助け、脂っぽさを中和", "boost": 1.1}],
+    "dressings": ["レモン汁", "おろしポン酢", "わさび醤油"],
+    "dressing_logic": "非ヘム鉄はビタミンC（レモン）と一緒に摂ることで、体に吸収されやすい形に変化します。",
+    "bad_pairs": [{"food": "コーヒー", "effect": "タンニンが鉄吸収を阻害"}]
   },
   {
-    "food": "鶏肉",
-    "nutrients": ["たんぱく質"],
+    "id": "pork",
+    "food": "豚肉",
+    "emoji": "🐷",
+    "nutrients": ["ビタミンB1"],
+    "keywords": ["疲労回復", "スタミナ"],
+    "best_methods": ["炒める"],
+    "good_pairs": [{"food": "にんにく", "effect": "ビタミンB1吸収率アップ", "boost": 1.4}],
+    "better_pairs": [{"food": "生姜", "effect": "血行を促進し代謝を上げる", "boost": 1.1}],
+    "dressings": ["生姜醤油", "ごまだれ", "ハニーマスタード"],
+    "dressing_logic": "生姜のジンゲロールが血行を良くし、豚肉のビタミンB1の代謝を効率化します。",
+    "bad_pairs": []
+  },
+  {
+    "id": "broccoli",
+    "food": "ブロッコリー",
+    "emoji": "🥦",
+    "nutrients": ["ビタミンC", "鉄"],
+    "keywords": ["免疫力", "筋トレ"],
     "best_methods": ["蒸す"],
-    "good_pairs": [
-      {"food": "レモン", "effect": "消化が良くなり吸収効率アップ", "boost": 1.2}
-    ],
-    "bad_pairs": [],
-    "tips": [
-      {"action": "蒸し料理にする", "effect": "消化しやすくなる"}
-    ]
+    "good_pairs": [{"food": "レモン", "effect": "ビタミンCが鉄吸収を助ける", "boost": 1.2}],
+    "better_pairs": [{"food": "ゆで卵", "effect": "タンパク質を効率よく摂取", "boost": 1.1}],
+    "dressings": ["ガーリックオイル", "マヨネーズ", "オーロラソース"],
+    "dressing_logic": "スルフォラファンやβカロテンの吸収率を油がアップさせます。",
+    "bad_pairs": []
   },
   {
-    "food": "サーモン",
-    "nutrients": ["DHA", "EPA"],
-    "best_methods": ["生", "焼く"],
-    "good_pairs": [
-      {"food": "アボカド", "effect": "抗酸化作用で脂質の酸化を防ぐ", "boost": 1.3}
-    ],
-    "bad_pairs": [
-      {"food": "高温調理", "effect": "良質な脂質が壊れやすい"}
-    ],
-    "tips": [
-      {"action": "焼きすぎない", "effect": "栄養を守る"}
-    ]
+    "id": "carrot",
+    "food": "にんじん",
+    "emoji": "🥕",
+    "nutrients": ["βカロテン", "食物繊維"],
+    "keywords": ["美肌", "目の健康"],
+    "best_methods": ["油で炒める"],
+    "good_pairs": [{"food": "油", "effect": "βカロテンの吸収率が大幅に向上します", "boost": 1.4}],
+    "better_pairs": [{"food": "りんご", "effect": "食物繊維をさらに強化", "boost": 1.1}],
+    "dressings": ["えごま油・ごま油", "胡麻ドレッシング", "レモンマリネ液"],
+    "dressing_logic": "βカロテンは油との相性が最強。生で食べるより格段に吸収が良くなります。",
+    "bad_pairs": []
   },
   {
+    "id": "chicken",
+    "food": "鶏肉",
+    "emoji": "🍗",
+    "nutrients": ["たんぱく質", "ビタミンA"],
+    "keywords": ["ダイエット", "疲労回復"],
+    "best_methods": ["蒸す", "焼く"],
+    "good_pairs": [{"food": "ブロッコリー", "effect": "筋力アップと疲労回復の最強コンビ", "boost": 1.3}],
+    "better_pairs": [{"food": "キノコ類", "effect": "食物繊維で満足感アップ", "boost": 1.1}],
+    "dressings": ["ネギ塩だれ", "タルタルソース", "スイートチリソース"],
+    "dressing_logic": "ネギのアリシンが鶏肉のビタミンB群の吸収と持続を助けます。",
+    "bad_pairs": []
+  },
+  {
+    "id": "egg",
+    "food": "たまご",
+    "emoji": "🥚",
+    "nutrients": ["たんぱく質", "ビタミンD", "亜鉛"],
+    "keywords": ["完全栄養食", "朝食"],
+    "best_methods": ["半熟ゆで卵"],
+    "good_pairs": [{"food": "にんじん", "effect": "ビタミンAの吸収とタンパク質を同時に摂取", "boost": 1.3}],
+    "better_pairs": [{"food": "ほうれん草", "effect": "卵のビタミンC不足を野菜がカバー", "boost": 1.1}],
+    "dressings": ["オリーブオイル", "めんつゆ", "トリュフ塩"],
+    "dressing_logic": "卵黄に含まれるビタミンDやAを油がしっかりキャッチして運びます。",
+    "bad_pairs": []
+  },
+  {
+    "id": "spinach",
+    "food": "ほうれん草",
+    "emoji": "🥬",
+    "nutrients": ["鉄", "ビタミンC", "葉酸"],
+    "keywords": ["貧血予防", "美肌"],
+    "best_methods": ["さっと茹でる"],
+    "good_pairs": [{"food": "牛肉", "effect": "動物性タンパク質が植物性鉄分の吸収を助ける", "boost": 1.4}],
+    "better_pairs": [{"food": "レモン", "effect": "ビタミンCが鉄分の吸収率をアップ", "boost": 1.2}],
+    "dressings": ["レモン・酢", "だし醤油", "バター醤油"],
+    "dressing_logic": "植物性の鉄分は酸（ビタミンCやクエン酸）で吸収効率を最大化します。",
+    "bad_pairs": []
+  },
+  {
+    "id": "salmon",
+    "food": "鮭",
+    "emoji": "🐟",
+    "nutrients": ["アスタキサンチン", "ビタミンD", "DHA"],
+    "keywords": ["アンチエイジング", "脳の健康"],
+    "best_methods": ["ホイル焼き"],
+    "good_pairs": [{"food": "ブロッコリー", "effect": "強力な抗酸化作用の相乗効果", "boost": 1.3}],
+    "better_pairs": [{"food": "チーズ", "effect": "鮭のビタミンDがカルシウム吸収を促進", "boost": 1.2}],
+    "dressings": ["レモンバター", "タルタルソース", "ポン酢"],
+    "dressing_logic": "鮭のビタミンDが、乳製品や付け合わせのカルシウム吸収を助ける最強の相棒です。",
+    "bad_pairs": []
+  },
+  {
+    "id": "avocado",
+    "food": "アボカド",
+    "emoji": "🥑",
+    "nutrients": ["ビタミンE", "脂質"],
+    "keywords": ["美肌", "老化防止"],
+    "best_methods": ["生で食べる"],
+    "good_pairs": [{"food": "納豆", "effect": "発酵食品と脂質で腸内環境を改善", "boost": 1.3}],
+    "better_pairs": [{"food": "トマト", "effect": "リコピンの吸収を脂質がサポート", "boost": 1.2}],
+    "dressings": ["レモン汁", "わさび醤油", "オリーブオイルと塩"],
+    "dressing_logic": "ビタミンCが脂質の酸化を防ぎ、美肌成分を壊さず体へ届けます。",
+    "bad_pairs": []
+  },
+  {
+    "id": "tofu",
+    "food": "豆腐",
+    "emoji": "⬜",
+    "nutrients": ["イソフラボン", "たんぱく質"],
+    "keywords": ["ヘルシー", "更年期ケア"],
+    "best_methods": ["冷奴"],
+    "good_pairs": [{"food": "かつお節", "effect": "アミノ酸スコアが100に向上", "boost": 1.4}],
+    "better_pairs": [{"food": "わかめ", "effect": "マグネシウムと食物繊維の補給", "boost": 1.1}],
+    "dressings": ["だし醤油", "ポン酢", "ごまドレッシング"],
+    "dressing_logic": "植物性タンパク質に欠けているアミノ酸を動物性のだし（かつお）が補い、質を高めます。",
+    "bad_pairs": []
+  },
+  {
+    "id": "cheese",
+    "food": "チーズ",
+    "emoji": "🧀",
+    "nutrients": ["カルシウム", "たんぱく質"],
+    "keywords": ["骨の健康", "おつまみ"],
+    "best_methods": ["そのまま"],
+    "good_pairs": [{"food": "鮭", "effect": "ビタミンDがカルシウムの定着を促進", "boost": 1.4}],
+    "better_pairs": [{"food": "パン", "effect": "炭水化物とタンパク質の効率的な摂取", "boost": 1.1}],
+    "dressings": ["黒胡椒", "はちみつ"],
+    "dressing_logic": "ピペリン（胡椒）が代謝を上げ、チーズのカルシウム吸収をサポートします。",
+    "bad_pairs": []
+  },
+  {
+    "id": "mackerel",
     "food": "サバ",
-    "nutrients": ["DHA", "EPA"],
-    "best_methods": ["煮る"],
-    "good_pairs": [
-      {"food": "大根", "effect": "消化酵素で胃もたれを防ぐ", "boost": 1.2}
-    ],
-    "bad_pairs": [
-      {"food": "揚げすぎ", "effect": "脂質が酸化する"}
-    ],
-    "tips": [
-      {"action": "味噌煮にする", "effect": "栄養を保ちやすい"}
-    ]
+    "emoji": "🐟",
+    "nutrients": ["EPA", "DHA"],
+    "keywords": ["血液サラサラ", "記憶力"],
+    "best_methods": ["塩焼き"],
+    "good_pairs": [{"food": "玉ねぎ", "effect": "硫化アリルが血液をさらにサラサラに", "boost": 1.4}],
+    "better_pairs": [{"food": "大根おろし", "effect": "消化酵素が脂の消化を助ける", "boost": 1.2}],
+    "dressings": ["ポン酢", "レモン汁"],
+    "dressing_logic": "大根の消化酵素（ジアスターゼ）が魚の良質な脂の消化・吸収を助けます。",
+    "bad_pairs": []
+  },
+  {
+    "id": "cabbage",
+    "food": "キャベツ",
+    "emoji": "🥬",
+    "nutrients": ["ビタミンU", "ビタミンK"],
+    "keywords": ["胃の健康", "ダイエット"],
+    "best_methods": ["千切り"],
+    "good_pairs": [{"food": "豚肉", "effect": "ビタミンUが油の消化を助け胃もたれ防止", "boost": 1.3}],
+    "better_pairs": [{"food": "しらす", "effect": "カルシウムとビタミンKで骨を強くする", "boost": 1.2}],
+    "dressings": ["ごま油と塩", "塩昆布", "オーロラソース"],
+    "dressing_logic": "ビタミンKやUは油と相性が良く、胃粘膜の保護効果を高めます。",
+    "bad_pairs": []
   }
 ]

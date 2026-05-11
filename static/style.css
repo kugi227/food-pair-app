@@ -290,10 +290,13 @@ h1 {
 .boost-box {
   border: 1.5px solid #e0d6c8;
   border-radius: 18px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   background: linear-gradient(135deg, #fff5d8, #fff0c1);
+  padding: 16px;
 }
 
 .boost-rate {
@@ -306,6 +309,59 @@ h1 {
 .boost-text {
   margin: 8px 0 0;
   font-size: 18px;
+}
+
+.boost-meter {
+  width: 100%;
+  max-width: 170px;
+  margin-top: 14px;
+}
+
+.boost-meter-track {
+  position: relative;
+  height: 14px;
+  border: 1px solid #d8cfbf;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fff4ee 0%, #fffdf8 50%, #f2faed 100%);
+  overflow: hidden;
+}
+
+.boost-meter-center {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: 50%;
+  width: 2px;
+  background: #7b8a72;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.boost-meter-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  transition: width 0.8s ease;
+}
+
+.boost-meter-bar-positive {
+  left: 50%;
+  background: linear-gradient(90deg, #76b85f, #f1c84b);
+}
+
+.boost-meter-bar-negative {
+  right: 50%;
+  background: linear-gradient(90deg, #f09a4a, #d95f4a);
+}
+
+.boost-meter-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: #6c6256;
+  font-size: 11px;
+  line-height: 1;
 }
 
 .support-tags {
@@ -431,6 +487,16 @@ h1 {
   margin-bottom: 16px;
 }
 
+.search-controls {
+  display: flex;
+  align-items: center;
+}
+
+.food-search-wrapper {
+  position: relative;
+  max-width: 640px;
+}
+
 .food-search-input {
   width: 100%;
   max-width: 520px;
@@ -481,49 +547,52 @@ h1 {
   font-size: 15px;
   padding: 8px 0;
 }
-.food-search-input {
-  width: 100%;
-  max-width: 520px;
-  padding: 16px 20px;
-  border: 2px solid #d7d0c2;
-  border-radius: 999px;
-  font-size: 18px;
+
+.food-candidate-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: min(100%, 560px);
+  padding: 14px;
+  border: 1.5px solid #e0d6c8;
+  border-radius: 14px;
   background: #fff;
-  outline: none;
-  margin-bottom: 16px;
+  box-shadow: 0 14px 32px rgba(47, 47, 47, 0.16);
 }
 
-.food-search-input:focus {
-  border-color: #7bbf6a;
-  box-shadow: 0 0 0 4px rgba(123, 191, 106, 0.18);
+.food-candidate-panel.open {
+  display: block;
 }
 
-.search-results {
+.food-category-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.search-result-button {
-  border: 2px solid #d7d0c2;
-  background: #fff;
+.food-category-tab {
+  border: 1.5px solid #d7d0c2;
   border-radius: 999px;
-  padding: 12px 18px;
-  font-size: 16px;
+  background: #fff9f0;
+  color: #4d5d48;
+  padding: 8px 13px;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-.search-result-button:hover {
-  background: #fffdf8;
-}
-
-.search-result-button.active {
+.food-category-tab:hover,
+.food-category-tab.active {
   background: #e8f4e3;
   border-color: #7bbf6a;
   color: #2f5f2a;
-  font-weight: bold;
 }
 
+<<<<<<< HEAD
 .no-result {
   color: #777;
   font-size: 15px;
@@ -598,3 +667,19 @@ h1 {
   color: #777;
   font-size: 14px;
 }
+=======
+@media (max-width: 600px) {
+  .search-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .food-search-input {
+    max-width: none;
+  }
+
+  .food-candidate-panel {
+    width: 100%;
+  }
+}
+>>>>>>> 0ebe672bcb09a91679927fca31918698b9454433

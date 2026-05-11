@@ -13,38 +13,32 @@ with open("foods.json", "r", encoding="utf-8") as f:
 def get_food(name):
     if not name:
         return None
+
     name = name.strip()
     return next((f for f in foods if f["food"] == name), None)
 
 
 # =========================
-# 内部：ペアチェック（片方向）
+# ペア検索（片方向）
 # =========================
-def check_pair(base_food, target_food):
-    food = get_food(base_food)
-    if not food:
+def find_pair(base_food, target_food):
+    if not base_food:
         return None
 
-    # ◎ good
-    for pair in food.get("good_pairs", []):
+    # good
+    for pair in base_food.get("good_pairs", []):
         if pair.get("food") == target_food:
             return {
                 "type": "good",
-                "result": "◎",
-                "reason": pair.get("effect", ""),
-                "message": f"{base_food} × {target_food}は相性が良い組み合わせです",
-                "boost": pair.get("boost", 1.0)
+                "data": pair
             }
 
-    # × bad
-    for pair in food.get("bad_pairs", []):
+    # bad
+    for pair in base_food.get("bad_pairs", []):
         if pair.get("food") == target_food:
             return {
                 "type": "bad",
-                "result": "×",
-                "reason": pair.get("effect", ""),
-                "message": "一緒に摂るタイミングをずらすと改善できます",
-                "boost": 0.8
+                "data": pair
             }
 
     return None
@@ -54,63 +48,80 @@ def check_pair(base_food, target_food):
 # 食べ合わせ取得（双方向対応）
 # =========================
 def get_pair(food1, food2):
+    f1 = get_food(food1)
+    f2 = get_food(food2)
 
-    # ① 正方向
-    result = check_pair(food1, food2)
+    if not f1 or not f2:
+        return None
+
+    # ① food1 → food2
+    result = find_pair(f1, food2)
+
+    # ② なければ food2 → food1
+    if not result:
+        result = find_pair(f2, food1)
+
+    # ③ 判定
     if result:
-        return result
+        if result["type"] == "good":
+            return {
+                "result": "◎",
+                "reason": result["data"].get("effect", ""),
+                "improvement": f"{food1} × {food2}は相性が良い組み合わせです",
+                "dressing": "なし",
+                "boost": result["data"].get("boost", 1.2)
+            }
 
-    # ② 逆方向（重要）
-    result = check_pair(food2, food1)
-    if result:
-        return result
+        elif result["type"] == "bad":
+            return {
+                "result": "×",
+                "reason": result["data"].get("effect", ""),
+                "improvement": "一緒に摂取を避けるか、時間をずらしましょう",
+                "dressing": "なし",
+                "boost": 0.8
+            }
 
-    # ③ 未登録
+    # ④ 未登録
     return {
-        "type": "normal",
         "result": "△",
         "reason": "この組み合わせのデータはまだありません",
-        "message": "今後データ追加予定です",
+        "improvement": "今後データ追加予定です",
+        "dressing": "なし",
         "boost": 1.0
     }
 
 
 # =========================
-# スコア計算（強化版）
+# スコア計算
 # =========================
 def calc_score(food1, food2):
     base = 100
 
     pair = get_pair(food1, food2)
 
+    if not pair:
+        return {
+            "base": base,
+            "final": base,
+            "boost": 1.0
+        }
+
     boost = pair.get("boost", 1.0)
-
-    # スコア計算
     final = int(base * boost)
-
-    # ランク付け（UIで使える）
-    if final >= 120:
-        rank = "S"
-    elif final >= 110:
-        rank = "A"
-    elif final >= 95:
-        rank = "B"
-    else:
-        rank = "C"
 
     return {
         "base": base,
         "final": final,
-        "boost": boost,
-        "rank": rank
+        "boost": boost
     }
 
 
 # =========================
-# おすすめ情報
+# おすすめ取得
 # =========================
 def get_recommend(name):
     food = get_food(name)
+
     if not food:
         return None
 
