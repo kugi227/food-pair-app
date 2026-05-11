@@ -1,502 +1,34 @@
-* {
-  box-sizing: border-box;
-}
-
+/* --- 基本レイアウト --- */
 body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #fdfaf5;
+  color: #333;
   margin: 0;
-  font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
-  background: #fdf8ef;
-  color: #2f2f2f;
+  padding: 20px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 24px 32px;
-  border-bottom: 1px solid #e1d7c7;
-  background: linear-gradient(135deg, #fffaf0, #f7f0dd);
-}
-
-.header-left {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.logo-box {
-  width: 70px;
-  height: 70px;
-  border: 1px solid #b9b0a0;
-  background: #ffffff;
-  position: relative;
-}
-
-.logo-box::before,
-.logo-box::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  background: #b9b0a0;
-  top: 50%;
-  left: 0;
-}
-
-.logo-box::before {
-  transform: rotate(45deg);
-}
-
-.logo-box::after {
-  transform: rotate(-45deg);
-}
-
-h1 {
-  margin: 0;
-  font-size: 38px;
-  color: #243224;
-}
-
-.subtitle {
-  margin: 8px 0 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.header-right {
-  display: flex;
-  gap: 24px;
-}
-
-.header-icon-item {
-  text-align: center;
-  font-size: 13px;
-  color: #444;
-}
-
-.header-icon {
-  width: 42px;
-  height: 42px;
-  border: 1.5px solid #7b8a72;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  margin: 0 auto 6px;
-  background: #fff;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.section {
-  margin-bottom: 24px;
-}
-
-.section h2 {
-  margin: 0 0 14px;
-  font-size: 22px;
-  color: #2f3b2f;
-}
-
-.food-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.food-button {
-  min-width: 140px;
-  padding: 12px 22px;
-  border: 2px solid #d7d0c2;
-  background: #fff;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.2s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-}
-
-.food-button:hover {
-  transform: translateY(-2px);
-  background: #fffdf8;
-}
-
-.food-button.active {
-  background: #e8f4e3;
-  border-color: #7bbf6a;
-  color: #2f5f2a;
-  font-weight: bold;
-}
-
-.rating-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-
-.rating-card {
-  border: 2px solid #ddd4c5;
-  border-radius: 18px;
-  background: #fff;
-  min-height: 130px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.rating-card:hover {
-  transform: translateY(-2px);
-}
-
-.rating-card.active {
-  border-width: 2px;
-}
-
-.rating-card.active[data-rating="excellent"] {
-  background: #eaf7e4;
-  border-color: #74b65f;
-}
-
-.rating-card.active[data-rating="good"] {
-  background: #fff6dc;
-  border-color: #e0b84f;
-}
-
-.rating-card.active[data-rating="improve"] {
-  background: #fde9df;
-  border-color: #e08d64;
-}
-
-.rating-icon {
-  font-size: 42px;
-  font-weight: bold;
-}
-
-.selected-food {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 0;
-  color: #4d7b3b;
-}
-
-.result-wrapper {
-  border: 1.5px solid #e2d8c9;
-  border-radius: 24px;
-  padding: 18px;
-  background: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-}
-
-.result-top {
-  display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 22px;
-  margin-bottom: 16px;
-}
-
-.result-main {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 18px;
-  border: 1.5px solid #ece3d4;
-  border-radius: 20px;
-  padding: 18px;
-  background: #fffdf9;
-}
-
-.result-main-left-icon {
-  width: 110px;
-  height: 110px;
-  border: 1.5px solid #d8cfbf;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  font-size: 54px;
-  font-weight: bold;
-  background: #f8f4ea;
-}
-
-.result-main-left-icon.excellent {
-  color: #4d9c38;
-  background: #eaf7e4;
-}
-
-.result-main-left-icon.good {
-  color: #b38710;
-  background: #fff6dc;
-}
-
-.result-main-left-icon.improve {
-  color: #c56b43;
-  background: #fde9df;
-}
-
-.result-main-content h3 {
-  margin: 0 0 8px;
-  font-size: 22px;
-}
-
-.small-label {
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: #666;
-}
-
-.pair-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 12px;
-}
-
-.pair-title {
-  font-size: 30px;
-  font-weight: bold;
-  margin: 0;
-  color: #2e2e2e;
-}
-
-.score-box {
-  min-width: 180px;
-  border: 1.5px solid #e0d6c8;
-  border-radius: 16px;
-  padding: 12px;
-  text-align: center;
-  background: #fff;
-}
-
-.score-label {
-  margin: 0 0 6px;
-  font-size: 14px;
-}
-
-.score-number {
-  margin: 0;
-  font-size: 30px;
-  font-weight: bold;
-  color: #2f5f2a;
-}
-
-.boost-box {
-  border: 1.5px solid #e0d6c8;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: linear-gradient(135deg, #fff5d8, #fff0c1);
-  padding: 16px;
-}
-
-.boost-rate {
-  margin: 0;
-  font-size: 30px;
-  font-weight: bold;
-  color: #a86f00;
-}
-
-.boost-text {
-  margin: 8px 0 0;
-  font-size: 18px;
-}
-
-.boost-meter {
-  width: 100%;
-  max-width: 170px;
-  margin-top: 14px;
-}
-
-.boost-meter-track {
-  position: relative;
-  height: 14px;
-  border: 1px solid #d8cfbf;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #fff4ee 0%, #fffdf8 50%, #f2faed 100%);
-  overflow: hidden;
-}
-
-.boost-meter-center {
-  position: absolute;
-  top: -3px;
-  bottom: -3px;
-  left: 50%;
-  width: 2px;
-  background: #7b8a72;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-
-.boost-meter-bar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  transition: width 0.8s ease;
-}
-
-.boost-meter-bar-positive {
-  left: 50%;
-  background: linear-gradient(90deg, #76b85f, #f1c84b);
-}
-
-.boost-meter-bar-negative {
-  right: 50%;
-  background: linear-gradient(90deg, #f09a4a, #d95f4a);
-}
-
-.boost-meter-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
-  color: #6c6256;
-  font-size: 11px;
-  line-height: 1;
-}
-
-.support-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.tag {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid #d7cdbf;
-  border-radius: 999px;
-  background: #fff8ea;
-  font-size: 15px;
-  color: #5b5145;
-}
-
-.info-row {
-  display: grid;
-  grid-template-columns: 95px 1fr;
-  gap: 18px;
-  margin-bottom: 12px;
-}
-
-.info-icon {
-  border: 1.5px solid #e0d6c8;
-  border-radius: 16px;
-  background: #fff9f0;
-  min-height: 90px;
-  display: grid;
-  place-items: center;
-  font-size: 36px;
-}
-
-.info-content {
-  border: 1.5px solid #e0d6c8;
-  border-radius: 16px;
-  background: #fff;
-  padding: 14px 18px;
-}
-
-.info-content h4 {
-  margin: 0 0 10px;
-  font-size: 18px;
-  color: #314431;
-}
-
-.info-content p,
-.info-content li {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.info-content ul {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.notice-box {
-  margin-top: 20px;
-  border: 1.5px solid #e0d6c8;
-  border-radius: 18px;
-  padding: 18px;
-  display: grid;
-  grid-template-columns: 50px 1fr;
-  gap: 16px;
-  background: #fff;
-}
-
-.notice-icon {
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid #7b8a72;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-weight: bold;
-  font-size: 22px;
-  color: #4d5d48;
-}
-
-.notice-box p {
-  margin: 0 0 6px;
-  font-size: 14px;
-  line-height: 1.7;
-  color: #555;
-}
-
-@media (max-width: 900px) {
-  .rating-cards {
-    grid-template-columns: 1fr;
-  }
-
-  .result-top {
-    grid-template-columns: 1fr;
-  }
-
-  .pair-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .result-main {
-    grid-template-columns: 1fr;
-  }
-
-  .info-row {
-    grid-template-columns: 1fr;
-  }
-
-  .header {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .header-right {
-    justify-content: flex-start;
-  }
-}
+/* --- 検索エリア全体 --- */
 .search-area {
-  margin-bottom: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
 }
 
 .search-controls {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .food-search-wrapper {
   position: relative;
+  width: 100%;
   max-width: 640px;
 }
 
+/* --- 入力欄 --- */
 .food-search-input {
   width: 100%;
   max-width: 520px;
@@ -507,6 +39,7 @@ h1 {
   background: #fff;
   outline: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 .food-search-input:focus {
@@ -514,40 +47,25 @@ h1 {
   box-shadow: 0 0 0 4px rgba(123, 191, 106, 0.18);
 }
 
-.search-results {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.search-result-button {
-  border: 2px solid #d7d0c2;
-  background: #fff;
+/* --- OKボタン --- */
+.search-ok-button {
+  padding: 14px 28px;
+  border: none;
   border-radius: 999px;
-  padding: 12px 18px;
+  background: #7bbf6a;
+  color: white;
   font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.search-result-button:hover {
-  transform: translateY(-2px);
-  background: #fffdf8;
-}
-
-.search-result-button.active {
-  background: #e8f4e3;
-  border-color: #7bbf6a;
-  color: #2f5f2a;
   font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-left: 10px;
 }
 
-.no-result {
-  color: #777;
-  font-size: 15px;
-  padding: 8px 0;
+.search-ok-button:hover {
+  background: #65a956;
 }
 
+/* --- 候補パネル（ドロップダウン） --- */
 .food-candidate-panel {
   display: none;
   position: absolute;
@@ -555,7 +73,7 @@ h1 {
   left: 0;
   z-index: 20;
   width: min(100%, 560px);
-  padding: 14px;
+  padding: 18px;
   border: 1.5px solid #e0d6c8;
   border-radius: 14px;
   background: #fff;
@@ -566,11 +84,12 @@ h1 {
   display: block;
 }
 
+/* --- カテゴリタブ --- */
 .food-category-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .food-category-tab {
@@ -592,68 +111,29 @@ h1 {
   color: #2f5f2a;
 }
 
-<<<<<<< HEAD
-.no-result {
-  color: #777;
-  font-size: 15px;
-}
-
-.search-area {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.food-search-input {
-  width: 100%;
-  max-width: 420px;
-  padding: 16px 20px;
-  border: 2px solid #d7d0c2;
-  border-radius: 999px;
-  font-size: 18px;
-  background: #fff;
-  outline: none;
-}
-
-.food-search-input:focus {
-  border-color: #7bbf6a;
-  box-shadow: 0 0 0 4px rgba(123, 191, 106, 0.18);
-}
-
-.search-ok-button {
-  padding: 14px 28px;
-  border: none;
-  border-radius: 999px;
-  background: #7bbf6a;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.search-ok-button:hover {
-  background: #65a956;
-}
-
+/* --- 検索結果のボタン --- */
 .search-results {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .search-result-button {
   border: 2px solid #d7d0c2;
   background: #fff;
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 10px 18px;
   font-size: 15px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .search-result-button:hover {
+  transform: translateY(-2px);
   background: #fffdf8;
+  border-color: #7bbf6a;
 }
 
 .search-result-button.active {
@@ -663,23 +143,66 @@ h1 {
   font-weight: bold;
 }
 
-.search-message {
+/* --- メッセージ・通知 --- */
+.no-result, .search-message {
   color: #777;
   font-size: 14px;
+  padding: 8px 0;
 }
-=======
+
+/* --- 評価カードと結果表示 --- */
+.rating-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.rating-card {
+  flex: 1;
+  padding: 20px;
+  background: #fff;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.rating-card.active {
+  border-color: #7bbf6a;
+  background: #f0f9ed;
+}
+
+/* --- レスポンシブ対応（スマホ） --- */
 @media (max-width: 600px) {
-  .search-controls {
-    align-items: stretch;
+  .search-area {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-controls {
+    flex-direction: column;
+    gap: 10px;
   }
 
   .food-search-input {
     max-width: none;
   }
 
+  .search-ok-button {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .food-candidate-panel {
     width: 100%;
+    position: static; /* スマホでは押し出す形で表示 */
+    box-shadow: none;
+    border-width: 1px 0;
+    border-radius: 0;
+  }
+
+  .rating-container {
+    flex-direction: column;
   }
 }
->>>>>>> 0ebe672bcb09a91679927fca31918698b9454433
