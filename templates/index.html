@@ -1,161 +1,19 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Pair Navi</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-box"></div>
-      <div>
-        <h1>Food Pair Navi</h1>
-        <p class="subtitle">食材の組み合わせを最適化して、毎日の食事をもっと健康に。</p>
-      </div>
-    </div>
-
-    <div class="header-right">
-      <div class="header-icon-item">
-        <div class="header-icon">?</div>
-        <span>使い方</span>
-      </div>
-      <div class="header-icon-item">
-        <div class="header-icon">♡</div>
-        <span>お気に入り</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- 食材選択 -->
-    <section class="section">
+<section class="section">
   <h2>使いたい食材を検索してください</h2>
 
-  <input
-    type="text"
-    id="foodSearch"
-    class="food-search-input"
-    placeholder="例：納豆、トマト、卵"
-    autocomplete="off"
-  >
+  <div class="search-area">
+    <input
+      type="text"
+      id="foodSearch"
+      class="food-search-input"
+      placeholder="例：納豆、トマト、卵"
+      autocomplete="off"
+    >
+
+    <button id="searchOkButton" class="search-ok-button">
+      OK
+    </button>
+  </div>
 
   <div id="searchResults" class="search-results"></div>
 </section>
-
-    <!-- 相性評価 -->
-    <section class="section">
-      <h2>相性評価</h2>
-      <div class="rating-cards">
-        <div class="rating-card active" id="ratingExcellent" data-rating="excellent">
-          <div class="rating-icon">◎</div>
-          <p>相性がとても良い</p>
-        </div>
-
-        <div class="rating-card" id="ratingGood" data-rating="good">
-          <div class="rating-icon">○</div>
-          <p>良い</p>
-        </div>
-
-        <div class="rating-card" id="ratingImprove" data-rating="improve">
-          <div class="rating-icon">△</div>
-          <p>改善余地あり</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 選択食材 -->
-    <section class="section">
-      <p class="selected-food" id="selectedFood">選んだ食材：🫘 納豆</p>
-    </section>
-
-    <!-- 結果 -->
-    <section class="result-wrapper">
-      <!-- 相乗効果 -->
-      <div class="result-top">
-        <div class="result-main">
-          <div class="result-main-left-icon" id="resultStatusIcon">◎</div>
-
-          <div class="result-main-content">
-            <h3>相乗効果</h3>
-            <p class="small-label">相性のよい組み合わせ</p>
-
-            <div class="pair-row">
-              <div>
-                <p class="pair-title" id="pairTitle">🫘 納豆 × ⚪ 胡麻</p>
-              </div>
-
-              <div class="score-box">
-                <p class="score-label">栄養スコア</p>
-                <p class="score-number" id="nutritionScore">120</p>
-              </div>
-            </div>
-
-            <div class="support-tags" id="boostTags">
-              <span class="tag">抗酸化サポート</span>
-              <span class="tag">たんぱく質活用サポート</span>
-              <span class="tag">エイジングケアサポート</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="boost-box">
-          <p class="boost-rate" id="boostRate">+20%</p>
-          <p class="boost-text">ブースト</p>
-        </div>
-      </div>
-
-      <!-- おすすめの食べ方 -->
-      <div class="info-row">
-        <div class="info-icon">🍴</div>
-        <div class="info-content">
-          <h4>おすすめの食べ方</h4>
-          <p id="suggestion">納豆にすりごまを加える</p>
-        </div>
-      </div>
-
-      <!-- 理由 -->
-      <div class="info-row">
-        <div class="info-icon">❓</div>
-        <div class="info-content">
-          <h4>理由</h4>
-          <p id="reason">納豆のたんぱく質と胡麻のビタミンEが相乗的に働き、抗酸化作用が高まります。</p>
-        </div>
-      </div>
-
-      <!-- 改善提案 -->
-      <div class="info-row">
-        <div class="info-icon">💡</div>
-        <div class="info-content">
-          <h4>改善提案</h4>
-          <p id="improvement">納豆にすりごまを加えることで、栄養価が向上し、風味も豊かになります。</p>
-        </div>
-      </div>
-
-      <!-- おすすめドレッシング -->
-      <div class="info-row">
-        <div class="info-icon">💧</div>
-        <div class="info-content">
-          <h4>おすすめドレッシング</h4>
-          <ul id="dressingList">
-            <li>ごまドレッシング</li>
-            <li>和風しょうゆドレッシング</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- 注意書き -->
-    <section class="notice-box">
-      <div class="notice-icon">i</div>
-      <div>
-        <p>本サービスは一般的な情報提供を目的としています。特定の疾患の治療・予防を目的とするものではありません。</p>
-        <p>食事や健康に関するご相談は、医師・管理栄養士などの専門家にご相談ください。</p>
-      </div>
-    </section>
-  </main>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
