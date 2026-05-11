@@ -41,20 +41,37 @@ async function loadFoods() {
           boostRate: item.good_pairs[0] ? `+${Math.round((item.good_pairs[0].boost - 1) * 100)}%` : "+0%",
           boosts: [item.good_pairs[0]?.effect || "基本の栄養"],
           suggestion: `${item.good_pairs[0]?.food || "旬の野菜"}をプラス`,
-          reason: item.good_pairs[0]?.effect || "単体でも優秀な食材です。",
+          reason: `${item.good_pairs[0].effect}。${item.dressing_logic || ""}`,
           improvement: `おすすめ調理法：${item.best_methods?.join('、') || "加熱調理"}`,
-          dressings: ["おすすめ調味料を準備中"]
+          dressings: item.dressings ? item.dressings.map((d, i) => i === 0 ? `★${d} (栄養効率UP)` : d) : ["お好みの調味料"],
         },
         good: {
           icon: "○",
-          pairTitle: `${item.emoji}${item.food} × 卵や野菜`,
-          nutritionScore: "110",
-          boostRate: "+10%",
-          boosts: ["バランスサポート"],
-          suggestion: "他の食材と組み合わせて彩りアップ",
-          reason: "色々な食材を組み合わせることで、栄養バランスが整います。",
-          improvement: "旬の野菜を足してみましょう。",
-          dressings: ["お好みのドレッシング"]
+          // better_pairsがあればその最初のデータを使う。なければ予備のテキストを出す。
+          pairTitle: (item.better_pairs && item.better_pairs.length > 0)
+            ? `${item.emoji}${item.food} × ${item.better_pairs[0].food}`
+            : `${item.emoji}${item.food} × 卵や野菜`,
+          
+          nutritionScore: (item.better_pairs && item.better_pairs.length > 0) 
+            ? Math.round(100 * item.better_pairs[0].boost) 
+            : "110",
+          
+          boostRate: (item.better_pairs && item.better_pairs.length > 0) 
+            ? `+${Math.round((item.better_pairs[0].boost - 1) * 100)}%` 
+            : "+10%",
+          
+          boosts: (item.better_pairs && item.better_pairs.length > 0) 
+            ? [item.better_pairs[0].effect] 
+            : ["バランスサポート"],
+          
+          suggestion: (item.better_pairs && item.better_pairs.length > 0) 
+            ? `${item.better_pairs[0].food}をプラス` 
+            : "他の食材と組み合わせて彩りアップ",
+          
+          reason: `${(item.better_pairs && item.better_pairs.length > 0) ? item.better_pairs[0].effect : "栄養バランスが整います"}。${item.dressing_logic || ""}`,
+          
+          improvement: "彩りよく盛り付けてみましょう。",
+          dressings: item.dressings ? item.dressings.map((d, i) => i === 0 ? `★${d} (栄養効率UP)` : d) : ["お好みのドレッシング"],
         },
         improve: {
           icon: (item.bad_pairs && item.bad_pairs.length > 0) ? "⚠" : "△",
