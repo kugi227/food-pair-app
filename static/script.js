@@ -235,7 +235,10 @@ function updateDisplay() {
 
   // テキスト要素の更新
   document.getElementById("selectedFood").textContent = `選んだ食材：${food.emoji} ${food.name}`;
-  document.getElementById("resultStatusIcon").textContent = data.icon || "";
+  const resultStatusIcon = document.getElementById("resultStatusIcon");
+  resultStatusIcon.textContent = data.icon || "";
+  resultStatusIcon.classList.remove("excellent", "good", "improve");
+  resultStatusIcon.classList.add(selectedRating);
   document.getElementById("pairTitle").textContent = data.pairTitle || "";
   document.getElementById("nutritionScore").textContent = data.nutritionScore || "-";
   document.getElementById("boostRate").textContent = data.boostRate || "-";
@@ -268,7 +271,9 @@ function updateDisplay() {
 
 function clearResultDisplay() {
   document.getElementById("selectedFood").textContent = "選んだ食材：未選択";
-  document.getElementById("resultStatusIcon").textContent = "";
+  const resultStatusIcon = document.getElementById("resultStatusIcon");
+  resultStatusIcon.textContent = "";
+  resultStatusIcon.classList.remove("excellent", "good", "improve");
   document.getElementById("pairTitle").textContent = "食材を選んでください";
   document.getElementById("nutritionScore").textContent = "-";
   document.getElementById("boostRate").textContent = "-";
