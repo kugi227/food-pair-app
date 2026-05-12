@@ -493,10 +493,22 @@ if (foodSearch) {
 }
 
 if (clearSelectedFood) {
-  clearSelectedFood.onclick = () => {
+  clearSelectedFood.onclick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // 食材選択を初期状態に戻す
     resetFoodSelectionPanel();
-    openFoodCandidatePanel();
-    foodSearch.focus();
+
+    // 候補パネルは開かずに閉じる
+    closeFoodCandidatePanel();
+
+    // 検索欄も初期状態に戻す
+    if (foodSearch) {
+      foodSearch.value = "";
+      foodSearch.placeholder = "クリックして食材を選ぶ";
+      foodSearch.blur();
+    }
   };
 }
 
