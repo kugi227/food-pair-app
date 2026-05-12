@@ -30,7 +30,7 @@
 
   <main class="container">
     <section class="section search-section">
-      <h2>使いたい食材を検索してください</h2>
+      <h2>使いたい食材を選んでください</h2>
       <div class="food-search-wrapper" id="foodSearchWrapper">
         <div class="search-controls">
           <input
@@ -42,9 +42,14 @@
           >
           <button type="button" id="foodSearchOk" class="search-ok-button">OK</button>
         </div>
+        <div class="selected-food-chip" id="selectedFoodChip" hidden>
+          <span id="selectedFoodChipText"></span>
+          <button type="button" id="clearSelectedFood" class="selected-food-clear" aria-label="選択中の食材を消す">×</button>
+        </div>
 
         <div id="foodCandidatePanel" class="food-candidate-panel" aria-hidden="true">
           <div id="foodCategoryTabs" class="food-category-tabs"></div>
+          <div id="searchSubOptions" class="search-sub-options"></div>
           <div id="searchResults" class="search-results"></div>
         </div>
       </div>
