@@ -7,26 +7,14 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-box"></div>
-      <div>
-        <h1>Food Pair Navi</h1>
-        <p class="subtitle">食材の組み合わせを最適化して、毎日の食事をもっと健康に。</p>
-      </div>
+<header class="header">
+  <div class="header-left">
+    <div>
+      <h1>Food Pair Navi</h1>
+      <p class="subtitle">食材の組み合わせを最適化して、毎日の食事をもっと健康に。</p>
     </div>
-
-    <div class="header-right" aria-label="ヘッダー操作">
-      <div class="header-icon-item">
-        <div class="header-icon">?</div>
-        <span>使い方</span>
-      </div>
-      <div class="header-icon-item">
-        <div class="header-icon">♡</div>
-        <span>お気に入り</span>
-      </div>
-    </div>
-  </header>
+  </div>
+</header>
 
   <main class="container">
     <section class="section search-section">
@@ -76,7 +64,7 @@
     </section>
 
     <section class="section selected-section">
-      <p class="selected-food" id="selectedFood">選んだ食材：🫘 納豆</p>
+      <p class="selected-food" id="selectedFood">選んだ食材：未選択</p>
     </section>
 
     <section class="result-wrapper">
@@ -90,7 +78,7 @@
 
             <div class="pair-row">
               <div>
-                <p class="pair-title" id="pairTitle">🫘 納豆 × ⚪ 胡麻</p>
+                <p class="pair-title" id="pairTitle">食材を選んでください</p>
               </div>
 
               <div class="score-box">

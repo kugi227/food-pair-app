@@ -1,6 +1,6 @@
 let foodCatalog = {};
 let foodData = {};
-let selectedFood = "natto"; 
+let selectedFood = ""; 
 let selectedRating = "excellent";
 
 // カテゴリーの初期設定
