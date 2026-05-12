@@ -16,7 +16,8 @@
     "better_pairs": [{"food": "卵", "effect": "ビタミンとタンパク質をバランス良く補給", "boost": 1.1}],
     "dressings": ["オリーブオイル", "バルサミコ酢"],
     "dressing_logic": "リコピンは脂溶性。油と摂ると吸収率が数倍になります。",
-    "bad_pairs": [{"food": "きゅうり", "effect": "ビタミンCが分解されやすい"}]
+    "bad_pairs": [{"food": "きゅうり", "effect": "ビタミンCが分解されやすい"}],
+    "chart_data": { "栄養": 70, "脂質": 5, "糖質": 20, "抗酸化": 95, "酵素": 40 }
   },
   {
     "id": "natto",
@@ -35,7 +36,8 @@
     "better_pairs": [{"food": "キムチ", "effect": "ダブルの発酵食品で腸内環境を整える", "boost": 1.1}],
     "dressings": ["ごま油と塩", "酢胡椒"],
     "dressing_logic": "ビタミンKが脂溶性。油と一緒に摂ることで吸収がスムーズになります。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 90, "脂質": 45, "糖質": 25, "抗酸化": 65, "酵素": 100 }
   },
   {
     "id": "beef",
@@ -54,7 +56,8 @@
     "better_pairs": [{"food": "クレソン", "effect": "鉄分の吸収を助け、脂っぽさを中和", "boost": 1.1}],
     "dressings": ["レモン汁", "おろしポン酢"],
     "dressing_logic": "非ヘム鉄はビタミンCと一緒に摂ることで、体に吸収されやすい形に変化します。",
-    "bad_pairs": [{"food": "コーヒー", "effect": "タンニンが鉄吸収を阻害"}]
+    "bad_pairs": [{"food": "コーヒー", "effect": "タンニンが鉄吸収を阻害"}],
+    "chart_data": { "栄養": 95, "脂質": 70, "糖質": 0, "抗酸化": 40, "酵素": 30 }
   },
   {
     "id": "onion",
@@ -73,7 +76,8 @@
     "better_pairs": [{"food": "納豆", "effect": "血栓予防の相乗効果", "boost": 1.2}],
     "dressings": ["お酢とオリーブオイル", "黒酢"],
     "dressing_logic": "アリシンを油でコーティングして揮発を防ぎ、お酢で成分を安定させます。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 60, "脂質": 2, "糖質": 40, "抗酸化": 70, "酵素": 65 }
   },
   {
     "id": "salmon",
@@ -92,7 +96,8 @@
     "better_pairs": [{"food": "レモン", "effect": "アスタキサンチンの維持", "boost": 1.1}],
     "dressings": ["オリーブオイル", "タルタルソース"],
     "dressing_logic": "脂溶性ビタミンDの吸収を油が助けます。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 55, "糖質": 0, "抗酸化": 90, "酵素": 30 }
   },
   {
     "id": "broccoli",
@@ -110,8 +115,9 @@
     "good_pairs": [{"food": "ゆで卵", "effect": "タンパク質とビタミンの完全補給", "boost": 1.2}],
     "better_pairs": [{"food": "すりごま", "effect": "ビタミンEがCの働きをサポート", "boost": 1.1}],
     "dressings": ["オリーブオイル", "マヨネーズ"],
-    "dressing_logic": "β-カロテンの吸収を助けるため、油分を含むドレッシングが適しています。",
-    "bad_pairs": []
+    "dressing_logic": "β-カロテン의吸収を助けるため、油分を含むドレッシングが適しています。",
+    "bad_pairs": [],
+    "chart_data": { "栄養": 90, "脂質": 5, "糖質": 15, "抗酸化": 95, "酵素": 55 }
   },
   {
     "id": "pork",
@@ -130,7 +136,8 @@
     "better_pairs": [{"food": "ニラ", "effect": "アリシン効果で代謝アップ", "boost": 1.3}],
     "dressings": ["ポン酢", "ごまダレ"],
     "dressing_logic": "茹ですぎるとB1が溶け出すため、サッと火を通すのが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 65, "糖質": 5, "抗酸化": 20, "酵素": 35 }
   },
   {
     "id": "carrot",
@@ -149,7 +156,8 @@
     "better_pairs": [{"food": "鶏肉", "effect": "タンパク質と一緒に粘膜を強化", "boost": 1.1}],
     "dressings": ["フレンチドレッシング", "マヨネーズ"],
     "dressing_logic": "脂溶性ビタミンがメインなので、オイルベースの味付けが必須です。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 5, "糖質": 45, "抗酸化": 95, "酵素": 40 }
   },
   {
     "id": "chicken",
@@ -168,7 +176,8 @@
     "better_pairs": [{"food": "レモン", "effect": "クエン酸とペプチドで疲労回復ダブル効果", "boost": 1.3}],
     "dressings": ["オリーブオイルと塩", "梅ソース"],
     "dressing_logic": "高タンパク低脂質を活かすため、良質な油を少し足すのがバランス良し。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 40, "糖質": 0, "抗酸化": 30, "酵素": 30 }
   },
   {
     "id": "avocado",
@@ -187,7 +196,8 @@
     "better_pairs": [{"food": "納豆", "effect": "食物繊維と発酵菌の相乗効果", "boost": 1.2}],
     "dressings": ["わさび醤油", "オリーブオイル"],
     "dressing_logic": "自身の脂質が多いため、それを活かしたシンプルな味付けが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 95, "糖質": 10, "抗酸化": 70, "酵素": 60 }
   },
   {
     "id": "mackerel",
@@ -206,7 +216,8 @@
     "better_pairs": [{"food": "トマト", "effect": "リコピンが魚の脂の酸化をガード", "boost": 1.3}],
     "dressings": ["生姜ポン酢", "梅ドレッシング"],
     "dressing_logic": "魚の脂を酸化から守るため、抗酸化成分を合わせるのが鉄則。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 90, "脂質": 85, "糖質": 0, "抗酸化": 60, "酵素": 30 }
   },
   {
     "id": "tofu",
@@ -225,7 +236,8 @@
     "better_pairs": [{"food": "納豆", "effect": "大豆栄養の完璧な補完", "boost": 1.1}],
     "dressings": ["だし醤油", "オリーブオイルと塩"],
     "dressing_logic": "脂溶性ビタミンを足すために少量の油をプラスするのが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 45, "糖質": 15, "抗酸化": 40, "酵素": 35 }
   },
   {
     "id": "cheese",
@@ -244,7 +256,8 @@
     "better_pairs": [{"food": "ナッツ", "effect": "良質な脂質とビタミンの補給", "boost": 1.1}],
     "dressings": ["黒胡椒", "ハチミツ"],
     "dressing_logic": "脂質が多いため、食物繊維と一緒に摂るのが理に適っています。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 90, "糖質": 5, "抗酸化": 10, "酵素": 20 }
   },
   {
     "id": "cabbage",
@@ -263,7 +276,8 @@
     "better_pairs": [{"food": "豚肉", "effect": "ビタミンCが肉の鉄分吸収をサポート", "boost": 1.1}],
     "dressings": ["マヨネーズ", "ごまドレッシング"],
     "dressing_logic": "脂溶性ビタミンKも含むため、油分のある味付けが正解。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 75, "脂質": 2, "糖質": 25, "抗酸化": 70, "酵素": 75 }
   },
   {
     "id": "shiitake",
@@ -282,7 +296,8 @@
     "better_pairs": [{"food": "鮭", "effect": "ビタミンDをダブルで補強", "boost": 1.2}],
     "dressings": ["だし醤油", "バター"],
     "dressing_logic": "ビタミンDは油に溶けるため、バターや油での調理が最強です。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 75, "脂質": 10, "糖質": 15, "抗酸化": 60, "酵素": 85 }
   },
   {
     "id": "enoki",
@@ -301,7 +316,8 @@
     "better_pairs": [{"food": "豆腐", "effect": "食物繊維とタンパク質で満腹感維持", "boost": 1.1}],
     "dressings": ["ポン酢", "梅"],
     "dressing_logic": "キノコの旨味を活かすシンプルな酸味がベスト。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 75, "脂質": 5, "糖質": 20, "抗酸化": 40, "酵素": 90 }
   },
   {
     "id": "mozuku",
@@ -320,7 +336,8 @@
     "better_pairs": [{"food": "きゅうり", "effect": "カリウムを足してむくみケア", "boost": 1.1}],
     "dressings": ["三杯酢", "黒酢"],
     "dressing_logic": "酸性がフコイダンを安定させ、効果を持続させます。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 80, "脂質": 2, "糖質": 10, "抗酸化": 60, "酵素": 70 }
   },
   {
     "id": "hijiki",
@@ -339,7 +356,8 @@
     "better_pairs": [{"food": "人参", "effect": "ビタミンAと鉄分で免疫力アップ", "boost": 1.1}],
     "dressings": ["甘酢", "ポン酢"],
     "dressing_logic": "吸収の悪いミネラルを酸で助けるのが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 95, "脂質": 5, "糖質": 15, "抗酸化": 50, "酵素": 30 }
   },
   {
     "id": "almond",
@@ -358,7 +376,8 @@
     "better_pairs": [{"food": "ヨーグルト", "effect": "良質な脂質とタンパク質", "boost": 1.1}],
     "dressings": [],
     "dressing_logic": "酸化しやすい脂質を含むため、味付けなしの密封保存が理想。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 95, "糖質": 15, "抗酸化": 85, "酵素": 30 }
   },
   {
     "id": "walnut",
@@ -377,7 +396,8 @@
     "better_pairs": [{"food": "チーズ", "effect": "タンパク質と良質な脂質の補給", "boost": 1.1}],
     "dressings": [],
     "dressing_logic": "加熱厳禁。ドレッシング代わりに砕いて使うのが最強。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 80, "脂質": 95, "糖質": 15, "抗酸化": 90, "酵素": 30 }
   },
   {
     "id": "orange",
@@ -396,7 +416,8 @@
     "better_pairs": [{"food": "牛肉", "effect": "鉄分の吸収を最大化", "boost": 1.3}],
     "dressings": [],
     "dressing_logic": "ビタミンCの流失を防ぐため、カットしたらすぐに食べる。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 60, "脂質": 2, "糖質": 85, "抗酸化": 90, "酵素": 60 }
   },
   {
     "id": "strawberry",
@@ -415,7 +436,8 @@
     "better_pairs": [{"food": "練乳", "effect": "乳脂質が微量の脂溶性栄養を助ける", "boost": 1.1}],
     "dressings": [],
     "dressing_logic": "酸化を防ぐため、包丁を使わずそのままかぶりつくのが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 65, "脂質": 2, "糖質": 75, "抗酸化": 95, "酵素": 70 }
   },
   {
     "id": "apple",
@@ -434,7 +456,8 @@
     "better_pairs": [{"food": "豚肉", "effect": "リンゴ酸が肉を柔らかくし消化を助ける", "boost": 1.1}],
     "dressings": [],
     "dressing_logic": "皮の成分を活かすため、よく洗って加熱せずに食べる。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 60, "脂質": 2, "糖質": 75, "抗酸化": 75, "酵素": 65 }
   },
   {
     "id": "kiwi",
@@ -449,11 +472,12 @@
       "reason": "タンパク質分解酵素が豊富なため、肉や魚の食後に食べることで、タンパク質の消化吸収率が激変します。",
       "action": "肉料理の後のデザートとして、半分に切って食べる。"
     },
-    "good_pairs": [{"food": "肉料理", "effect": "最強の消化サポート", "boost": 1.4}],
+    "good_pairs": [{"food": "肉料理", "effect": "最強의消化サポート", "boost": 1.4}],
     "better_pairs": [{"food": "ヨーグルト", "effect": "ビタミンCがカルシウム吸収を助ける", "boost": 1.2}],
     "dressings": [],
     "dressing_logic": "酵素は熱に弱いため、必ず「生のまま」で。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 70, "脂質": 2, "糖質": 80, "抗酸化": 85, "酵素": 95 }
   },
   {
     "id": "milk",
@@ -472,7 +496,8 @@
     "better_pairs": [{"food": "ココア", "effect": "ポリフェノールとのリラックス相乗効果", "boost": 1.1}],
     "dressings": [],
     "dressing_logic": "鉄分の吸収を阻害する場合があるため、貧血気味の時は肉と一緒に飲まない。",
-    "bad_pairs": [{"food": "牛肉", "effect": "タンニン/カゼインが鉄吸収を阻害"}]
+    "bad_pairs": [{"food": "牛肉", "effect": "タンニン/カゼインが鉄吸収を阻害"}],
+    "chart_data": { "栄養": 80, "脂質": 50, "糖質": 35, "抗酸化": 15, "酵素": 20 }
   },
   {
     "id": "soymilk",
@@ -491,7 +516,8 @@
     "better_pairs": [{"food": "きなこ", "effect": "大豆栄養の完全摂取", "boost": 1.2}],
     "dressings": [],
     "dressing_logic": "植物性タンパク質を活かすため、糖分を控えた「無調整」が理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 40, "糖質": 15, "抗酸化": 40, "酵素": 40 }
   },
   {
     "id": "bellpepper",
@@ -510,7 +536,8 @@
     "better_pairs": [{"food": "豚肉", "effect": "ビタミンCとB1で疲労回復", "boost": 1.2}],
     "dressings": ["醤油", "ごま油"],
     "dressing_logic": "ワタの苦味を油でコーティングすると食べやすくなります。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 75, "脂質": 5, "糖質": 20, "抗酸化": 85, "酵素": 40 }
   },
   {
     "id": "eggplant",
@@ -529,7 +556,8 @@
     "better_pairs": [{"food": "鶏肉", "effect": "ナスが油を吸って美味しくタンパク補給", "boost": 1.1}],
     "dressings": ["ポン酢", "味噌"],
     "dressing_logic": "油を吸いやすいため、酸化しにくい良質な油を使うのが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 65, "脂質": 45, "糖質": 30, "抗酸化": 75, "酵素": 35 }
   },
   {
     "id": "chocolate",
@@ -548,7 +576,8 @@
     "better_pairs": [{"food": "コーヒー", "effect": "カフェインとポリフェノールの集中力維持", "boost": 1.2}],
     "dressings": [],
     "dressing_logic": "ミルクよりビターの方が、カカオの純粋な栄養を取り込めます。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 50, "脂質": 85, "糖質": 45, "抗酸化": 95, "酵素": 10 }
   },
   {
     "id": "pudding",
@@ -567,7 +596,8 @@
     "better_pairs": [{"food": "生クリーム", "effect": "脂溶性ビタミンの吸収を助ける", "boost": 1.1}],
     "dressings": [],
     "dressing_logic": "原材料が「卵・乳・糖」だけのシンプルなものが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 70, "脂質": 65, "糖質": 75, "抗酸化": 10, "酵素": 20 }
   },
   {
     "id": "pineapple",
@@ -586,7 +616,8 @@
     "better_pairs": [{"food": "ヨーグルト", "effect": "乳酸菌との相乗効果で腸内環境改善", "boost": 1.2}],
     "dressings": [],
     "dressing_logic": "缶詰は加熱処理されているため、酵素を求めるなら「生」一択。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 60, "脂質": 2, "糖質": 85, "抗酸化": 40, "酵素": 95 }
   },
   {
     "id": "greentea",
@@ -605,7 +636,8 @@
     "better_pairs": [{"food": "梅干し", "effect": "クエン酸とのダブル殺菌", "boost": 1.2}],
     "dressings": [],
     "dressing_logic": "酸化を防ぐため、淹れたてをすぐに飲むのが理詰め。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 45, "脂質": 0, "糖質": 5, "抗酸化": 95, "酵素": 30 }
   },
   {
     "id": "coffee",
@@ -624,7 +656,8 @@
     "better_pairs": [{"food": "ナッツ", "effect": "ビタミンEが血管を保護", "boost": 1.2}],
     "dressings": [],
     "dressing_logic": "鉄吸収を妨げないよう、食事中ではなく食後30分あけて飲む。",
-    "bad_pairs": [{"food": "牛肉", "effect": "鉄分吸収を阻害"}]
+    "bad_pairs": [{"food": "牛肉", "effect": "鉄分吸収を阻害"}],
+    "chart_data": { "栄養": 40, "脂質": 2, "糖質": 5, "抗酸化": 90, "酵素": 20 }
   },
   {
     "id": "tuna",
@@ -643,7 +676,8 @@
     "better_pairs": [{"food": "山芋", "effect": "消化酵素がタンパク質吸収を助ける", "boost": 1.1}],
     "dressings": ["わさび醤油", "オリーブオイルと塩"],
     "dressing_logic": "良質な油が、マグロの脂溶性ビタミンの運び屋になります。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 90, "脂質": 15, "糖質": 0, "抗酸化": 55, "酵素": 30 }
   },
   {
     "id": "miso",
@@ -662,7 +696,8 @@
     "better_pairs": [{"food": "豆腐", "effect": "大豆の栄養をダブルで補給", "boost": 1.1}],
     "dressings": ["マヨネーズ", "オリーブオイル"],
     "dressing_logic": "発酵由来の栄養素を守るため、常に「非加熱」での活用が理詰めです。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 35, "糖質": 30, "抗酸化": 65, "酵素": 95 }
   },
   {
     "id": "konbu",
@@ -681,7 +716,8 @@
     "better_pairs": [{"food": "カツオ節", "effect": "旨味成分の相乗効果", "boost": 1.5}],
     "dressings": ["甘酢", "ポン酢"],
     "dressing_logic": "酸性の液体に浸すことでミネラル栄養素が抽出されやすくなります。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 90, "脂質": 2, "糖質": 15, "抗酸化": 60, "酵素": 35 }
   },
   {
     "id": "nori",
@@ -700,7 +736,8 @@
     "better_pairs": [{"food": "チーズ", "effect": "カルシウムと良質な脂質の補給", "boost": 1.1}],
     "dressings": ["醤油", "ごま油と塩"],
     "dressing_logic": "海苔に含まれる脂溶性成分（EPA）を油で保護しながら摂取するのがコツです。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 95, "脂質": 10, "糖質": 20, "抗酸化": 85, "酵素": 60 }
   },
   {
     "id": "sesame",
@@ -719,7 +756,8 @@
     "better_pairs": [{"food": "鶏肉", "effect": "良質な脂質とアミノ酸補給", "boost": 1.1}],
     "dressings": ["練りごま", "ごまドレッシング"],
     "dressing_logic": "ビタミンEは脂溶性。皮を壊して自身の油分を有効活用するのが鉄則です。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 85, "脂質": 90, "糖質": 15, "抗酸化": 85, "酵素": 30 }
   },
   {
     "id": "banana",
@@ -738,6 +776,7 @@
     "better_pairs": [{"food": "オートミール", "effect": "持続性の高いエネルギー源", "boost": 1.1}],
     "dressings": ["はちみつ", "シナモン"],
     "dressing_logic": "カリウムの排出を邪魔しないよう、低塩分な味付けが理に適っています。",
-    "bad_pairs": []
+    "bad_pairs": [],
+    "chart_data": { "栄養": 65, "脂質": 5, "糖質": 95, "抗酸化": 35, "酵素": 80 }
   }
 ]
