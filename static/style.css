@@ -386,6 +386,7 @@ h1 {
 }
 
 .score-box {
+  position: relative;
   min-width: 150px;
   padding: 12px 14px;
   border: 1.5px solid #e0d6c8;
@@ -398,6 +399,44 @@ h1 {
   margin: 0 0 6px;
   color: #70665a;
   font-size: 13px;
+}
+
+.score-label-row,
+.boost-label-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.score-label-row {
+  margin-bottom: 6px;
+}
+
+.score-label-row .score-label,
+.boost-label-row .boost-text {
+  margin: 0;
+}
+
+.help-popover {
+  display: none;
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 8px 9px;
+  border: 1px solid #e0d6c8;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #423d37;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .score-box:hover .help-popover,
+  .boost-box:hover .help-popover {
+    display: block;
+  }
 }
 
 .score-number {
@@ -425,6 +464,7 @@ h1 {
 }
 
 .boost-box {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;

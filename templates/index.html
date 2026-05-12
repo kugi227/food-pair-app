@@ -89,8 +89,13 @@
               </div>
 
               <div class="score-box">
-                <p class="score-label">栄養スコア</p>
+                <div class="score-label-row">
+                  <p class="score-label">栄養スコア</p>
+                </div>
                 <p class="score-number" id="nutritionScore">120</p>
+                <p class="help-popover score-help-popover">
+                  栄養スコアは、食材の栄養バランスを点数で表したものです。
+                </p>
               </div>
             </div>
 
@@ -104,7 +109,9 @@
 
         <div class="boost-box">
           <p class="boost-rate" id="boostRate">+20%</p>
-          <p class="boost-text">ブースト</p>
+          <div class="boost-label-row">
+            <p class="boost-text">ブースト</p>
+          </div>
           <div class="boost-meter" aria-label="ブーストメーター">
             <div class="boost-meter-track">
               <div class="boost-meter-center"></div>
@@ -117,6 +124,9 @@
               <span>+20%</span>
             </div>
           </div>
+          <p class="help-popover boost-help-popover">
+            ブーストは、食材の組み合わせによって栄養の良さが高まることを表しています。
+          </p>
         </div>
       </div>
 
