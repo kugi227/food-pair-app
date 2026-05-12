@@ -34,6 +34,12 @@ let activePurposeTag = "";
 let previewPanelStep = "";
 let previewFoodCategory = "";
 let previewPurposeTag = "";
+const foodNameAliases = {
+  "卵": "たまご",
+  "さば": "サバ",
+  "みかん": "オレンジ（フルーツ）",
+  "きのこ": "しいたけ（キノコ類）",
+};
 
 // 1. データの読み込みと変換（JSONの全食材をfoodDataに登録）
 async function loadFoods() {
@@ -129,10 +135,19 @@ function findMatchingFoods(query) {
 }
 
 function findFoodIdByName(foodName) {
+  const normalizedFoodName = foodNameAliases[foodName] || foodName;
   return Object.keys(foodData).find((id) => {
     const food = foodData[id];
-    return food.name === foodName || food.name.includes(foodName) || foodName.includes(food.name);
+    return food.name === normalizedFoodName
+      || food.name.includes(normalizedFoodName)
+      || normalizedFoodName.includes(food.name);
   });
+}
+
+function syncSelectedFoodFromInput() {
+  const foodName = foodSearch.value.trim();
+  selectedFood = foodName ? (findFoodIdByName(foodName) || "") : "";
+  updateDisplay();
 }
 
 // 3. 表示更新
@@ -198,6 +213,7 @@ function updateSelectedFoodChip(foodName) {
 
 function resetFoodSelectionPanel() {
   foodSearch.value = "";
+  selectedFood = "";
   searchPanelStep = "entry";
   activeFoodCategory = "";
   activePurposeTag = "";
@@ -205,11 +221,15 @@ function resetFoodSelectionPanel() {
   updateSelectedFoodChip("");
   renderCategoryTabs();
   renderSearchResults();
+  clearResultDisplay();
 }
 
 function updateDisplay() {
   const food = foodData[selectedFood];
-  if (!food) return;
+  if (!food) {
+    clearResultDisplay();
+    return;
+  }
 
   const data = food[selectedRating];
 
@@ -244,6 +264,20 @@ function updateDisplay() {
 
   updateBoostMeter(data.boostRate);
   ratingCards.forEach(c => c.classList.toggle("active", c.dataset.rating === selectedRating));
+}
+
+function clearResultDisplay() {
+  document.getElementById("selectedFood").textContent = "選んだ食材：未選択";
+  document.getElementById("resultStatusIcon").textContent = "";
+  document.getElementById("pairTitle").textContent = "食材を選んでください";
+  document.getElementById("nutritionScore").textContent = "-";
+  document.getElementById("boostRate").textContent = "-";
+  document.getElementById("suggestion").textContent = "";
+  document.getElementById("reason").textContent = "";
+  document.getElementById("improvement").textContent = "";
+  document.getElementById("boostTags").innerHTML = "";
+  document.getElementById("dressingList").innerHTML = "";
+  updateBoostMeter("+0%");
 }
 
 // メーター（ゲージ）の更新
@@ -325,7 +359,10 @@ function renderFoodCandidateButtons(foodItems) {
     btn.textContent = foodEmoji ? `${foodEmoji} ${foodName}` : foodName;
     btn.onclick = () => {
       foodSearch.value = foodName;
+      selectedFood = foodKey || "";
       updateSelectedFoodChip(foodName);
+      foodSearch.dispatchEvent(new Event("change", { bubbles: true }));
+      updateDisplay();
       closeFoodCandidatePanel();
     };
     searchResults.appendChild(btn);
@@ -447,10 +484,12 @@ if (foodSearch) {
     activeFoodCategory = "";
     activePurposeTag = "";
     clearSearchPreview();
+    syncSelectedFoodFromInput();
     updateSelectedFoodChip("");
     renderCategoryTabs();
     renderSearchResults();
   };
+  foodSearch.onchange = () => syncSelectedFoodFromInput();
 }
 
 if (clearSelectedFood) {
