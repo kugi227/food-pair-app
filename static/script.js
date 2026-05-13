@@ -41,10 +41,12 @@ const foodNameAliases = {
   "きのこ": "しいたけ（キノコ類）",
 };
 
-// 1. データの読み込みと変換（JSONの全食材をfoodDataに登録）
-async function loadFoods() {
+// 1. データの読み込みと変換（検索キーワード対応版）
+async function loadFoods(query = "") {
   try {
-    const response = await fetch("/foods"); // FlaskのAPIから全食材取得
+    // 検索ワードがある場合はクエリパラメータを付与してリクエスト
+    const url = query ? `/foods?q=${encodeURIComponent(query)}` : "/foods";
+    const response = await fetch(url); 
     const rawFoods = await response.json();
 
     foodCatalog = {};
@@ -53,13 +55,11 @@ async function loadFoods() {
     rawFoods.forEach((item) => {
       const id = item.id || item.food;
 
-      // 検索用カタログ（名前とキーワードで探せるようにする）
       foodCatalog[id] = { 
         label: item.food, 
         keywords: item.keywords || [] 
       };
 
-      // 全食材の表示用データを組み立てる
       foodData[id] = {
         name: item.food,
         emoji: item.emoji || "🥗",
@@ -121,19 +121,7 @@ async function loadFoods() {
   }
 }
 
-// 2. 検索ロジック（名前、栄養素、キーワードすべてから探す「逆引き対応」）
-function findMatchingFoods(query) {
-  const normalizedQuery = query.trim().toLowerCase();
-  if (!normalizedQuery) return [];
-
-  return Object.keys(foodData).filter((id) => {
-    const food = foodData[id];
-    const catalog = foodCatalog[id];
-    const targets = [id, food.name, ...(catalog?.keywords || []), ...(food.nutrients || [])];
-    return targets.some((target) => String(target).toLowerCase().includes(normalizedQuery));
-  });
-}
-
+// 2. 検索ロジック（サーバー側の検索結果を表示する形に変更）
 function findFoodIdByName(foodName) {
   const normalizedFoodName = foodNameAliases[foodName] || foodName;
   return Object.keys(foodData).find((id) => {
@@ -233,7 +221,6 @@ function updateDisplay() {
 
   const data = food[selectedRating];
 
-  // テキスト要素の更新
   document.getElementById("selectedFood").textContent = `選んだ食材：${food.emoji} ${food.name}`;
   const resultStatusIcon = document.getElementById("resultStatusIcon");
   resultStatusIcon.textContent = data.icon || "";
@@ -246,7 +233,6 @@ function updateDisplay() {
   document.getElementById("reason").textContent = data.reason || "";
   document.getElementById("improvement").textContent = data.improvement || "";
 
-  // ブーストタグの更新
   const boostTags = document.getElementById("boostTags");
   boostTags.innerHTML = "";
   data.boosts.forEach(b => {
@@ -256,7 +242,6 @@ function updateDisplay() {
     boostTags.appendChild(span);
   });
 
-  // ドレッシングリストの更新
   const dressingList = document.getElementById("dressingList");
   dressingList.innerHTML = "";
   data.dressings.forEach(d => {
@@ -270,22 +255,32 @@ function updateDisplay() {
 }
 
 function clearResultDisplay() {
-  document.getElementById("selectedFood").textContent = "選んだ食材：未選択";
+  const selectedFoodEl = document.getElementById("selectedFood");
+  if(selectedFoodEl) selectedFoodEl.textContent = "選んだ食材：未選択";
   const resultStatusIcon = document.getElementById("resultStatusIcon");
-  resultStatusIcon.textContent = "";
-  resultStatusIcon.classList.remove("excellent", "good", "improve");
-  document.getElementById("pairTitle").textContent = "食材を選んでください";
-  document.getElementById("nutritionScore").textContent = "-";
-  document.getElementById("boostRate").textContent = "-";
-  document.getElementById("suggestion").textContent = "";
-  document.getElementById("reason").textContent = "";
-  document.getElementById("improvement").textContent = "";
-  document.getElementById("boostTags").innerHTML = "";
-  document.getElementById("dressingList").innerHTML = "";
+  if(resultStatusIcon) {
+    resultStatusIcon.textContent = "";
+    resultStatusIcon.classList.remove("excellent", "good", "improve");
+  }
+  const pairTitle = document.getElementById("pairTitle");
+  if(pairTitle) pairTitle.textContent = "食材を選んでください";
+  const nutritionScore = document.getElementById("nutritionScore");
+  if(nutritionScore) nutritionScore.textContent = "-";
+  const boostRate = document.getElementById("boostRate");
+  if(boostRate) boostRate.textContent = "-";
+  const suggestion = document.getElementById("suggestion");
+  if(suggestion) suggestion.textContent = "";
+  const reason = document.getElementById("reason");
+  if(reason) reason.textContent = "";
+  const improvement = document.getElementById("improvement");
+  if(improvement) improvement.textContent = "";
+  const boostTags = document.getElementById("boostTags");
+  if(boostTags) boostTags.innerHTML = "";
+  const dressingList = document.getElementById("dressingList");
+  if(dressingList) dressingList.innerHTML = "";
   updateBoostMeter("+0%");
 }
 
-// メーター（ゲージ）の更新
 function updateBoostMeter(boostRate) {
   const posBar = document.getElementById("boostMeterPositive");
   const negBar = document.getElementById("boostMeterNegative");
@@ -296,15 +291,17 @@ function updateBoostMeter(boostRate) {
   negBar.style.width = value < 0 ? (Math.abs(value) / 20 * 50) + "%" : "0%";
 }
 
-// 4. UI生成（検索結果の描画）
+// 4. UI生成（検索結果の描画：サーバー側のデータを使うように修正）
 function renderSearchResults() {
   if (!searchResults) return;
   const query = foodSearch.value.trim();
   const displayedStep = getDisplayedPanelStep();
 
   searchResults.innerHTML = "";
+
+  // 修正：クエリがあるときは、サーバーから読み込まれたfoodDataのキーをそのまま使う
   if (query) {
-    renderFoodCandidateButtons(findMatchingFoods(query));
+    renderFoodCandidateButtons(Object.keys(foodData));
     return;
   }
 
@@ -484,11 +481,17 @@ function renderSubOptions() {
 if (foodSearch) {
   foodSearch.onfocus = () => openFoodCandidatePanel();
   foodSearch.onclick = () => openFoodCandidatePanel();
-  foodSearch.oninput = () => {
+  
+  // 修正：入力されるたびにサーバーへ問い合わせ(loadFoods)を行うように変更
+  foodSearch.oninput = async () => {
     searchPanelStep = "entry";
     activeFoodCategory = "";
     activePurposeTag = "";
     clearSearchPreview();
+
+    // サーバーから検索結果を取得
+    await loadFoods(foodSearch.value.trim());
+
     syncSelectedFoodFromInput();
     updateSelectedFoodChip("");
     renderCategoryTabs();
@@ -501,14 +504,8 @@ if (clearSelectedFood) {
   clearSelectedFood.onclick = (event) => {
     event.preventDefault();
     event.stopPropagation();
-
-    // 食材選択を初期状態に戻す
     resetFoodSelectionPanel();
-
-    // 候補パネルは開かずに閉じる
     closeFoodCandidatePanel();
-
-    // 検索欄も初期状態に戻す
     if (foodSearch) {
       foodSearch.value = "";
       foodSearch.placeholder = "クリックして食材を選ぶ";
@@ -524,5 +521,5 @@ ratingCards.forEach((card) => {
   };
 });
 
-// 初期実行
+// 初期実行（全件読み込み）
 loadFoods();
