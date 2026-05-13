@@ -21,20 +21,13 @@
       <h2>使いたい食材を選んでください</h2>
       <div class="food-search-wrapper" id="foodSearchWrapper">
         <div class="search-controls">
-          <input
-            type="text"
-            id="foodSearch"
-            class="food-search-input"
-            placeholder="クリックして食材を選ぶ"
-            autocomplete="off"
-          >
+          <input type="text" id="foodSearch" class="food-search-input" placeholder="クリックして食材を選ぶ" autocomplete="off">
           <button type="button" id="foodSearchOk" class="search-ok-button">OK</button>
         </div>
         <div class="selected-food-chip" id="selectedFoodChip" hidden>
           <span id="selectedFoodChipText"></span>
-          <button type="button" id="clearSelectedFood" class="selected-food-clear" aria-label="選択中の食材を消す">×</button>
+          <button type="button" id="clearSelectedFood" class="selected-food-clear">×</button>
         </div>
-
         <div id="foodCandidatePanel" class="food-candidate-panel" aria-hidden="true">
           <div id="foodCategoryTabs" class="food-category-tabs"></div>
           <div id="searchSubOptions" class="search-sub-options"></div>
@@ -43,115 +36,43 @@
       </div>
     </section>
 
-    <section class="section">
-      <h2>相性評価</h2>
-      <div class="rating-cards">
-        <div class="rating-card active" id="ratingExcellent" data-rating="excellent">
-          <div class="rating-icon">◎</div>
-          <p>相性がとても良い</p>
+    <section class="result-wrapper" id="resultContainer">
+      <div id="logicBox" class="logic-box-container">
+        <div class="card-header-main">
+          <div class="result-icon-circle" id="resultStatusIcon">◎</div>
+          <h3 id="cardTitle">相乗効果</h3>
+        </div> <div class="pair-tabs" style="display: flex; gap: 10px; margin: 15px 0; justify-content: center;">
+            <button onclick="updateDisplay(currentFoodId, 0)" style="padding: 5px 15px; cursor: pointer; border-radius: 20px; border: 1px solid #ffd700; background: #fff;">◎ 最強</button>
+            <button onclick="updateDisplay(currentFoodId, 1)" style="padding: 5px 15px; cursor: pointer; border-radius: 20px; border: 1px solid #ccc; background: #fff;">○ 良好</button>
+            <button onclick="updateDisplay(currentFoodId, 2)" style="padding: 5px 15px; cursor: pointer; border-radius: 20px; border: 1px solid #ccc; background: #fff;">△ 普通</button>
         </div>
 
-        <div class="rating-card" id="ratingGood" data-rating="good">
-          <div class="rating-icon">○</div>
-          <p>良い</p>
-        </div>
-
-        <div class="rating-card" id="ratingImprove" data-rating="improve">
-          <div class="rating-icon">△</div>
-          <p>改善余地あり</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section selected-section">
-      <p class="selected-food" id="selectedFood">選んだ食材：未選択</p>
-    </section>
-
-    <section class="result-wrapper">
-      <div class="result-top">
-        <div class="result-main">
-          <div class="result-main-left-icon" id="resultStatusIcon">◎</div>
-
-          <div class="result-main-content">
-            <h3>相乗効果</h3>
-            <p class="small-label">相性のよい組み合わせ</p>
-
-            <div class="pair-row">
-              <div>
-                <p class="pair-title" id="pairTitle">食材を選んでください</p>
-              </div>
-
-              <div class="score-box">
-                <div class="score-label-row">
-                  <p class="score-label">栄養スコア</p>
-                </div>
-                <p class="score-number" id="nutritionScore">120</p>
-                <p class="help-popover score-help-popover">
-                  栄養スコアは、食材の栄養バランスを点数で表したものです。
-                </p>
-              </div>
-            </div>
-
-            <div class="support-tags" id="boostTags">
-              <span class="tag">抗酸化サポート</span>
-              <span class="tag">たんぱく質活用サポート</span>
-              <span class="tag">エイジングケアサポート</span>
-            </div>
+        <div class="logic-content">
+          <div class="food-display">
+            <span id="foodEmojiDisplay" style="font-size: 5rem;"></span>
+            <p id="foodNameLabel" style="font-weight: bold;"></p>
+          </div>
+          <div class="chart-box" style="width: 200px; height: 200px;">
+            <canvas id="radarChart"></canvas>
           </div>
         </div>
 
-        <div class="boost-box">
-          <p class="boost-rate" id="boostRate">+20%</p>
-          <div class="boost-label-row">
-            <p class="boost-text">ブースト</p>
-          </div>
-          <div class="boost-meter" aria-label="ブーストメーター">
-            <div class="boost-meter-track">
-              <div class="boost-meter-center"></div>
-              <div class="boost-meter-bar boost-meter-bar-negative" id="boostMeterNegative"></div>
-              <div class="boost-meter-bar boost-meter-bar-positive" id="boostMeterPositive"></div>
-            </div>
-            <div class="boost-meter-labels">
-              <span>-20%</span>
-              <span>0</span>
-              <span>+20%</span>
-            </div>
-          </div>
-          <p class="help-popover boost-help-popover">
-            ブーストは、食材の組み合わせによって栄養の良さが高まることを表しています。
-          </p>
+        <div class="score-display-row">
+          <div class="score-main-val">栄養スコア：<span id="nutritionScore">-</span></div>
+          <div class="boost-val-sub">(<span id="boostRate">+0%</span> ブースト)</div>
+        </div>
+
+        <div class="logic-content-area">
+          <div class="best-logic-tag">🏆 最強ロジック</div>
+          <h4 id="bestMethodTitle" class="logic-title-text"></h4>
+          <p id="scientificEvidence" class="logic-description"></p>
         </div>
       </div>
 
-      <div class="info-row">
-        <div class="info-content">
-          <h4><span class="info-icon" aria-hidden="true">🍴</span>おすすめの食べ方</h4>
-          <p id="suggestion">納豆にすりごまを加える</p>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-content">
-          <h4><span class="info-icon" aria-hidden="true">❓</span>理由</h4>
-          <p id="reason">納豆のたんぱく質と胡麻のビタミンEが相乗的に働き、抗酸化作用が高まります。</p>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-content">
-          <h4><span class="info-icon" aria-hidden="true">💡</span>改善提案</h4>
-          <p id="improvement">納豆にすりごまを加えることで、栄養価が向上し、風味も豊かになります。</p>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-content">
-          <h4><span class="info-icon" aria-hidden="true">💧</span>おすすめドレッシング</h4>
-          <ul id="dressingList">
-            <li>ごまドレッシング</li>
-            <li>和風しょうゆドレッシング</li>
-          </ul>
-        </div>
+      <div class="detail-info-section">
+        <div class="info-item"><strong>❓ 理由：</strong><span id="reason"></span></div>
+        <div class="info-item"><strong>💡 改善提案：</strong><span id="improvement"></span></div>
+        <div class="info-item"><strong>💧 おすすめドレッシング：</strong><ul id="dressingList" class="horizontal-list"></ul></div>
       </div>
     </section>
 
@@ -159,11 +80,11 @@
       <div class="notice-icon">i</div>
       <div>
         <p>本サービスは一般的な情報提供を目的としています。特定の疾患の治療・予防を目的とするものではありません。</p>
-        <p>食事や健康に関するご相談は、医師・管理栄養士などの専門家にご相談ください。</p>
       </div>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

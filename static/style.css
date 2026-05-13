@@ -755,3 +755,133 @@ h1 {
     min-width: 0;
   }
 }
+
+/* --- 黄金カード再現セクション --- */
+
+/* カード全体のコンテナ */
+.logic-box-container {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+/* 黄金状態のクラス（JSで切り替えます） */
+.logic-gold {
+    background: linear-gradient(145deg, #ffffff, #fff9e6, #ffeb99) !important;
+    border: 2px solid #ffd700 !important;
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+}
+
+/* ヘッダー部分（アイコンとタイトル） */
+.card-header-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.result-icon-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* 中央：画像とチャートの横並び */
+.card-body-visual {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+/* スコア表示 */
+.score-display-row {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.score-main-val {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+#nutritionScore {
+    font-size: 2rem;
+    color: #2d5a27;
+}
+
+.boost-val-sub {
+    color: #e67e22;
+    font-weight: bold;
+}
+
+/* 最強ロジックのタグと内容 */
+.logic-content-area {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #ffeeba;
+}
+
+.best-logic-tag {
+    background: #ffd700;
+    color: #856404;
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.logic-title-text {
+    font-size: 1.2rem;
+    margin: 5px 0;
+    color: #333;
+}
+
+.logic-description {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* 詳細情報（リスト形式） */
+.detail-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-item {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.horizontal-list {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.horizontal-list li {
+    background: #e9ecef;
+    padding: 2px 10px;
+    border-radius: 15px;
+}

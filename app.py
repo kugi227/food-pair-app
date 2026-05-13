@@ -7,7 +7,7 @@ app = Flask(__name__)
 # =========================
 # foods.json 読み込み
 # =========================
-with open("foods.json", "r", encoding="utf-8") as f:
+with open("static/foods.json", "r", encoding="utf-8") as f:
     foods = json.load(f)
 
 # =========================
