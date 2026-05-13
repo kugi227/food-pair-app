@@ -229,24 +229,48 @@ function resetFoodSelectionPanel() {
 
 let currentFoodId = ""; // 今選んでいる食材を保存する変数（関数の外に書いてください）
 
-function updateDisplay(foodId, pairIndex = 0) {
-    // 1. データの特定
-    if (!foodId) return;
-    currentFoodId = foodId; // 今の食材IDを記憶しておく
 
-    const food = foods.find(f => f.id === foodId);
-    if (!food) return;
-  // テキスト要素の更新
-  document.getElementById("selectedFood").textContent = `選んだ食材：${food.emoji} ${food.name}`;
-  const resultStatusIcon = document.getElementById("resultStatusIcon");
-  resultStatusIcon.textContent = data.icon || "";
-  resultStatusIcon.className = `result-main-left-icon ${selectedRating}`;
-  document.getElementById("pairTitle").textContent = data.pairTitle || "";
-  document.getElementById("nutritionScore").textContent = data.nutritionScore || "-";
-  document.getElementById("boostRate").textContent = data.boostRate || "-";
-  document.getElementById("suggestion").textContent = data.suggestion || "";
-  document.getElementById("reason").textContent = data.reason || "";
-  document.getElementById("improvement").textContent = data.improvement || "";
+  function updateDisplay(foodId, rankIndex = 0) { // pairIndex を rankIndex に変更
+    if (!foodId) return;
+    currentFoodId = foodId; 
+
+    // foodData という変数を使っている場合はこちらの方が確実です
+    const food = foodData[foodId]; 
+    if (!food) {
+        console.error("食材データが見つかりません:", foodId);
+        return;
+    }
+
+    const selectedFoodEl = document.getElementById("selectedFood");
+    if (selectedFoodEl) {
+        selectedFoodEl.textContent = `選んだ食材：${food.emoji} ${food.name}`;
+    }
+
+    // 名前を rankIndex に揃えたので、これで正しくデータが取り出せます！
+    const targetData = rankIndex === 0 ? food.excellent : (rankIndex === 1 ? food.good : food.average);
+
+  // 各項目を targetData から取得して表示
+  if (document.getElementById("pairTitle")) 
+    document.getElementById("pairTitle").textContent = targetData.pairTitle || "";
+  // targetData が存在することを確認してから中身を書き換える
+if (targetData) {
+    if (document.getElementById("nutritionScore")) {
+        document.getElementById("nutritionScore").textContent = targetData.nutritionScore || "-";
+    }
+    
+    if (document.getElementById("boostRate")) {
+        document.getElementById("boostRate").textContent = targetData.boostRate || "-";
+    }
+
+    if (document.getElementById("suggestion")) {
+        document.getElementById("suggestion").textContent = targetData.suggestion || "";
+    }
+}
+  if (document.getElementById("reason"))
+    document.getElementById("reason").textContent = targetData.reason || "";
+
+  if (document.getElementById("improvement"))
+    document.getElementById("improvement").textContent = targetData.improvement || "";
 
     // 2. 表示するペア（◎、○、△）を特定する
     // good_pairs(◎), better_pairs(○), bad_pairs(△) の順でひとまとめにする
@@ -256,43 +280,78 @@ function updateDisplay(foodId, pairIndex = 0) {
         ...(food.bad_pairs || [])
     ];
     
-    // 指定された番号のペアを取り出す（なければ1番目のペアを表示）
-    const currentPair = allPairs[pairIndex] || food.good_pairs[0];
-    const score = Math.round(currentPair.boost * 100);
+   // 以前の allPairs を使うのをやめて、さっき作った targetData を直接使います
+  // スコアの計算（targetDataの中にスコアが入っているならそれを使う）
+  const score = targetData.nutritionScore || "-"; 
+
+  // ボタン（◎○△）のクリックイベントを最新の状態に更新
+  const ratingButtons = document.querySelectorAll(".rating-btn"); 
+  ratingButtons.forEach((btn, index) => {
+    btn.onclick = () => {
+      // ボタンを押した時に、そのランク(index)で自分自身を再表示する
+      updateDisplay(foodId, index);
+    };
+  });
 
     // 3. 判定（◎○△）に合わせてカードの見た目を変える
     const logicBox = document.getElementById("logicBox");
     const cardTitle = document.getElementById("cardTitle");
     const statusIcon = document.getElementById("resultStatusIcon");
 
-    if (pairIndex === 0 && score >= 130) {
-        logicBox.classList.add("logic-gold"); // 黄金デザイン適用
-        cardTitle.textContent = "黄金の栄養ブースト";
-        statusIcon.textContent = "◎";
+    // 全ての pairIndex を rankIndex に書き換えます
+    if (rankIndex === 0 && score >= 130) {
+        if (logicBox) logicBox.classList.add("logic-gold"); // 黄金デザイン適用
+        if (cardTitle) cardTitle.textContent = "黄金の栄養ブースト";
+        if (statusIcon) statusIcon.textContent = "◎";
     } else {
-        logicBox.classList.remove("logic-gold"); // 通常デザイン
-        cardTitle.textContent = pairIndex === 1 ? "栄養の組み合わせ：良好" : "栄養の組み合わせ：普通";
-        statusIcon.textContent = pairIndex === 1 ? "○" : "△";
+        if (logicBox) logicBox.classList.remove("logic-gold"); // 通常デザイン
+        if (cardTitle) {
+            cardTitle.textContent = rankIndex === 1 ? "栄養の組み合わせ：良好" : "栄養の組み合わせ：普通";
+        }
+        if (statusIcon) {
+            statusIcon.textContent = rankIndex === 1 ? "○" : "△";
+        }
     }
 
     // 4. テキストデータの流し込み
-    document.getElementById("foodEmojiDisplay").textContent = food.emoji;
-    document.getElementById("foodNameLabel").textContent = `食材：${food.food}`;
-    document.getElementById("nutritionScore").textContent = score;
-    document.getElementById("boostRate").textContent = `+${Math.round((currentPair.boost - 1) * 100)}%`;
+    const foodEmojiDisplay = document.getElementById("foodEmojiDisplay");
+    if (foodEmojiDisplay) foodEmojiDisplay.textContent = food.emoji;
+
+    const foodNameLabel = document.getElementById("foodNameLabel");
+    if (foodNameLabel) foodNameLabel.textContent = `食材：${food.name}`;
+
+    // score は targetData から取得
+    const nutritionScoreEl = document.getElementById("nutritionScore");
+    if (nutritionScoreEl) nutritionScoreEl.textContent = targetData.nutritionScore || "-";
+
+    const boostRateEl = document.getElementById("boostRate");
+    if (boostRateEl) boostRateEl.textContent = targetData.boostRate || "-";
     
-    // ペアの相手の名前と、理由を表示
-    // 相手の名前を候補（name, partner, food_name）から探して表示する
-    // partner がさらに中に入っている場合や、別の名前（food）で入っている場合を網羅
-const partnerName = currentPair.food || currentPair.name || currentPair.partner || "玉ねぎ等";
-    document.getElementById("bestMethodTitle").textContent = `${food.food} × ${partnerName}`;
-    document.getElementById("scientificEvidence").textContent = food.logic.reason;
-    document.getElementById("reason").textContent = food.logic.reason;
-    document.getElementById("improvement").textContent = food.logic.action;
+    // ペアの相手の名前を表示
+    const partnerName = targetData.pairTitle || "おすすめ食材";
+    const bestMethodTitle = document.getElementById("bestMethodTitle");
+    if (bestMethodTitle) bestMethodTitle.textContent = `${food.name} × ${partnerName}`;
 
-    const dList = document.getElementById("dressingList");
-    dList.innerHTML = food.dressings.map(d => `<li>${d}</li>`).join("");
+    // ロジック（理由・改善点）の表示
+    const scientificEvidence = document.getElementById("scientificEvidence");
+    if (scientificEvidence) scientificEvidence.textContent = targetData.reason || "";
 
+    const reasonEl = document.getElementById("reason");
+    if (reasonEl) reasonEl.textContent = targetData.reason || "";
+
+    const improvementEl = document.getElementById("improvement");
+    if (improvementEl) improvementEl.textContent = targetData.suggestion || "";
+
+    // 【修正後】342行目付近
+const dList = document.getElementById("dressingList");
+if (dList) {
+    // food.dressings が存在する場合だけ map を実行し、ない場合は空にする
+    if (food.dressings && Array.isArray(food.dressings)) {
+        dList.innerHTML = food.dressings.map(d => `<li>${d}</li>`).join("");
+    } else {
+        dList.innerHTML = "<li>おすすめの味付け：塩・オリーブオイルなど</li>"; 
+    }
+}
     // 5. チャート描画（既存のグラフを壊してから新しく作る）
     const ctx = document.getElementById('radarChart').getContext('2d');
     let chartStatus = Chart.getChart("radarChart"); 
@@ -300,13 +359,14 @@ const partnerName = currentPair.food || currentPair.name || currentPair.partner 
         chartStatus.destroy();
     }
 
-    const chartValues = [
-        food.chart_data["栄養"] || 0,
-        food.chart_data["吸収"] || 80,
-        food.chart_data["脂質"] || 0,
-        food.chart_data["酵素"] || 0,
-        food.chart_data["抗酸化"] || food.chart_data["糖質"] || 0
-    ];
+    // 【修正後】エラーを回避しつつ、チャート用の数値を設定
+const chartValues = [
+    (food.chart_data && food.chart_data["栄養"]) || 80,
+    (food.chart_data && food.chart_data["吸収"]) || 90,
+    (food.chart_data && food.chart_data["脂質"]) || 50,
+    (food.chart_data && food.chart_data["酵素"]) || 60,
+    (food.chart_data && (food.chart_data["抗酸化"] || food.chart_data["糖質"])) || 70
+];
 
     new Chart(ctx, {
         type: 'radar',
@@ -444,7 +504,10 @@ function renderFoodCandidateButtons(foodItems) {
       selectedFood = foodKey || "";
       updateSelectedFoodChip(foodName);
       foodSearch.dispatchEvent(new Event("change", { bubbles: true }));
-      updateDisplay();
+
+      // ここを修正：どの食材(foodKey)の、どのランク(0=最強)を表示するか指定する
+      updateDisplay(foodKey, 0); 
+      
       closeFoodCandidatePanel();
     };
     searchResults.appendChild(btn);
