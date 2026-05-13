@@ -236,6 +236,17 @@ function updateDisplay(foodId, pairIndex = 0) {
 
     const food = foods.find(f => f.id === foodId);
     if (!food) return;
+  // テキスト要素の更新
+  document.getElementById("selectedFood").textContent = `選んだ食材：${food.emoji} ${food.name}`;
+  const resultStatusIcon = document.getElementById("resultStatusIcon");
+  resultStatusIcon.textContent = data.icon || "";
+  resultStatusIcon.className = `result-main-left-icon ${selectedRating}`;
+  document.getElementById("pairTitle").textContent = data.pairTitle || "";
+  document.getElementById("nutritionScore").textContent = data.nutritionScore || "-";
+  document.getElementById("boostRate").textContent = data.boostRate || "-";
+  document.getElementById("suggestion").textContent = data.suggestion || "";
+  document.getElementById("reason").textContent = data.reason || "";
+  document.getElementById("improvement").textContent = data.improvement || "";
 
     // 2. 表示するペア（◎、○、△）を特定する
     // good_pairs(◎), better_pairs(○), bad_pairs(△) の順でひとまとめにする

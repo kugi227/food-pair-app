@@ -755,10 +755,48 @@ h1 {
     min-width: 0;
   }
 }
+/* --- 共同開発者さんの追加：評価カードと結果アイコンの色 --- */
+.rating-card.active[data-rating="excellent"] {
+  border-color: #4caf50;
+  background: #eaf7e4;
+}
+.rating-card.active[data-rating="excellent"] .rating-icon {
+  color: #2f8f2f;
+}
+.result-main-left-icon.excellent {
+  border-color: #8bcf7a;
+  background: #eaf7e4;
+  color: #2f8f2f;
+}
 
-/* --- 黄金カード再現セクション --- */
+.rating-card.active[data-rating="good"] {
+  border-color: #e0b84f;
+  background: #fff4cf;
+}
+.rating-card.active[data-rating="good"] .rating-icon {
+  color: #b07a00;
+}
+.result-main-left-icon.good {
+  border-color: #e0b84f;
+  background: #fff4cf;
+  color: #b07a00;
+}
 
-/* カード全体のコンテナ */
+.rating-card.active[data-rating="improve"] {
+  border-color: #e08d64;
+  background: #fde9df;
+}
+.rating-card.active[data-rating="improve"] .rating-icon {
+  color: #c56b43;
+}
+.result-main-left-icon.improve {
+  border-color: #e08d64;
+  background: #fde9df;
+  color: #c56b43;
+}
+
+/* --- Yukiさんの追加：黄金カード再現セクション --- */
+
 .logic-box-container {
     background: white;
     border-radius: 20px;
@@ -768,14 +806,12 @@ h1 {
     border: 1px solid #eee;
 }
 
-/* 黄金状態のクラス（JSで切り替えます） */
 .logic-gold {
     background: linear-gradient(145deg, #ffffff, #fff9e6, #ffeb99) !important;
     border: 2px solid #ffd700 !important;
     box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
 }
 
-/* ヘッダー部分（アイコンとタイトル） */
 .card-header-main {
     display: flex;
     align-items: center;
@@ -795,7 +831,6 @@ h1 {
     font-size: 1.2rem;
 }
 
-/* 中央：画像とチャートの横並び */
 .card-body-visual {
     display: flex;
     justify-content: space-around;
@@ -806,7 +841,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* スコア表示 */
 .score-display-row {
     text-align: center;
     margin-bottom: 20px;
@@ -827,7 +861,6 @@ h1 {
     font-weight: bold;
 }
 
-/* 最強ロジックのタグと内容 */
 .logic-content-area {
     background: white;
     border-radius: 12px;
@@ -858,7 +891,6 @@ h1 {
     line-height: 1.5;
 }
 
-/* 詳細情報（リスト形式） */
 .detail-info-section {
     display: flex;
     flex-direction: column;
