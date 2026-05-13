@@ -744,3 +744,52 @@ h1 {
     min-width: 0;
   }
 }
+/* 評価カードと結果アイコンの色を統一 */
+
+/* ◎ とても良い：特別 */
+.rating-card.active[data-rating="excellent"] {
+  border-color: #4caf50;
+  background: #eaf7e4;
+}
+
+.rating-card.active[data-rating="excellent"] .rating-icon {
+  color: #2f8f2f;
+}
+
+.result-main-left-icon.excellent {
+  border-color: #8bcf7a;
+  background: #eaf7e4;
+  color: #2f8f2f;
+}
+
+/* ○ 良い：普通 */
+.rating-card.active[data-rating="good"] {
+  border-color: #e0b84f;
+  background: #fff4cf;
+}
+
+.rating-card.active[data-rating="good"] .rating-icon {
+  color: #b07a00;
+}
+
+.result-main-left-icon.good {
+  border-color: #e0b84f;
+  background: #fff4cf;
+  color: #b07a00;
+}
+
+/* △ 改善余地あり：残念 */
+.rating-card.active[data-rating="improve"] {
+  border-color: #e08d64;
+  background: #fde9df;
+}
+
+.rating-card.active[data-rating="improve"] .rating-icon {
+  color: #c56b43;
+}
+
+.result-main-left-icon.improve {
+  border-color: #e08d64;
+  background: #fde9df;
+  color: #c56b43;
+}

@@ -235,7 +235,9 @@ function updateDisplay() {
 
   // テキスト要素の更新
   document.getElementById("selectedFood").textContent = `選んだ食材：${food.emoji} ${food.name}`;
-  document.getElementById("resultStatusIcon").textContent = data.icon || "";
+  const resultStatusIcon = document.getElementById("resultStatusIcon");
+resultStatusIcon.textContent = data.icon || "";
+resultStatusIcon.className = `result-main-left-icon ${selectedRating}`;
   document.getElementById("pairTitle").textContent = data.pairTitle || "";
   document.getElementById("nutritionScore").textContent = data.nutritionScore || "-";
   document.getElementById("boostRate").textContent = data.boostRate || "-";
