@@ -342,8 +342,13 @@ h1 {
 }
 
 .rating-card.active[data-rating="improve"] {
-  border-color: #e08d64;
-  background: #fde9df;
+  border-color: #8fa9c8;
+  background: #eef4fa;
+  color: #3f5f7f;
+}
+
+.rating-card.active[data-rating="improve"] .rating-icon {
+  color: #3f5f7f;
 }
 
 .rating-icon {
@@ -421,8 +426,9 @@ h1 {
 }
 
 .result-main-left-icon.improve {
-  color: #c56b43;
-  background: #fde9df;
+  color: #3f5f7f;
+  background: #eef4fa;
+  border-color: #8fa9c8;
 }
 
 .result-main-content h3 {
@@ -539,15 +545,15 @@ h1 {
   justify-content: center;
   min-height: 180px;
   padding: 18px;
-  border: 1.5px solid #ead89a;
+  border: 1.5px solid #e7b8a7;
   border-radius: 20px;
-  background: #fff4cf;
+  background: #fceee8;
   text-align: center;
 }
 
 .boost-rate {
   margin: 0;
-  color: #a86f00;
+  color: #c96a4a;
   font-size: 34px;
   line-height: 1;
   font-weight: 800;
@@ -555,7 +561,7 @@ h1 {
 
 .boost-text {
   margin: 9px 0 0;
-  color: #6b5521;
+  color: #a85c47;
   font-size: 17px;
   font-weight: 700;
 }
@@ -570,9 +576,9 @@ h1 {
   position: relative;
   height: 14px;
   overflow: hidden;
-  border: 1px solid #d8cfbf;
+  border: 1px solid #e8c4b8;
   border-radius: 999px;
-  background: linear-gradient(90deg, #fff4ee 0%, #fffdf8 50%, #f2faed 100%);
+  background: linear-gradient(90deg, #fff7f3 0%, #fffdfb 50%, #fff1ea 100%);
 }
 
 .boost-meter-center {
@@ -582,7 +588,7 @@ h1 {
   left: 50%;
   z-index: 2;
   width: 2px;
-  background: #7b8a72;
+  background: #c9917f;
   transform: translateX(-50%);
 }
 
@@ -596,21 +602,26 @@ h1 {
 
 .boost-meter-bar-positive {
   left: 50%;
-  background: linear-gradient(90deg, #76b85f, #f1c84b);
+  background: linear-gradient(90deg, #d87958, #f0b49f);
 }
 
 .boost-meter-bar-negative {
   right: 50%;
-  background: linear-gradient(90deg, #f09a4a, #d95f4a);
+  background: linear-gradient(90deg, #d9a08e, #b65d49);
 }
 
 .boost-meter-labels {
   display: flex;
   justify-content: space-between;
   margin-top: 7px;
-  color: #6c6256;
+  color: #8c6559;
   font-size: 11px;
   line-height: 1;
+}
+
+.boost-meter-labels span:first-child,
+.boost-meter-labels span:last-child {
+  visibility: hidden;
 }
 
 .info-row {
