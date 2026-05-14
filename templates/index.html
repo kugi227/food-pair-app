@@ -6,28 +6,38 @@
   <title>Food Pair Navi</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-<header class="header">
-  <div class="header-left">
-    <div>
+  <header class="header">
+    <div class="header-inner">
       <h1>Food Pair Navi</h1>
       <p class="subtitle">食材の組み合わせを最適化して、毎日の食事をもっと健康に。</p>
     </div>
-  </div>
-</header>
+  </header>
 
   <main class="container">
+
+    <!-- 食材検索エリア -->
     <section class="section search-section">
       <h2>使いたい食材を選んでください</h2>
+
       <div class="food-search-wrapper" id="foodSearchWrapper">
         <div class="search-controls">
-          <input type="text" id="foodSearch" class="food-search-input" placeholder="クリックして食材を選ぶ" autocomplete="off">
+          <input
+            type="text"
+            id="foodSearch"
+            class="food-search-input"
+            placeholder="クリックして食材を選ぶ"
+            autocomplete="off"
+          >
           <button type="button" id="foodSearchOk" class="search-ok-button">OK</button>
         </div>
+
         <div class="selected-food-chip" id="selectedFoodChip" hidden>
           <span id="selectedFoodChipText"></span>
           <button type="button" id="clearSelectedFood" class="selected-food-clear">×</button>
         </div>
+
         <div id="foodCandidatePanel" class="food-candidate-panel" aria-hidden="true">
           <div id="foodCategoryTabs" class="food-category-tabs"></div>
           <div id="searchSubOptions" class="search-sub-options"></div>
@@ -36,52 +46,86 @@
       </div>
     </section>
 
+    <!-- 結果エリア -->
     <section class="result-wrapper" id="resultContainer">
+
       <div id="logicBox" class="logic-box-container">
+
+        <!-- タイトル -->
         <div class="card-header-main">
           <div class="result-icon-circle" id="resultStatusIcon">◎</div>
           <h3 id="cardTitle">相乗効果</h3>
-        </div> <div class="pair-tabs" style="display: flex; gap: 10px; margin: 15px 0; justify-content: center;">
-            <button onclick="updateDisplay(currentFoodId, 0)" style="padding: 5px 15px; cursor: pointer; border-radius: 20px; border: 1px solid #ffd700; background: #fff;">◎ 最強</button>
-            <button onclick="updateDisplay(currentFoodId, 1)" style="padding: 5px 15px; cursor: pointer; border-radius: 20px; border: 1px solid #ccc; background: #fff;">○ 良好</button>
-            <button onclick="updateDisplay(currentFoodId, 2)" style="padding: 5px 15px; cursor: pointer; border-radius: 20px; border: 1px solid #ccc; background: #fff;">△ 普通</button>
         </div>
 
-        <div class="logic-content">
+        <!-- ◎ ○ △ タブ -->
+        <div class="pair-tabs">
+          <button type="button" onclick="updateDisplay(currentFoodId, 0)">◎ 最強</button>
+          <button type="button" onclick="updateDisplay(currentFoodId, 1)">○ 良好</button>
+          <button type="button" onclick="updateDisplay(currentFoodId, 2)">△ 普通</button>
+        </div>
+
+        <!-- 上段：左に食材、右にチャート -->
+        <div class="result-main-layout">
+
           <div class="food-display">
-            <span id="foodEmojiDisplay" style="font-size: 5rem;"></span>
-            <p id="foodNameLabel" style="font-weight: bold;"></p>
+            <span id="foodEmojiDisplay"></span>
+            <p id="foodNameLabel"></p>
           </div>
-          <div class="chart-box" style="width: 200px; height: 200px;">
-            <canvas id="radarChart"></canvas>
+
+          <div class="chart-score-column">
+            <div class="chart-box">
+              <canvas id="radarChart"></canvas>
+            </div>
+
+            <div class="score-display-row">
+              <div class="score-main-val">
+                栄養スコア：<span id="nutritionScore">-</span>
+              </div>
+              <div class="boost-val-sub">
+                (<span id="boostRate">+0%</span> ブースト)
+              </div>
+            </div>
           </div>
+
         </div>
 
-        <div class="score-display-row">
-          <div class="score-main-val">栄養スコア：<span id="nutritionScore">-</span></div>
-          <div class="boost-val-sub">(<span id="boostRate">+0%</span> ブースト)</div>
-        </div>
-
+        <!-- コメント -->
         <div class="logic-content-area">
           <div class="best-logic-tag">🏆 最強ロジック</div>
           <h4 id="bestMethodTitle" class="logic-title-text"></h4>
           <p id="scientificEvidence" class="logic-description"></p>
         </div>
+
       </div>
 
+      <!-- 詳細情報 -->
       <div class="detail-info-section">
-        <div class="info-item"><strong>❓ 理由：</strong><span id="reason"></span></div>
-        <div class="info-item"><strong>💡 改善提案：</strong><span id="improvement"></span></div>
-        <div class="info-item"><strong>💧 おすすめドレッシング：</strong><ul id="dressingList" class="horizontal-list"></ul></div>
+        <div class="info-item">
+          <strong>❓ 理由：</strong>
+          <span id="reason"></span>
+        </div>
+
+        <div class="info-item">
+          <strong>💡 改善提案：</strong>
+          <span id="improvement"></span>
+        </div>
+
+        <div class="info-item">
+          <strong>💧 おすすめドレッシング：</strong>
+          <ul id="dressingList" class="horizontal-list"></ul>
+        </div>
       </div>
+
     </section>
 
+    <!-- 注意書き -->
     <section class="notice-box">
       <div class="notice-icon">i</div>
       <div>
         <p>本サービスは一般的な情報提供を目的としています。特定の疾患の治療・予防を目的とするものではありません。</p>
       </div>
     </section>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
