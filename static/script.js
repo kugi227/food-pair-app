@@ -29,6 +29,8 @@ const categoryLabels = {
   meat: "肉",
   fish: "魚",
   fruit: "フルーツ",
+  carbohydrate: "炭水化物",
+  protein: "卵・たんぱく質",
   dairy: "乳製品・飲料",
   mushroom: "きのこ",
   seaweed: "海藻",
@@ -36,7 +38,7 @@ const categoryLabels = {
   beverage: "飲み物",
   snack: "おやつ",
 };
-const categoryOrder = ["vegetable", "meat", "fish", "processed", "dairy", "mushroom", "seaweed", "seed", "fruit", "beverage", "snack"];
+const categoryOrder = ["vegetable", "meat", "fish", "protein", "processed", "dairy", "carbohydrate", "mushroom", "seaweed", "seed", "fruit", "beverage", "snack"];
 let purposeNutrientTags = [
   { id: "vitamin-c", name: "ビタミンC", foods: ["ブロッコリー", "キウイ", "みかん", "キャベツ"] },
   { id: "iron", name: "鉄", foods: ["ほうれん草", "納豆", "豆腐", "牛肉"] },
