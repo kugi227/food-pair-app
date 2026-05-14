@@ -30,7 +30,6 @@
             placeholder="クリックして食材を選ぶ"
             autocomplete="off"
           >
-          <button type="button" id="foodSearchOk" class="search-ok-button">OK</button>
         </div>
 
         <div class="selected-food-chip" id="selectedFoodChip" hidden>
@@ -58,10 +57,10 @@
         </div>
 
         <!-- ◎ ○ △ タブ -->
-        <div class="pair-tabs">
-          <button type="button" onclick="updateDisplay(currentFoodId, 0)">◎ 最強</button>
-          <button type="button" onclick="updateDisplay(currentFoodId, 1)">○ 良好</button>
-          <button type="button" onclick="updateDisplay(currentFoodId, 2)">△ 普通</button>
+        <div class="pair-tabs" id="pairTabs">
+          <button type="button" class="rating-btn active" data-rank="excellent" onclick="updateDisplay(currentFoodId, 0)">◎ 最強</button>
+          <button type="button" class="rating-btn" data-rank="good" onclick="updateDisplay(currentFoodId, 1)">○ 良好</button>
+          <button type="button" class="rating-btn" data-rank="improve" onclick="updateDisplay(currentFoodId, 2)">△ 普通</button>
         </div>
 
         <!-- 上段：左に食材、右にチャート -->
@@ -90,7 +89,7 @@
         </div>
 
         <!-- コメント -->
-        <div class="logic-content-area">
+        <div class="logic-content-area" id="bestLogicArea">
           <div class="best-logic-tag">🏆 最強ロジック</div>
           <h4 id="bestMethodTitle" class="logic-title-text"></h4>
           <p id="scientificEvidence" class="logic-description"></p>

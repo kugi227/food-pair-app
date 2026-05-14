@@ -15,22 +15,28 @@ fetch('/static/foods.json')
 
 let foodCatalog = {};
 let foodData = {};
+let allFoodData = {};
+let searchResultFoodIds = [];
 let selectedFood = ""; 
+let selectedFoods = [];
 let selectedRating = "excellent";
 
-// カテゴリーの初期設定
-let foodCategories = [
-  { id: "vegetables", name: "野菜", foods: ["トマト", "にんじん", "ブロッコリー", "ほうれん草", "玉ねぎ"] },
-  { id: "meat", name: "肉", foods: ["鶏肉", "豚肉", "牛肉"] },
-  { id: "fish", name: "魚", foods: ["鮭", "さば", "まぐろ"] },
-  { id: "egg-dairy", name: "卵・乳製品", foods: ["卵", "牛乳", "チーズ", "ヨーグルト"] },
-  { id: "soy-fermented", name: "大豆・発酵食品", foods: ["納豆", "豆腐", "味噌"] },
-  { id: "mushroom", name: "きのこ", foods: ["しめじ", "えのき", "しいたけ"] },
-  { id: "seaweed", name: "海藻", foods: ["わかめ", "昆布", "のり"] },
-  { id: "nuts", name: "ナッツ", foods: ["アーモンド", "くるみ", "ごま"] },
-  { id: "fruit", name: "フルーツ", foods: ["バナナ", "りんご", "みかん", "キウイ"] },
-  { id: "drink", name: "飲み物", foods: ["緑茶", "コーヒー", "豆乳"] },
-];
+// カテゴリーは foods.json の category から自動生成する
+let foodCategories = [];
+const categoryLabels = {
+  vegetable: "野菜",
+  processed: "加工・発酵食品",
+  meat: "肉",
+  fish: "魚",
+  fruit: "フルーツ",
+  dairy: "乳製品・飲料",
+  mushroom: "きのこ",
+  seaweed: "海藻",
+  seed: "ナッツ・種子",
+  beverage: "飲み物",
+  snack: "おやつ",
+};
+const categoryOrder = ["vegetable", "meat", "fish", "processed", "dairy", "mushroom", "seaweed", "seed", "fruit", "beverage", "snack"];
 let purposeNutrientTags = [
   { id: "vitamin-c", name: "ビタミンC", foods: ["ブロッコリー", "キウイ", "みかん", "キャベツ"] },
   { id: "iron", name: "鉄", foods: ["ほうれん草", "納豆", "豆腐", "牛肉"] },
@@ -53,7 +59,14 @@ const foodNameAliases = {
   "卵": "たまご",
   "さば": "サバ",
   "みかん": "オレンジ（フルーツ）",
-  "きのこ": "しいたけ（キノコ類）",
+  "きのこ": "椎茸",
+  "しいたけ": "椎茸",
+  "くるみ": "胡桃（くるみ）",
+  "まぐろ": "鮪（マグロ）",
+  "ツナ": "鮪（マグロ）",
+  "のり": "海苔",
+  "ごま": "ゴマ",
+  "なす": "なすび",
 };
 
 // 1. データの読み込みと変換（検索キーワード対応版）
@@ -75,13 +88,17 @@ async function loadFoods(query = "") {
         keywords: item.keywords || [] 
       };
 
+      const foodIconText = item.emoji || "🥗";
+
       foodData[id] = {
         name: item.food,
-        emoji: item.emoji || "🥗",
+        category: item.category || "",
+        emoji: foodIconText,
+        image: normalizeFoodImagePath(item.image),
         nutrients: item.nutrients || [],
         excellent: {
           icon: "◎",
-          pairTitle: `${item.emoji}${item.food} × ${item.good_pairs[0]?.food || "バランス食"}`,
+          pairTitle: `${foodIconText}${item.food} × ${item.good_pairs[0]?.food || "バランス食"}`,
           nutritionScore: item.good_pairs[0] ? Math.round(100 * item.good_pairs[0].boost) : "100",
           boostRate: item.good_pairs[0] ? `+${Math.round((item.good_pairs[0].boost - 1) * 100)}%` : "+0%",
           boosts: [item.good_pairs[0]?.effect || "基本の栄養"],
@@ -93,8 +110,8 @@ async function loadFoods(query = "") {
         good: {
           icon: "○",
           pairTitle: (item.better_pairs && item.better_pairs.length > 0)
-            ? `${item.emoji}${item.food} × ${item.better_pairs[0].food}`
-            : `${item.emoji}${item.food} × 卵や野菜`,
+            ? `${foodIconText}${item.food} × ${item.better_pairs[0].food}`
+            : `${foodIconText}${item.food} × 卵や野菜`,
           nutritionScore: (item.better_pairs && item.better_pairs.length > 0) 
             ? Math.round(100 * item.better_pairs[0].boost) 
             : "110",
@@ -114,8 +131,8 @@ async function loadFoods(query = "") {
         improve: {
           icon: (item.bad_pairs && item.bad_pairs.length > 0) ? "⚠" : "△",
           pairTitle: (item.bad_pairs && item.bad_pairs.length > 0) 
-            ? `${item.emoji}${item.food} × ${item.bad_pairs[0].food}`
-            : `${item.emoji}${item.food} 単体`,
+            ? `${foodIconText}${item.food} × ${item.bad_pairs[0].food}`
+            : `${foodIconText}${item.food} 単体`,
           nutritionScore: (item.bad_pairs && item.bad_pairs.length > 0) ? "85" : "95",
           boostRate: (item.bad_pairs && item.bad_pairs.length > 0) ? "-15%" : "+0%",
           boosts: (item.bad_pairs && item.bad_pairs.length > 0) ? ["もったいないアラート"] : ["伸びしろあり"],
@@ -127,6 +144,18 @@ async function loadFoods(query = "") {
       };
     });
 
+    if (!query) {
+      allFoodData = { ...foodData };
+      searchResultFoodIds = Object.keys(allFoodData);
+      foodCategories = buildFoodCategoriesFromData(allFoodData);
+    } else {
+      searchResultFoodIds = rawFoods.map((item) => item.id || item.food);
+      rawFoods.forEach((item) => {
+        const id = item.id || item.food;
+        allFoodData[id] = foodData[id];
+      });
+    }
+
     renderCategoryTabs();
     renderSearchResults();
     updateDisplay();
@@ -137,19 +166,69 @@ async function loadFoods(query = "") {
 }
 
 // 2. 検索ロジック（サーバー側の検索結果を表示する形に変更）
-function findFoodIdByName(foodName) {
-  const normalizedFoodName = foodNameAliases[foodName] || foodName;
-  return Object.keys(foodData).find((id) => {
-    const food = foodData[id];
-    return food.name === normalizedFoodName
-      || food.name.includes(normalizedFoodName)
-      || normalizedFoodName.includes(food.name);
+function buildFoodCategoriesFromData(sourceData) {
+  const grouped = {};
+
+  Object.entries(sourceData).forEach(([id, food]) => {
+    const category = food.category || "other";
+    if (!grouped[category]) {
+      grouped[category] = {
+        id: category,
+        name: categoryLabels[category] || category,
+        foods: [],
+      };
+    }
+    grouped[category].foods.push(id);
   });
+
+  return Object.values(grouped).sort((a, b) => {
+    const aIndex = categoryOrder.indexOf(a.id);
+    const bIndex = categoryOrder.indexOf(b.id);
+    if (aIndex === -1 && bIndex === -1) return a.name.localeCompare(b.name, "ja");
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
+}
+
+function findFoodIdByName(foodName) {
+  const normalizedFoodName = normalizeFoodName(foodNameAliases[foodName] || foodName);
+  const sourceData = Object.keys(allFoodData).length ? allFoodData : foodData;
+
+  const exactMatch = Object.keys(sourceData).find((id) => {
+    const food = sourceData[id];
+    return normalizeFoodName(food.name) === normalizedFoodName;
+  });
+  if (exactMatch) return exactMatch;
+
+  return Object.keys(sourceData).find((id) => {
+    const food = sourceData[id];
+    const normalizedName = normalizeFoodName(food.name);
+    return normalizedName.includes(normalizedFoodName)
+      || normalizedFoodName.includes(normalizedName);
+  });
+}
+
+function normalizeFoodName(foodName) {
+  return String(foodName || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[（）()]/g, "");
+}
+
+function normalizeFoodImagePath(imagePath) {
+  const path = String(imagePath || "").trim().replace(/\\/g, "/");
+  return path.startsWith("/static/icons/") && path.toLowerCase().endsWith(".png")
+    ? path
+    : "";
 }
 
 function syncSelectedFoodFromInput() {
   const foodName = foodSearch.value.trim();
-  selectedFood = foodName ? (findFoodIdByName(foodName) || "") : "";
+  const foodKey = foodName ? (findFoodIdByName(foodName) || "") : "";
+  selectedFood = foodKey;
+  if (foodName && foodKey) addSelectedFood(foodKey, (allFoodData[foodKey] || foodData[foodKey])?.name || foodName);
   updateDisplay();
 }
 
@@ -162,6 +241,8 @@ const searchResults = document.getElementById("searchResults");
 const selectedFoodChip = document.getElementById("selectedFoodChip");
 const selectedFoodChipText = document.getElementById("selectedFoodChipText");
 const clearSelectedFood = document.getElementById("clearSelectedFood");
+const foodSearchWrapper = document.getElementById("foodSearchWrapper");
+const resultContainer = document.getElementById("resultContainer");
 const ratingCards = document.querySelectorAll(".rating-card");
 const canHoverSearchPanel = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
@@ -201,22 +282,177 @@ function getDisplayedPurposeTag() {
   return previewPurposeTag || activePurposeTag;
 }
 
+function splitFoodNames(foodNames) {
+  if (Array.isArray(foodNames)) return foodNames;
+  return String(foodNames || "")
+    .split(/[、,]/)
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
+function dedupeFoodNames(foodNames) {
+  return [...new Set(splitFoodNames(foodNames))];
+}
+
+function dedupeSelectedFoods() {
+  const seen = new Set();
+  selectedFoods = selectedFoods.filter((food) => {
+    const key = food.id || food.name;
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function createFoodMedia(food, className = "food-inline-image") {
+  if (food?.image) {
+    const img = document.createElement("img");
+    img.className = className;
+    img.src = food.image;
+    img.alt = food.name || "食材";
+    img.loading = "lazy";
+    img.onerror = () => {
+      const fallback = document.createElement("span");
+      fallback.className = className === "food-image-display" ? "food-emoji-display" : "food-inline-emoji";
+      fallback.textContent = food.emoji || "🥗";
+      img.replaceWith(fallback);
+    };
+    return img;
+  }
+
+  const span = document.createElement("span");
+  span.className = className === "food-image-display" ? "food-emoji-display" : "food-inline-emoji";
+  span.textContent = food?.emoji || "🥗";
+  return span;
+}
+
+function renderFoodMedia(target, food, className = "food-inline-image") {
+  if (!target) return;
+  target.textContent = "";
+  target.appendChild(createFoodMedia(food, className));
+}
+
+function renderFoodLabel(target, food) {
+  if (!target) return;
+  target.textContent = "";
+  appendFoodLabel(target, food);
+}
+
+function appendFoodLabel(target, food) {
+  target.appendChild(createFoodMedia(food));
+  target.append(` ${food.name}`);
+}
+
+function addSelectedFood(foodKey, foodName) {
+  const selectedFoodData = allFoodData[foodKey] || foodData[foodKey];
+  const name = String(foodName || selectedFoodData?.name || "").trim();
+  if (!name) return;
+
+  const id = foodKey || findFoodIdByName(name) || name;
+  dedupeSelectedFoods();
+
+  if (!selectedFoods.some((food) => food.id === id || food.name === name)) {
+    selectedFoods.push({
+      id,
+      name,
+      emoji: selectedFoodData?.emoji || "",
+      image: selectedFoodData?.image || "",
+      data: selectedFoodData || null,
+    });
+  }
+
+  dedupeSelectedFoods();
+  updateSelectedFoodChip();
+}
+
 function updateSelectedFoodChip(foodName) {
   if (!selectedFoodChip || !selectedFoodChipText) return;
 
-  if (!foodName) {
+  const displayNames = foodName
+    ? dedupeFoodNames(foodName)
+    : dedupeFoodNames(selectedFoods.map((food) => food.name));
+
+  if (!displayNames.length) {
     selectedFoodChip.hidden = true;
     selectedFoodChipText.textContent = "";
     return;
   }
 
-  selectedFoodChipText.textContent = `選択中：${foodName}`;
+  selectedFoodChipText.textContent = "選択中：";
+  if (!foodName && selectedFoods.length) {
+    selectedFoods.forEach((food, index) => {
+      if (index > 0) selectedFoodChipText.append("、");
+      appendFoodLabel(selectedFoodChipText, food.data || food);
+    });
+  } else {
+    selectedFoodChipText.append(displayNames.join("、"));
+  }
   selectedFoodChip.hidden = false;
+}
+
+function formatPairPart(part, food) {
+  const trimmedPart = String(part || "").trim();
+  const iconAndName = `${food.emoji || ""}${food.name || ""}`;
+
+  if (food.emoji && food.name && trimmedPart === iconAndName) {
+    return `${food.emoji} ${food.name}`;
+  }
+
+  return trimmedPart;
+}
+
+function normalizePairTitle(pairTitle, food) {
+  const parts = String(pairTitle || "")
+    .split("×")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (!parts.length) {
+    return food.emoji && food.name ? `${food.emoji} ${food.name}` : "おすすめ食材";
+  }
+
+  const selectedName = food.name || "";
+  const hasIconSelectedPart = selectedName
+    && parts.some((part) => part.includes(selectedName) && part !== selectedName);
+  const seenNames = new Set();
+
+  return parts
+    .filter((part) => !(hasIconSelectedPart && part === selectedName))
+    .filter((part) => {
+      const nameKey = selectedName && part.includes(selectedName) ? selectedName : part;
+      if (seenNames.has(nameKey)) return false;
+      seenNames.add(nameKey);
+      return true;
+    })
+    .map((part) => formatPairPart(part, food))
+    .join(" × ");
+}
+
+function renderPairTitle(target, pairTitle, food) {
+  if (!target) return;
+  const parts = String(pairTitle || "")
+    .split("×")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  target.textContent = "";
+
+  parts.forEach((part, index) => {
+    if (index > 0) target.append(" × ");
+
+    if (food.image && food.name && part.includes(food.name)) {
+      appendFoodLabel(target, food);
+    } else {
+      target.append(part);
+    }
+  });
 }
 
 function resetFoodSelectionPanel() {
   foodSearch.value = "";
   selectedFood = "";
+  selectedFoods = [];
+  currentFoodId = "";
   searchPanelStep = "entry";
   activeFoodCategory = "";
   activePurposeTag = "";
@@ -225,17 +461,49 @@ function resetFoodSelectionPanel() {
   renderCategoryTabs();
   renderSearchResults();
   clearResultDisplay();
+  applyRankTheme(0);
+  closeFoodCandidatePanel();
+  if (resultContainer) resultContainer.hidden = true;
 }
 
 let currentFoodId = ""; // 今選んでいる食材を保存する変数（関数の外に書いてください）
+const rankThemes = [
+  { key: "excellent", label: "最強", icon: "◎", mainColor: "#f1c40f", chartBg: "rgba(241, 196, 15, 0.35)" },
+  { key: "good", label: "良好", icon: "○", mainColor: "#e74c3c", chartBg: "rgba(231, 76, 60, 0.22)" },
+  { key: "improve", label: "普通", icon: "△", mainColor: "#3498db", chartBg: "rgba(52, 152, 219, 0.22)" },
+];
+
+function applyRankTheme(rankIndex) {
+  const theme = rankThemes[rankIndex] || rankThemes[0];
+  const logicBox = document.getElementById("logicBox");
+  const cardTitle = document.getElementById("cardTitle");
+  const statusIcon = document.getElementById("resultStatusIcon");
+  const bestLogicArea = document.getElementById("bestLogicArea");
+
+  if (logicBox) {
+    logicBox.classList.remove("rank-excellent", "rank-good", "rank-improve", "logic-gold");
+    logicBox.classList.add(`rank-${theme.key}`);
+  }
+
+  if (cardTitle) cardTitle.textContent = `栄養の組み合わせ：${theme.label}`;
+  if (statusIcon) statusIcon.textContent = theme.icon;
+  if (bestLogicArea) bestLogicArea.hidden = rankIndex !== 0;
+
+  document.querySelectorAll(".rating-btn").forEach((btn, index) => {
+    btn.classList.toggle("active", index === rankIndex);
+  });
+
+  return theme;
+}
 
 
   function updateDisplay(foodId, rankIndex = 0) { // pairIndex を rankIndex に変更
     if (!foodId) return;
     currentFoodId = foodId; 
+    if (resultContainer) resultContainer.hidden = false;
 
     // foodData という変数を使っている場合はこちらの方が確実です
-    const food = foodData[foodId]; 
+    const food = allFoodData[foodId] || foodData[foodId]; 
     if (!food) {
         console.error("食材データが見つかりません:", foodId);
         return;
@@ -243,15 +511,19 @@ let currentFoodId = ""; // 今選んでいる食材を保存する変数（関�
 
     const selectedFoodEl = document.getElementById("selectedFood");
     if (selectedFoodEl) {
-        selectedFoodEl.textContent = `選んだ食材：${food.emoji} ${food.name}`;
+        selectedFoodEl.textContent = "選んだ食材：";
+        appendFoodLabel(selectedFoodEl, food);
     }
 
     // 名前を rankIndex に揃えたので、これで正しくデータが取り出せます！
-    const targetData = rankIndex === 0 ? food.excellent : (rankIndex === 1 ? food.good : food.average);
+    const targetData = rankIndex === 0 ? food.excellent : (rankIndex === 1 ? food.good : food.improve);
+    const activeTheme = applyRankTheme(rankIndex);
+    if (!targetData) return;
+    const displayPairTitle = normalizePairTitle(targetData.pairTitle, food);
 
   // 各項目を targetData から取得して表示
   if (document.getElementById("pairTitle")) 
-    document.getElementById("pairTitle").textContent = targetData.pairTitle || "";
+    renderPairTitle(document.getElementById("pairTitle"), displayPairTitle, food);
   // targetData が存在することを確認してから中身を書き換える
 if (targetData) {
     if (document.getElementById("nutritionScore")) {
@@ -293,29 +565,9 @@ if (targetData) {
     };
   });
 
-    // 3. 判定（◎○△）に合わせてカードの見た目を変える
-    const logicBox = document.getElementById("logicBox");
-    const cardTitle = document.getElementById("cardTitle");
-    const statusIcon = document.getElementById("resultStatusIcon");
-
-    // 全ての pairIndex を rankIndex に書き換えます
-    if (rankIndex === 0 && score >= 130) {
-        if (logicBox) logicBox.classList.add("logic-gold"); // 黄金デザイン適用
-        if (cardTitle) cardTitle.textContent = "黄金の栄養ブースト";
-        if (statusIcon) statusIcon.textContent = "◎";
-    } else {
-        if (logicBox) logicBox.classList.remove("logic-gold"); // 通常デザイン
-        if (cardTitle) {
-            cardTitle.textContent = rankIndex === 1 ? "栄養の組み合わせ：良好" : "栄養の組み合わせ：普通";
-        }
-        if (statusIcon) {
-            statusIcon.textContent = rankIndex === 1 ? "○" : "△";
-        }
-    }
-
-    // 4. テキストデータの流し込み
+    // 3. テキストデータの流し込み
     const foodEmojiDisplay = document.getElementById("foodEmojiDisplay");
-    if (foodEmojiDisplay) foodEmojiDisplay.textContent = food.emoji;
+    if (foodEmojiDisplay) renderFoodMedia(foodEmojiDisplay, food, "food-image-display");
 
     const foodNameLabel = document.getElementById("foodNameLabel");
     if (foodNameLabel) foodNameLabel.textContent = `食材：${food.name}`;
@@ -328,9 +580,8 @@ if (targetData) {
     if (boostRateEl) boostRateEl.textContent = targetData.boostRate || "-";
     
     // ペアの相手の名前を表示
-    const partnerName = targetData.pairTitle || "おすすめ食材";
     const bestMethodTitle = document.getElementById("bestMethodTitle");
-    if (bestMethodTitle) bestMethodTitle.textContent = `${food.name} × ${partnerName}`;
+    if (bestMethodTitle) renderPairTitle(bestMethodTitle, displayPairTitle, food);
 
     // ロジック（理由・改善点）の表示
     const scientificEvidence = document.getElementById("scientificEvidence");
@@ -374,10 +625,10 @@ const chartValues = [
             labels: ['栄養', '吸収', '脂質', '酵素', '抗酸化'],
             datasets: [{
                 data: chartValues,
-                backgroundColor: 'rgba(255, 215, 0, 0.4)',
-                borderColor: '#ffd700',
+                backgroundColor: activeTheme.chartBg,
+                borderColor: activeTheme.mainColor,
                 borderWidth: 3,
-                pointBackgroundColor: '#ffd700'
+                pointBackgroundColor: activeTheme.mainColor
             }]
         },
         options: {
@@ -441,7 +692,7 @@ function renderSearchResults() {
 
   // 修正：クエリがあるときは、サーバーから読み込まれたfoodDataのキーをそのまま使う
   if (query) {
-    renderFoodCandidateButtons(Object.keys(foodData));
+    renderFoodCandidateButtons(searchResultFoodIds);
     return;
   }
 
@@ -491,18 +742,25 @@ function renderFoodCandidateButtons(foodItems) {
   }
 
   foodItems.forEach((foodItem) => {
-    const foodKey = foodData[foodItem] ? foodItem : findFoodIdByName(foodItem);
-    const foodName = foodData[foodKey]?.name || foodItem;
-    const foodEmoji = foodData[foodKey]?.emoji || "";
+    const foodKey = (allFoodData[foodItem] || foodData[foodItem])
+      ? foodItem
+      : findFoodIdByName(foodItem);
+    const candidateFood = allFoodData[foodKey] || foodData[foodKey];
+    if (!foodKey || !candidateFood) return;
 
+    const foodName = candidateFood.name;
     const btn = document.createElement("button");
     btn.className = "food-button search-result-button";
-    if (foodKey && foodKey === selectedFood) btn.classList.add("active");
-    btn.textContent = foodEmoji ? `${foodEmoji} ${foodName}` : foodName;
-    btn.onclick = () => {
+    btn.dataset.id = foodKey;
+    if (foodKey && (foodKey === selectedFood || selectedFoods.some((food) => food.id === foodKey))) {
+      btn.classList.add("active");
+    }
+    appendFoodLabel(btn, candidateFood);
+    btn.onclick = (event) => {
+      event.stopPropagation();
       foodSearch.value = foodName;
       selectedFood = foodKey || "";
-      updateSelectedFoodChip(foodName);
+      addSelectedFood(foodKey, foodName);
       foodSearch.dispatchEvent(new Event("change", { bubbles: true }));
 
       // ここを修正：どの食材(foodKey)の、どのランク(0=最強)を表示するか指定する
@@ -623,7 +881,10 @@ function renderSubOptions() {
 // イベントリスナーの設定
 if (foodSearch) {
   foodSearch.onfocus = () => openFoodCandidatePanel();
-  foodSearch.onclick = () => openFoodCandidatePanel();
+  foodSearch.onclick = (event) => {
+    event.stopPropagation();
+    openFoodCandidatePanel();
+  };
   
   // 修正：入力されるたびにサーバーへ問い合わせ(loadFoods)を行うように変更
   foodSearch.oninput = async () => {
@@ -666,3 +927,4 @@ ratingCards.forEach((card) => {
 
 // 初期実行（全件読み込み）
 loadFoods();
+if (resultContainer) resultContainer.hidden = true;
