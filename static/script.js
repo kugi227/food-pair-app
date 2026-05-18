@@ -71,10 +71,9 @@ const foodNameAliases = {
   "なす": "なすび",
 };
 
-// 1. データの読み込みと変換（検索キーワード対応版）
+// 1. データの読み込みと変換
 async function loadFoods(query = "") {
   try {
-    // 検索ワードがある場合はクエリパラメータを付与してリクエスト
     const url = query ? `/foods?q=${encodeURIComponent(query)}` : "/foods";
     const response = await fetch(url); 
     const rawFoods = await response.json();
@@ -98,12 +97,12 @@ async function loadFoods(query = "") {
         emoji: foodIconText,
         image: normalizeFoodImagePath(item.image),
         nutrients: item.nutrients || [],
+        chart_data: item.chart_data || null,
         excellent: {
           icon: "◎",
           pairTitle: `${foodIconText}${item.food} × ${item.good_pairs[0]?.food || "バランス食"}`,
           nutritionScore: item.good_pairs[0] ? Math.round(100 * item.good_pairs[0].boost) : "100",
           boostRate: item.good_pairs[0] ? `+${Math.round((item.good_pairs[0].boost - 1) * 100)}%` : "+0%",
-          boosts: [item.good_pairs[0]?.effect || "基本の栄養"],
           suggestion: `${item.good_pairs[0]?.food || "をプラス"}`,
           reason: `${item.good_pairs[0]?.effect || ""}。${item.dressing_logic || ""}`,
           improvement: `おすすめ調理法：${item.best_methods?.join('、') || "加熱調理"}`,
@@ -111,33 +110,19 @@ async function loadFoods(query = "") {
         },
         good: {
           icon: "○",
-          pairTitle: (item.better_pairs && item.better_pairs.length > 0)
-            ? `${foodIconText}${item.food} × ${item.better_pairs[0].food}`
-            : `${foodIconText}${item.food} × 卵や野菜`,
-          nutritionScore: (item.better_pairs && item.better_pairs.length > 0) 
-            ? Math.round(100 * item.better_pairs[0].boost) 
-            : "110",
-          boostRate: (item.better_pairs && item.better_pairs.length > 0) 
-            ? `+${Math.round((item.better_pairs[0].boost - 1) * 100)}%` 
-            : "+10%",
-          boosts: (item.better_pairs && item.better_pairs.length > 0) 
-            ? [item.better_pairs[0].effect] 
-            : ["バランスサポート"],
-          suggestion: (item.better_pairs && item.better_pairs.length > 0) 
-            ? `${item.better_pairs[0].food}をプラス` 
-            : "他の食材と組み合わせて彩りアップ",
+          pairTitle: (item.better_pairs && item.better_pairs.length > 0) ? `${foodIconText}${item.food} × ${item.better_pairs[0].food}` : `${foodIconText}${item.food} × 卵や野菜`,
+          nutritionScore: (item.better_pairs && item.better_pairs.length > 0) ? Math.round(100 * item.better_pairs[0].boost) : "110",
+          boostRate: (item.better_pairs && item.better_pairs.length > 0) ? `+${Math.round((item.better_pairs[0].boost - 1) * 100)}%` : "+10%",
+          suggestion: (item.better_pairs && item.better_pairs.length > 0) ? `${item.better_pairs[0].food}をプラス` : "他の食材と組み合わせて彩りアップ",
           reason: `${(item.better_pairs && item.better_pairs.length > 0) ? item.better_pairs[0].effect : "栄養バランスが整います"}。${item.dressing_logic || ""}`,
           improvement: "彩りよく盛り付けてみましょう。",
           dressings: item.dressings ? item.dressings.map((d, i) => i === 1 ? `★${d}` : d) : ["お好みのドレッシング"],
         },
         improve: {
           icon: (item.bad_pairs && item.bad_pairs.length > 0) ? "⚠" : "△",
-          pairTitle: (item.bad_pairs && item.bad_pairs.length > 0) 
-            ? `${foodIconText}${item.food} × ${item.bad_pairs[0].food}`
-            : `${foodIconText}${item.food} 単体`,
+          pairTitle: (item.bad_pairs && item.bad_pairs.length > 0) ? `${foodIconText}${item.food} × ${item.bad_pairs[0].food}` : `${foodIconText}${item.food} 単体`,
           nutritionScore: (item.bad_pairs && item.bad_pairs.length > 0) ? "85" : "95",
           boostRate: (item.bad_pairs && item.bad_pairs.length > 0) ? "-15%" : "+0%",
-          boosts: (item.bad_pairs && item.bad_pairs.length > 0) ? ["もったいないアラート"] : ["伸びしろあり"],
           suggestion: (item.bad_pairs && item.bad_pairs.length > 0) ? "この組み合わせは避ける" : "油や酸味を足して吸収率アップ",
           reason: item.bad_pairs && item.bad_pairs.length > 0 ? item.bad_pairs[0].effect : "もっと効率よく栄養を摂れる方法があります。",
           improvement: "食べるタイミングや調理法を工夫してみましょう。",
@@ -160,25 +145,18 @@ async function loadFoods(query = "") {
 
     renderCategoryTabs();
     renderSearchResults();
-    updateDisplay();
 
   } catch (error) {
     console.error("データの読み込みエラー:", error);
   }
 }
 
-// 2. 検索ロジック（サーバー側の検索結果を表示する形に変更）
 function buildFoodCategoriesFromData(sourceData) {
   const grouped = {};
-
   Object.entries(sourceData).forEach(([id, food]) => {
     const category = food.category || "other";
     if (!grouped[category]) {
-      grouped[category] = {
-        id: category,
-        name: categoryLabels[category] || category,
-        foods: [],
-      };
+      grouped[category] = { id: category, name: categoryLabels[category] || category, foods: [] };
     }
     grouped[category].foods.push(id);
   });
@@ -196,34 +174,21 @@ function buildFoodCategoriesFromData(sourceData) {
 function findFoodIdByName(foodName) {
   const normalizedFoodName = normalizeFoodName(foodNameAliases[foodName] || foodName);
   const sourceData = Object.keys(allFoodData).length ? allFoodData : foodData;
-
-  const exactMatch = Object.keys(sourceData).find((id) => {
-    const food = sourceData[id];
-    return normalizeFoodName(food.name) === normalizedFoodName;
-  });
+  const exactMatch = Object.keys(sourceData).find((id) => normalizeFoodName(sourceData[id].name) === normalizedFoodName);
   if (exactMatch) return exactMatch;
-
   return Object.keys(sourceData).find((id) => {
-    const food = sourceData[id];
-    const normalizedName = normalizeFoodName(food.name);
-    return normalizedName.includes(normalizedFoodName)
-      || normalizedFoodName.includes(normalizedName);
+    const normalizedName = normalizeFoodName(sourceData[id].name);
+    return normalizedName.includes(normalizedFoodName) || normalizedFoodName.includes(normalizedName);
   });
 }
 
 function normalizeFoodName(foodName) {
-  return String(foodName || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "")
-    .replace(/[（）()]/g, "");
+  return String(foodName || "").trim().toLowerCase().replace(/\s+/g, "").replace(/[（）()]/g, "");
 }
 
 function normalizeFoodImagePath(imagePath) {
   const path = String(imagePath || "").trim().replace(/\\/g, "/");
-  return path.startsWith("/static/icons/") && path.toLowerCase().endsWith(".png")
-    ? path
-    : "";
+  return path.startsWith("/static/icons/") && path.toLowerCase().endsWith(".png") ? path : "";
 }
 
 function syncSelectedFoodFromInput() {
@@ -231,10 +196,10 @@ function syncSelectedFoodFromInput() {
   const foodKey = foodName ? (findFoodIdByName(foodName) || "") : "";
   selectedFood = foodKey;
   if (foodName && foodKey) addSelectedFood(foodKey, (allFoodData[foodKey] || foodData[foodKey])?.name || foodName);
-  updateDisplay();
+  updateDisplay(foodKey, getCurrentRankIndex());
 }
 
-// 3. 表示更新
+// 2. UI要素の取得と検索パネル制御
 const foodSearch = document.getElementById("foodSearch");
 const foodCandidatePanel = document.getElementById("foodCandidatePanel");
 const foodCategoryTabs = document.getElementById("foodCategoryTabs");
@@ -245,8 +210,11 @@ const selectedFoodChipText = document.getElementById("selectedFoodChipText");
 const clearSelectedFood = document.getElementById("clearSelectedFood");
 const foodSearchWrapper = document.getElementById("foodSearchWrapper");
 const resultContainer = document.getElementById("resultContainer");
-const ratingCards = document.querySelectorAll(".rating-card");
 const canHoverSearchPanel = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+var volumeSliderEl = document.getElementById("volumeSlider");
+var vegSliderEl = document.getElementById("vegSlider");
+var condimentSliderEl = document.getElementById("condimentSlider");
 
 function openFoodCandidatePanel() {
   if (!foodSearch.value.trim()) {
@@ -272,29 +240,10 @@ function clearSearchPreview() {
   previewPurposeTag = "";
 }
 
-function getDisplayedPanelStep() {
-  return previewPanelStep || searchPanelStep;
-}
-
-function getDisplayedFoodCategory() {
-  return previewFoodCategory || activeFoodCategory;
-}
-
-function getDisplayedPurposeTag() {
-  return previewPurposeTag || activePurposeTag;
-}
-
-function splitFoodNames(foodNames) {
-  if (Array.isArray(foodNames)) return foodNames;
-  return String(foodNames || "")
-    .split(/[、,]/)
-    .map((name) => name.trim())
-    .filter(Boolean);
-}
-
-function dedupeFoodNames(foodNames) {
-  return [...new Set(splitFoodNames(foodNames))];
-}
+function getDisplayedPanelStep() { return previewPanelStep || searchPanelStep; }
+function getDisplayedPurposeTag() { return previewPurposeTag || activePurposeTag; }
+function splitFoodNames(foodNames) { return Array.isArray(foodNames) ? foodNames : String(foodNames || "").split(/[、,]/).map(n => n.trim()).filter(Boolean); }
+function dedupeFoodNames(foodNames) { return [...new Set(splitFoodNames(foodNames))]; }
 
 function dedupeSelectedFoods() {
   const seen = new Set();
@@ -306,169 +255,70 @@ function dedupeSelectedFoods() {
   });
 }
 
+// メディア(絵文字・画像)生成ヘルパー
 function createFoodMedia(food, className = "food-inline-image") {
   if (food?.image) {
     const img = document.createElement("img");
-    img.className = className;
-    img.src = food.image;
-    img.alt = food.name || "食材";
-    img.loading = "lazy";
+    img.className = className; img.src = food.image; img.alt = food.name || "食材"; img.loading = "lazy";
     img.onerror = () => {
       const fallback = document.createElement("span");
       fallback.className = className === "food-image-display" ? "food-emoji-display" : "food-inline-emoji";
-      fallback.textContent = food.emoji || "🥗";
-      img.replaceWith(fallback);
+      fallback.textContent = food.emoji || "🥗"; img.replaceWith(fallback);
     };
     return img;
   }
-
   const span = document.createElement("span");
   span.className = className === "food-image-display" ? "food-emoji-display" : "food-inline-emoji";
   span.textContent = food?.emoji || "🥗";
   return span;
 }
 
-function renderFoodMedia(target, food, className = "food-inline-image") {
-  if (!target) return;
-  target.textContent = "";
-  target.appendChild(createFoodMedia(food, className));
-}
-
-function renderFoodLabel(target, food) {
-  if (!target) return;
-  target.textContent = "";
-  appendFoodLabel(target, food);
-}
-
-function appendFoodLabel(target, food) {
-  target.appendChild(createFoodMedia(food));
-  target.append(` ${food.name}`);
-}
+function renderFoodMedia(target, food, className = "food-inline-image") { if (!target) return; target.textContent = ""; target.appendChild(createFoodMedia(food, className)); }
+function appendFoodLabel(target, food) { target.appendChild(createFoodMedia(food)); target.append(` ${food.name}`); }
 
 function addSelectedFood(foodKey, foodName) {
   const selectedFoodData = allFoodData[foodKey] || foodData[foodKey];
-  const name = String(foodName || selectedFoodData?.name || "").trim();
-  if (!name) return;
-
-  const id = foodKey || findFoodIdByName(name) || name;
-  dedupeSelectedFoods();
-
+  const name = String(foodName || selectedFoodData?.name || "").trim(); if (!name) return;
+  const id = foodKey || findFoodIdByName(name) || name; dedupeSelectedFoods();
   if (!selectedFoods.some((food) => food.id === id || food.name === name)) {
-    selectedFoods.push({
-      id,
-      name,
-      emoji: selectedFoodData?.emoji || "",
-      image: selectedFoodData?.image || "",
-      data: selectedFoodData || null,
-    });
+    selectedFoods.push({ id, name, emoji: selectedFoodData?.emoji || "", image: selectedFoodData?.image || "", data: selectedFoodData || null });
   }
-
-  dedupeSelectedFoods();
-  updateSelectedFoodChip();
+  dedupeSelectedFoods(); updateSelectedFoodChip();
 }
 
 function updateSelectedFoodChip(foodName) {
   if (!selectedFoodChip || !selectedFoodChipText) return;
-
-  const displayNames = foodName
-    ? dedupeFoodNames(foodName)
-    : dedupeFoodNames(selectedFoods.map((food) => food.name));
-
-  if (!displayNames.length) {
-    selectedFoodChip.hidden = true;
-    selectedFoodChipText.textContent = "";
-    return;
-  }
-
+  const displayNames = foodName ? dedupeFoodNames(foodName) : dedupeFoodNames(selectedFoods.map((food) => food.name));
+  if (!displayNames.length) { selectedFoodChip.hidden = true; selectedFoodChipText.textContent = ""; return; }
   selectedFoodChipText.textContent = "選択中：";
   if (!foodName && selectedFoods.length) {
-    selectedFoods.forEach((food, index) => {
-      if (index > 0) selectedFoodChipText.append("、");
-      appendFoodLabel(selectedFoodChipText, food.data || food);
-    });
-  } else {
-    selectedFoodChipText.append(displayNames.join("、"));
-  }
+    selectedFoods.forEach((food, index) => { if (index > 0) selectedFoodChipText.append("、"); appendFoodLabel(selectedFoodChipText, food.data || food); });
+  } else { selectedFoodChipText.append(displayNames.join("、")); }
   selectedFoodChip.hidden = false;
 }
 
-function formatPairPart(part, food) {
-  const trimmedPart = String(part || "").trim();
-  const iconAndName = `${food.emoji || ""}${food.name || ""}`;
-
-  if (food.emoji && food.name && trimmedPart === iconAndName) {
-    return `${food.emoji} ${food.name}`;
-  }
-
-  return trimmedPart;
-}
+function formatPairPart(part, food) { const trimmedPart = String(part || "").trim(); const iconAndName = `${food.emoji || ""}${food.name || ""}`; return (food.emoji && food.name && trimmedPart === iconAndName) ? `${food.emoji} ${food.name}` : trimmedPart; }
 
 function normalizePairTitle(pairTitle, food) {
-  const parts = String(pairTitle || "")
-    .split("×")
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  if (!parts.length) {
-    return food.emoji && food.name ? `${food.emoji} ${food.name}` : "おすすめ食材";
-  }
-
-  const selectedName = food.name || "";
-  const hasIconSelectedPart = selectedName
-    && parts.some((part) => part.includes(selectedName) && part !== selectedName);
-  const seenNames = new Set();
-
-  return parts
-    .filter((part) => !(hasIconSelectedPart && part === selectedName))
-    .filter((part) => {
-      const nameKey = selectedName && part.includes(selectedName) ? selectedName : part;
-      if (seenNames.has(nameKey)) return false;
-      seenNames.add(nameKey);
-      return true;
-    })
-    .map((part) => formatPairPart(part, food))
-    .join(" × ");
+  const parts = String(pairTitle || "").split("×").map(p => p.trim()).filter(Boolean);
+  if (!parts.length) return food.emoji && food.name ? `${food.emoji} ${food.name}` : "おすすめ食材";
+  const selectedName = food.name || ""; const hasIconSelectedPart = selectedName && parts.some((part) => part.includes(selectedName) && part !== selectedName); const seenNames = new Set();
+  return parts.filter(p => !(hasIconSelectedPart && p === selectedName)).filter(p => { const k = selectedName && p.includes(selectedName) ? selectedName : p; if (seenNames.has(k)) return false; seenNames.add(k); return true; }).map(p => formatPairPart(p, food)).join(" × ");
 }
 
 function renderPairTitle(target, pairTitle, food) {
-  if (!target) return;
-  const parts = String(pairTitle || "")
-    .split("×")
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  target.textContent = "";
-
-  parts.forEach((part, index) => {
-    if (index > 0) target.append(" × ");
-
-    if (food.image && food.name && part.includes(food.name)) {
-      appendFoodLabel(target, food);
-    } else {
-      target.append(part);
-    }
-  });
+  if (!target) return; const parts = String(pairTitle || "").split("×").map(p => p.trim()).filter(Boolean); target.textContent = "";
+  parts.forEach((part, index) => { if (index > 0) target.append(" × "); if (food.image && food.name && part.includes(food.name)) { appendFoodLabel(target, food); } else { target.append(part); } });
 }
 
 function resetFoodSelectionPanel() {
-  foodSearch.value = "";
-  selectedFood = "";
-  selectedFoods = [];
-  currentFoodId = "";
-  searchPanelStep = "entry";
-  activeFoodCategory = "";
-  activePurposeTag = "";
-  clearSearchPreview();
-  updateSelectedFoodChip("");
-  renderCategoryTabs();
-  renderSearchResults();
-  clearResultDisplay();
-  applyRankTheme(0);
-  closeFoodCandidatePanel();
-  if (resultContainer) resultContainer.hidden = true;
+  foodSearch.value = ""; selectedFood = ""; selectedFoods = []; currentFoodId = ""; searchPanelStep = "entry"; activeFoodCategory = ""; activePurposeTag = ""; clearSearchPreview(); updateSelectedFoodChip(""); renderCategoryTabs(); renderSearchResults(); clearResultDisplay(); applyRankTheme(0); closeFoodCandidatePanel(); if (resultContainer) resultContainer.hidden = true;
 }
 
-let currentFoodId = ""; // 今選んでいる食材を保存する変数（関数の外に書いてください）
+// ----------------------------------------------------
+// 3. 【コアロジック】表示更新・テーマ適用・API連携（統合版）
+// ----------------------------------------------------
+let currentFoodId = ""; 
 const rankThemes = [
   { key: "excellent", label: "最強", icon: "◎", mainColor: "#f1c40f", chartBg: "rgba(241, 196, 15, 0.35)" },
   { key: "good", label: "良好", icon: "○", mainColor: "#e74c3c", chartBg: "rgba(231, 76, 60, 0.22)" },
@@ -486,447 +336,280 @@ function applyRankTheme(rankIndex) {
     logicBox.classList.remove("rank-excellent", "rank-good", "rank-improve", "logic-gold");
     logicBox.classList.add(`rank-${theme.key}`);
   }
-
   if (cardTitle) cardTitle.textContent = `栄養の組み合わせ：${theme.label}`;
   if (statusIcon) statusIcon.textContent = theme.icon;
   if (bestLogicArea) bestLogicArea.hidden = rankIndex !== 0;
 
-  document.querySelectorAll(".rating-btn").forEach((btn, index) => {
-    btn.classList.toggle("active", index === rankIndex);
+  document.querySelectorAll(".pair-tabs .rating-btn").forEach((btn, index) => {
+    btn.classList.toggle("active", index === parseInt(rankIndex));
   });
-
   return theme;
 }
 
+// テキスト情報の描画と、裏側計算(fetch)を同時に行う統合関数
+function updateDisplay(foodId, rankIndex = 0) {
+  if (!foodId) return;
+  currentFoodId = foodId; 
+  if (resultContainer) resultContainer.hidden = false;
 
-  function updateDisplay(foodId, rankIndex = 0) { // pairIndex を rankIndex に変更
-    if (!foodId) return;
-    currentFoodId = foodId; 
-    if (resultContainer) resultContainer.hidden = false;
+  const food = allFoodData[foodId] || foodData[foodId]; 
+  if (!food) return;
 
-    // foodData という変数を使っている場合はこちらの方が確実です
-    const food = allFoodData[foodId] || foodData[foodId]; 
-    if (!food) {
-        console.error("食材データが見つかりません:", foodId);
-        return;
-    }
+  const targetData = rankIndex === 0 ? food.excellent : (rankIndex === 1 ? food.good : food.improve);
+  const activeTheme = applyRankTheme(rankIndex);
+  if (!targetData) return;
 
-    const selectedFoodEl = document.getElementById("selectedFood");
-    if (selectedFoodEl) {
-        selectedFoodEl.textContent = "選んだ食材：";
-        appendFoodLabel(selectedFoodEl, food);
-    }
+  const displayPairTitle = normalizePairTitle(targetData.pairTitle, food);
 
-    // 名前を rankIndex に揃えたので、これで正しくデータが取り出せます！
-    const targetData = rankIndex === 0 ? food.excellent : (rankIndex === 1 ? food.good : food.improve);
-    const activeTheme = applyRankTheme(rankIndex);
-    if (!targetData) return;
-    const displayPairTitle = normalizePairTitle(targetData.pairTitle, food);
+  if (document.getElementById("pairTitle")) renderPairTitle(document.getElementById("pairTitle"), displayPairTitle, food);
+  if (document.getElementById("suggestion")) document.getElementById("suggestion").textContent = targetData.suggestion || "";
+  if (document.getElementById("reason")) document.getElementById("reason").textContent = targetData.reason || "";
+  if (document.getElementById("improvement")) document.getElementById("improvement").textContent = targetData.improvement || "";
 
-  // 各項目を targetData から取得して表示
-  if (document.getElementById("pairTitle")) 
-    renderPairTitle(document.getElementById("pairTitle"), displayPairTitle, food);
-  // targetData が存在することを確認してから中身を書き換える
-if (targetData) {
-    if (document.getElementById("nutritionScore")) {
-        document.getElementById("nutritionScore").textContent = targetData.nutritionScore || "-";
-    }
+  const foodEmojiDisplay = document.getElementById("foodEmojiDisplay");
+  if (foodEmojiDisplay) renderFoodMedia(foodEmojiDisplay, food, "food-image-display");
+
+  const foodNameLabel = document.getElementById("foodNameLabel");
+  if (foodNameLabel) foodNameLabel.textContent = `食材：${food.name}`;
     
-    if (document.getElementById("boostRate")) {
-        document.getElementById("boostRate").textContent = targetData.boostRate || "-";
-    }
+  const bestMethodTitle = document.getElementById("bestMethodTitle");
+  if (bestMethodTitle) renderPairTitle(bestMethodTitle, displayPairTitle, food);
 
-    if (document.getElementById("suggestion")) {
-        document.getElementById("suggestion").textContent = targetData.suggestion || "";
-    }
-}
-  if (document.getElementById("reason"))
-    document.getElementById("reason").textContent = targetData.reason || "";
+  const scientificEvidence = document.getElementById("scientificEvidence");
+  if (scientificEvidence) scientificEvidence.textContent = targetData.reason || "";
 
-  if (document.getElementById("improvement"))
-    document.getElementById("improvement").textContent = targetData.improvement || "";
-
-    // 2. 表示するペア（◎、○、△）を特定する
-    // good_pairs(◎), better_pairs(○), bad_pairs(△) の順でひとまとめにする
-    const allPairs = [
-        ...(food.good_pairs || []),
-        ...(food.better_pairs || []),
-        ...(food.bad_pairs || [])
-    ];
-    
-   // 以前の allPairs を使うのをやめて、さっき作った targetData を直接使います
-  // スコアの計算（targetDataの中にスコアが入っているならそれを使う）
-  const score = targetData.nutritionScore || "-"; 
-
-  // ボタン（◎○△）のクリックイベントを最新の状態に更新
-  const ratingButtons = document.querySelectorAll(".rating-btn"); 
-  ratingButtons.forEach((btn, index) => {
-    btn.onclick = () => {
-      // ボタンを押した時に、そのランク(index)で自分自身を再表示する
-      updateDisplay(foodId, index);
-    };
-  });
-
-    // 3. テキストデータの流し込み
-    const foodEmojiDisplay = document.getElementById("foodEmojiDisplay");
-    if (foodEmojiDisplay) renderFoodMedia(foodEmojiDisplay, food, "food-image-display");
-
-    const foodNameLabel = document.getElementById("foodNameLabel");
-    if (foodNameLabel) foodNameLabel.textContent = `食材：${food.name}`;
-
-    // score は targetData から取得
-    const nutritionScoreEl = document.getElementById("nutritionScore");
-    if (nutritionScoreEl) nutritionScoreEl.textContent = targetData.nutritionScore || "-";
-
-    const boostRateEl = document.getElementById("boostRate");
-    if (boostRateEl) boostRateEl.textContent = targetData.boostRate || "-";
-    
-    // ペアの相手の名前を表示
-    const bestMethodTitle = document.getElementById("bestMethodTitle");
-    if (bestMethodTitle) renderPairTitle(bestMethodTitle, displayPairTitle, food);
-
-    // ロジック（理由・改善点）の表示
-    const scientificEvidence = document.getElementById("scientificEvidence");
-    if (scientificEvidence) scientificEvidence.textContent = targetData.reason || "";
-
-    const reasonEl = document.getElementById("reason");
-    if (reasonEl) reasonEl.textContent = targetData.reason || "";
-
-    const improvementEl = document.getElementById("improvement");
-    if (improvementEl) improvementEl.textContent = targetData.suggestion || "";
-
-    // 【修正後】342行目付近
-const dList = document.getElementById("dressingList");
-if (dList) {
-    // food.dressings が存在する場合だけ map を実行し、ない場合は空にする
+  const dList = document.getElementById("dressingList");
+  if (dList) {
     if (food.dressings && Array.isArray(food.dressings)) {
-        dList.innerHTML = food.dressings.map(d => `<li>${d}</li>`).join("");
+      dList.innerHTML = food.dressings.map(d => `<li>${d}</li>`).join("");
     } else {
-        dList.innerHTML = "<li>おすすめの味付け：塩・オリーブオイルなど</li>"; 
+      dList.innerHTML = "<li>おすすめの味付け：塩・オリーブオイルなど</li>"; 
     }
+  }
+
+  // 自動的にリアルタイム計算を呼び出す
+  fetchCalculatedScore();
 }
-    // 5. チャート描画（既存のグラフを壊してから新しく作る）
-    const ctx = document.getElementById('radarChart').getContext('2d');
-    let chartStatus = Chart.getChart("radarChart"); 
-    if (chartStatus !== undefined) {
-        chartStatus.destroy();
-    }
 
-    // 【修正後】エラーを回避しつつ、チャート用の数値を設定
-const chartValues = [
-    (food.chart_data && food.chart_data["栄養"]) || 80,
-    (food.chart_data && food.chart_data["吸収"]) || 90,
-    (food.chart_data && food.chart_data["脂質"]) || 50,
-    (food.chart_data && food.chart_data["酵素"]) || 60,
-    (food.chart_data && (food.chart_data["抗酸化"] || food.chart_data["糖質"])) || 70
-];
+// サーバー(Python)に現在の条件を送り、スコアとグラフデータを更新する関数
+async function fetchCalculatedScore() {
+  if (!currentFoodId) return;
 
-    new Chart(ctx, {
-        type: 'radar',
-        data: {
+  const activeBtn = document.querySelector(".pair-tabs .rating-btn.active");
+  const rankIndex = activeBtn ? parseInt(activeBtn.dataset.rank) : 0;
+  
+  const modes = ["best", "standard", "single"];
+  const currentRank = modes[rankIndex] || "best";
+
+  const portion = volumeSliderEl ? volumeSliderEl.value : 1;
+  const vegPortion = vegSliderEl ? vegSliderEl.value : 1;
+  
+  let dressing = "なし";
+  if (condimentSliderEl) {
+    const names = ["なし", "オリーブオイル", "醤油", "マヨネーズ"];
+    dressing = names[condimentSliderEl.value] || "なし";
+  }
+
+  try {
+    const response = await fetch(`/calculate?food=${encodeURIComponent(currentFoodId)}&rank=${currentRank}&portion=${portion}&veg_portion=${vegPortion}&dressing=${encodeURIComponent(dressing)}`);
+    if (!response.ok) throw new Error(`サーバーエラー: ${response.status}`);
+
+    const result = await response.json();
+
+    if (result.success) {
+      if (document.getElementById("nutritionScore")) document.getElementById("nutritionScore").textContent = result.nutritionScore;
+      if (document.getElementById("boostRate")) document.getElementById("boostRate").textContent = result.boostRate;
+
+      // 📊 Chart.js の描画・更新処理
+      const chartValues = [
+        result.chart_data["栄養"] || 0,
+        result.chart_data["吸収"] || 0,
+        result.chart_data["脂質"] || 0,
+        result.chart_data["酵素"] || 0,
+        result.chart_data["抗酸化"] || 0
+      ];
+
+      const activeTheme = rankThemes[rankIndex] || rankThemes[0];
+      let chartStatus = Chart.getChart("radarChart");
+
+      if (chartStatus !== undefined) {
+        chartStatus.data.datasets[0].data = chartValues;
+        chartStatus.data.datasets[0].backgroundColor = activeTheme.chartBg;
+        chartStatus.data.datasets[0].borderColor = activeTheme.mainColor;
+        chartStatus.data.datasets[0].pointBackgroundColor = activeTheme.mainColor;
+        chartStatus.update(); 
+      } else {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'radar',
+          data: {
             labels: ['栄養', '吸収', '脂質', '酵素', '抗酸化'],
-            datasets: [{
-                data: chartValues,
-                backgroundColor: activeTheme.chartBg,
-                borderColor: activeTheme.mainColor,
-                borderWidth: 3,
-                pointBackgroundColor: activeTheme.mainColor
-            }]
-        },
-        options: {
-            scales: {
-                r: {
-                    min: 0,
-                    max: 100,
-                    ticks: { display: false, stepSize: 20 },
-                    pointLabels: { font: { size: 12, weight: 'bold' } }
-                }
-            },
+            datasets: [{ data: chartValues, backgroundColor: activeTheme.chartBg, borderColor: activeTheme.mainColor, borderWidth: 3, pointBackgroundColor: activeTheme.mainColor }]
+          },
+          options: {
+            scales: { r: { min: 0, max: 100, ticks: { display: false, stepSize: 20 }, pointLabels: { font: { size: 12, weight: 'bold' } } } },
             plugins: { legend: { display: false } }
-        }
-    });
+          }
+        });
+      }
+    }
+  } catch (error) {
+    console.error("リアルタイム計算エラー:", error);
+  }
 }
 
 function clearResultDisplay() {
-  const selectedFoodEl = document.getElementById("selectedFood");
-  if(selectedFoodEl) selectedFoodEl.textContent = "選んだ食材：未選択";
-  const resultStatusIcon = document.getElementById("resultStatusIcon");
-  if(resultStatusIcon) {
-    resultStatusIcon.textContent = "";
-    resultStatusIcon.classList.remove("excellent", "good", "improve");
-  }
-  const pairTitle = document.getElementById("pairTitle");
-  if(pairTitle) pairTitle.textContent = "食材を選んでください";
-  const nutritionScore = document.getElementById("nutritionScore");
-  if(nutritionScore) nutritionScore.textContent = "-";
-  const boostRate = document.getElementById("boostRate");
-  if(boostRate) boostRate.textContent = "-";
-  const suggestion = document.getElementById("suggestion");
-  if(suggestion) suggestion.textContent = "";
-  const reason = document.getElementById("reason");
-  if(reason) reason.textContent = "";
-  const improvement = document.getElementById("improvement");
-  if(improvement) improvement.textContent = "";
-  const boostTags = document.getElementById("boostTags");
-  if(boostTags) boostTags.innerHTML = "";
-  const dressingList = document.getElementById("dressingList");
-  if(dressingList) dressingList.innerHTML = "";
-  updateBoostMeter("+0%");
+  if(document.getElementById("resultStatusIcon")) document.getElementById("resultStatusIcon").textContent = "";
+  if(document.getElementById("pairTitle")) document.getElementById("pairTitle").textContent = "食材を選んでください";
+  if(document.getElementById("nutritionScore")) document.getElementById("nutritionScore").textContent = "-";
+  if(document.getElementById("boostRate")) document.getElementById("boostRate").textContent = "-";
+  if(document.getElementById("suggestion")) document.getElementById("suggestion").textContent = "";
+  if(document.getElementById("reason")) document.getElementById("reason").textContent = "";
+  if(document.getElementById("improvement")) document.getElementById("improvement").textContent = "";
+  if(document.getElementById("dressingList")) document.getElementById("dressingList").innerHTML = "";
 }
 
-function updateBoostMeter(boostRate) {
-  const posBar = document.getElementById("boostMeterPositive");
-  const negBar = document.getElementById("boostMeterNegative");
-  if(!posBar || !negBar) return;
-  
-  const value = parseInt(boostRate.replace('%', ''));
-  posBar.style.width = value > 0 ? (value / 20 * 50) + "%" : "0%";
-  negBar.style.width = value < 0 ? (Math.abs(value) / 20 * 50) + "%" : "0%";
-}
-
-// 4. UI生成（検索結果の描画：サーバー側のデータを使うように修正）
+// 4. UI生成・検索結果・タブイベント
 function renderSearchResults() {
   if (!searchResults) return;
-  const query = foodSearch.value.trim();
-  const displayedStep = getDisplayedPanelStep();
-
+  const query = foodSearch.value.trim(); const displayedStep = getDisplayedPanelStep();
   searchResults.innerHTML = "";
 
-  // 修正：クエリがあるときは、サーバーから読み込まれたfoodDataのキーをそのまま使う
-  if (query) {
-    renderFoodCandidateButtons(searchResultFoodIds);
-    return;
-  }
-
-  if (displayedStep === "entry") {
-    const message = document.createElement("p");
-    message.className = "search-message";
-    message.textContent = canHoverSearchPanel ? "探し方にマウスを乗せてください。" : "探し方をタップしてください。";
-    searchResults.appendChild(message);
-    return;
-  }
-
-  if (displayedStep === "foodCategory") {
-    const message = document.createElement("p");
-    message.className = "search-message";
-    message.textContent = canHoverSearchPanel ? "カテゴリにマウスを乗せると食材候補が出ます。" : "カテゴリをタップすると食材候補が出ます。";
-    searchResults.appendChild(message);
-    return;
-  }
-
-  if (displayedStep === "purposeTag") {
-    const message = document.createElement("p");
-    message.className = "search-message";
-    message.textContent = canHoverSearchPanel ? "タグにマウスを乗せるとおすすめ食材が出ます。" : "タグをタップするとおすすめ食材が出ます。";
-    searchResults.appendChild(message);
-    return;
-  }
-
-  if (displayedStep === "foodCandidates") {
-    const activeCategory = foodCategories.find((cat) => cat.id === getDisplayedFoodCategory());
-    renderFoodCandidateButtons(activeCategory?.foods || []);
-    return;
-  }
-
-  if (displayedStep === "purposeCandidates") {
-    const activeTag = purposeNutrientTags.find((tag) => tag.id === getDisplayedPurposeTag());
-    renderFoodCandidateButtons(activeTag?.foods || []);
-  }
+  if (query) { renderFoodCandidateButtons(searchResultFoodIds); return; }
+  if (displayedStep === "entry") { searchResults.innerHTML = `<p class="search-message">${canHoverSearchPanel ? "探し方にマウスを乗せてください。" : "探し方をタップしてください。"}</p>`; return; }
+  if (displayedStep === "foodCategory") { searchResults.innerHTML = `<p class="search-message">${canHoverSearchPanel ? "カテゴリにマウスを乗せると食材候補が出ます。" : "カテゴリをタップすると食材候補が出ます。"}</p>`; return; }
+  if (displayedStep === "purposeTag") { searchResults.innerHTML = `<p class="search-message">${canHoverSearchPanel ? "タグにマウスを乗せるとおすすめ食材が出ます。" : "タグをタップするとおすすめ食材が出ます。"}</p>`; return; }
+  if (displayedStep === "foodCandidates") { const cat = foodCategories.find(c => c.id === (previewFoodCategory || activeFoodCategory)); renderFoodCandidateButtons(cat?.foods || []); return; }
+  if (displayedStep === "purposeCandidates") { const tag = purposeNutrientTags.find(t => t.id === (previewPurposeTag || activePurposeTag)); renderFoodCandidateButtons(tag?.foods || []); }
 }
 
 function renderFoodCandidateButtons(foodItems) {
-  if (!foodItems.length) {
-    const message = document.createElement("p");
-    message.className = "no-result";
-    message.textContent = "候補が見つかりませんでした。";
-    searchResults.appendChild(message);
-    return;
-  }
+  if (!foodItems.length) { searchResults.innerHTML = '<p class="no-result">候補が見つかりませんでした。</p>'; return; }
+  foodItems.forEach((item) => {
+    const foodKey = (allFoodData[item] || foodData[item]) ? item : findFoodIdByName(item);
+    const candidateFood = allFoodData[foodKey] || foodData[foodKey]; if (!foodKey || !candidateFood) return;
 
-  foodItems.forEach((foodItem) => {
-    const foodKey = (allFoodData[foodItem] || foodData[foodItem])
-      ? foodItem
-      : findFoodIdByName(foodItem);
-    const candidateFood = allFoodData[foodKey] || foodData[foodKey];
-    if (!foodKey || !candidateFood) return;
-
-    const foodName = candidateFood.name;
     const btn = document.createElement("button");
-    btn.className = "food-button search-result-button";
-    btn.dataset.id = foodKey;
-    if (foodKey && (foodKey === selectedFood || selectedFoods.some((food) => food.id === foodKey))) {
-      btn.classList.add("active");
-    }
+    btn.className = `food-button search-result-button ${foodKey === selectedFood ? "active" : ""}`;
     appendFoodLabel(btn, candidateFood);
-    btn.onclick = (event) => {
-      event.stopPropagation();
-      foodSearch.value = foodName;
-      selectedFood = foodKey || "";
-      addSelectedFood(foodKey, foodName);
-      foodSearch.dispatchEvent(new Event("change", { bubbles: true }));
-
-      // ここを修正：どの食材(foodKey)の、どのランク(0=最強)を表示するか指定する
+    btn.onclick = (e) => {
+      e.stopPropagation(); foodSearch.value = candidateFood.name; selectedFood = foodKey;
+      addSelectedFood(foodKey, candidateFood.name); closeFoodCandidatePanel();
       updateDisplay(foodKey, 0); 
-      
-      closeFoodCandidatePanel();
     };
     searchResults.appendChild(btn);
   });
 }
 
 function renderCategoryTabs() {
-  if (!foodCategoryTabs) return;
-  foodCategoryTabs.innerHTML = "";
-  if (searchSubOptions) searchSubOptions.innerHTML = "";
-
+  if (!foodCategoryTabs) return; foodCategoryTabs.innerHTML = ""; if (searchSubOptions) searchSubOptions.innerHTML = "";
   if (foodSearch.value.trim()) return;
 
-  [
-    { id: "foodCategory", name: "食材から探す" },
-    { id: "purposeTag", name: "目的・栄養素から探す" },
-  ].forEach((choice) => {
+  [{ id: "foodCategory", name: "食材から探す" }, { id: "purposeTag", name: "目的・栄養素から探す" }].forEach((choice) => {
     const btn = document.createElement("button");
-    const isActive = searchPanelStep === choice.id
-      || (choice.id === "foodCategory" && searchPanelStep === "foodCandidates")
-      || (choice.id === "purposeTag" && searchPanelStep === "purposeCandidates");
-    const isPreview = !isActive && previewPanelStep === choice.id;
-
-    btn.className = `food-category-tab search-mode-button ${isActive ? "active" : ""} ${isPreview ? "preview" : ""}`;
+    const isActive = searchPanelStep === choice.id || (choice.id === "foodCategory" && searchPanelStep === "foodCandidates") || (choice.id === "purposeTag" && searchPanelStep === "purposeCandidates");
+    btn.className = `food-category-tab search-mode-button ${isActive ? "active" : ""} ${(!isActive && previewPanelStep === choice.id) ? "preview" : ""}`;
     btn.textContent = choice.name;
 
-    const previewChoice = () => {
-      if (searchPanelStep !== "entry") return;
-      previewPanelStep = choice.id;
-      previewFoodCategory = "";
-      previewPurposeTag = "";
-      foodCategoryTabs.querySelectorAll(".preview").forEach((item) => item.classList.remove("preview"));
-      btn.classList.add("preview");
-      renderSubOptions();
-      renderSearchResults();
-    };
-
-    const fixChoice = () => {
-      searchPanelStep = choice.id;
-      activeFoodCategory = "";
-      activePurposeTag = "";
-      clearSearchPreview();
-      renderCategoryTabs();
-      renderSearchResults();
-    };
-
-    if (canHoverSearchPanel) btn.onmouseenter = previewChoice;
-    btn.onclick = fixChoice;
+    if (canHoverSearchPanel) {
+      btn.onmouseenter = () => { if (searchPanelStep !== "entry") return; previewPanelStep = choice.id; renderSubOptions(); renderSearchResults(); };
+    }
+    btn.onclick = () => { searchPanelStep = choice.id; activeFoodCategory = ""; activePurposeTag = ""; clearSearchPreview(); renderCategoryTabs(); renderSearchResults(); };
     foodCategoryTabs.appendChild(btn);
   });
-
   renderSubOptions();
 }
 
 function renderSubOptions() {
-  if (!searchSubOptions) return;
-  searchSubOptions.innerHTML = "";
-
-  const displayedStep = getDisplayedPanelStep();
-  if (displayedStep === "entry") return;
-
+  if (!searchSubOptions) return; searchSubOptions.innerHTML = "";
+  const displayedStep = getDisplayedPanelStep(); if (displayedStep === "entry") return;
   const isPurposeMode = displayedStep === "purposeTag" || displayedStep === "purposeCandidates";
-  const controlItems = isPurposeMode
-    ? purposeNutrientTags
-    : foodCategories;
 
-  controlItems.forEach((cat) => {
+  (isPurposeMode ? purposeNutrientTags : foodCategories).forEach((cat) => {
     const btn = document.createElement("button");
     const isActive = cat.id === activeFoodCategory || cat.id === activePurposeTag;
-    const isPreview = !isActive && (cat.id === previewFoodCategory || cat.id === previewPurposeTag);
-    btn.className = `food-category-tab ${isActive ? "active" : ""} ${isPreview ? "preview" : ""}`;
+    btn.className = `food-category-tab ${isActive ? "active" : ""} ${(!isActive && (cat.id === previewFoodCategory || cat.id === previewPurposeTag)) ? "preview" : ""}`;
     btn.textContent = cat.name;
 
-    const previewCandidates = () => {
-      if (searchPanelStep === "foodCandidates" || searchPanelStep === "purposeCandidates") return;
-
-      if (isPurposeMode) {
-        previewPanelStep = "purposeCandidates";
-        previewPurposeTag = cat.id;
-        previewFoodCategory = "";
-      } else {
-        previewPanelStep = "foodCandidates";
-        previewFoodCategory = cat.id;
-        previewPurposeTag = "";
-      }
-      searchSubOptions.querySelectorAll(".preview").forEach((item) => item.classList.remove("preview"));
-      btn.classList.add("preview");
-      renderSearchResults();
+    if (canHoverSearchPanel) {
+      btn.onmouseenter = () => {
+        if (searchPanelStep === "foodCandidates" || searchPanelStep === "purposeCandidates") return;
+        if (isPurposeMode) { previewPanelStep = "purposeCandidates"; previewPurposeTag = cat.id; }
+        else { previewPanelStep = "foodCandidates"; previewFoodCategory = cat.id; }
+        renderSearchResults();
+      };
+    }
+    btn.onclick = () => {
+      if (isPurposeMode) { activePurposeTag = cat.id; searchPanelStep = "purposeCandidates"; }
+      else { activeFoodCategory = cat.id; searchPanelStep = "foodCandidates"; }
+      clearSearchPreview(); renderCategoryTabs(); renderSearchResults();
     };
-
-    const fixCandidates = () => {
-      if (isPurposeMode) {
-        activePurposeTag = cat.id;
-        searchPanelStep = "purposeCandidates";
-        activeFoodCategory = "";
-      } else {
-        activeFoodCategory = cat.id;
-        searchPanelStep = "foodCandidates";
-        activePurposeTag = "";
-      }
-      foodSearch.value = "";
-      clearSearchPreview();
-      renderCategoryTabs();
-      renderSearchResults();
-    };
-
-    if (canHoverSearchPanel) btn.onmouseenter = previewCandidates;
-    btn.onclick = fixCandidates;
     searchSubOptions.appendChild(btn);
   });
 }
 
-// イベントリスナーの設定
+function getCurrentRankIndex() {
+  const activeBtn = document.querySelector(".pair-tabs .rating-btn.active");
+  return activeBtn ? parseInt(activeBtn.dataset.rank) : 0;
+}
+
+// ----------------------------------------------------
+// 5. イベントリスナー・初期化のセットアップ
+// ----------------------------------------------------
+function setupSliderEvents() {
+  if (volumeSliderEl) {
+    volumeSliderEl.addEventListener("input", () => {
+      const valEl = document.getElementById("volumeSliderValue");
+      if (valEl) valEl.textContent = `${volumeSliderEl.value}倍`;
+      fetchCalculatedScore();
+    });
+  }
+  if (vegSliderEl) {
+    vegSliderEl.addEventListener("input", () => {
+      const valEl = document.getElementById("vegSliderValue");
+      const labels = ["", "通常", "2倍", "3倍山盛り!"];
+      if (valEl) valEl.textContent = labels[vegSliderEl.value];
+      fetchCalculatedScore();
+    });
+  }
+  if (condimentSliderEl) {
+    condimentSliderEl.addEventListener("input", () => {
+      const valEl = document.getElementById("condimentSliderValue");
+      const names = ["なし", "オリーブオイル", "醤油", "マヨネーズ"];
+      if (valEl) valEl.textContent = names[condimentSliderEl.value];
+      fetchCalculatedScore();
+    });
+  }
+
+  // ◎○△タブの切り替え
+  document.querySelectorAll(".pair-tabs .rating-btn").forEach((btn) => {
+    btn.onclick = () => {
+      if (currentFoodId) {
+        const rank = parseInt(btn.dataset.rank);
+        updateDisplay(currentFoodId, rank);
+      }
+    };
+  });
+}
+
 if (foodSearch) {
   foodSearch.onfocus = () => openFoodCandidatePanel();
-  foodSearch.onclick = (event) => {
-    event.stopPropagation();
-    openFoodCandidatePanel();
-  };
-  
-  // 修正：入力されるたびにサーバーへ問い合わせ(loadFoods)を行うように変更
+  foodSearch.onclick = (e) => { e.stopPropagation(); openFoodCandidatePanel(); };
   foodSearch.oninput = async () => {
-    searchPanelStep = "entry";
-    activeFoodCategory = "";
-    activePurposeTag = "";
-    clearSearchPreview();
-
-    // サーバーから検索結果を取得
-    await loadFoods(foodSearch.value.trim());
-
-    syncSelectedFoodFromInput();
-    updateSelectedFoodChip("");
-    renderCategoryTabs();
-    renderSearchResults();
+    searchPanelStep = "entry"; activeFoodCategory = ""; activePurposeTag = ""; clearSearchPreview();
+    await loadFoods(foodSearch.value.trim()); syncSelectedFoodFromInput(); renderCategoryTabs(); renderSearchResults();
   };
   foodSearch.onchange = () => syncSelectedFoodFromInput();
 }
 
 if (clearSelectedFood) {
-  clearSelectedFood.onclick = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    resetFoodSelectionPanel();
-    closeFoodCandidatePanel();
-    if (foodSearch) {
-      foodSearch.value = "";
-      foodSearch.placeholder = "クリックして食材を選ぶ";
-      foodSearch.blur();
-    }
+  clearSelectedFood.onclick = (e) => {
+    e.preventDefault(); e.stopPropagation(); resetFoodSelectionPanel();
+    if (foodSearch) { foodSearch.value = ""; foodSearch.placeholder = "クリックして食材を選ぶ"; foodSearch.blur(); }
   };
 }
 
-ratingCards.forEach((card) => {
-  card.onclick = () => {
-    selectedRating = card.dataset.rating;
-    updateDisplay();
-  };
-});
-
-// 初期実行（全件読み込み）
+// 起動
 loadFoods();
+setupSliderEvents();
 if (resultContainer) resultContainer.hidden = true;

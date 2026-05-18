@@ -124,6 +124,7 @@
     "id": "pork",
     "food": "豚肉",
     "category": "meat",
+    "type": "meat",  
     "emoji": "🐷",
     "nutrients": ["ビタミンB1"],
     "keywords": ["疲労回復", "スタミナ"],
@@ -138,7 +139,16 @@
     "dressings": ["ポン酢", "ごまダレ"],
     "dressing_logic": "茹ですぎるとB1が溶け出すため、サッと火を通すのが鉄則。",
     "bad_pairs": [],
-    "chart_data": { "栄養": 85, "脂質": 65, "糖質": 5, "抗酸化": 20, "酵素": 35 }
+    
+    "single_scores": { 
+      "栄養": 85, "吸収": 5, "脂質": 65, "抗酸化": 20, "酵素": 35 
+    },
+    "standard_cooking": {
+      "menu_name": "焼き豚肉",
+      "scores": { 
+        "栄養": 80, "吸収": 5, "脂質": 55, "抗酸化": 15, "酵素": 10 
+      }
+    }
   },
   {
     "id": "carrot",
