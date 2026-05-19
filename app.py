@@ -71,7 +71,7 @@ def get_foods():
     )
 
 # =========================================
-# 🧪 栄養素ファースト版：私たちが仕込んだ nutrients を見て自動でウネウネ変化するAPI
+# 👑 完全版：豆腐・飲み物対応 ＆ ○△ペアデータも正しく返すAPI
 # =========================================
 @app.route("/calculate")
 def calculate_score():
@@ -91,7 +91,7 @@ def calculate_score():
     if not target_food:
         return jsonify({"success": False, "error": "食材が見つかりません"}), 404
 
-    # 🌟 私たちが設計した「栄養素のリスト」を取得（例: ["ビタミンC", "カリウム"] など）
+    # 私たちが設計した「栄養素のリスト」を取得
     item_nutrients = target_food.get("nutrients", [])
 
     # 1. foods.json から元々のベースとなる「チャートデータ」を取得
@@ -103,23 +103,29 @@ def calculate_score():
     base_boost = 1.0
     chart_multiplier = 1.0
 
+    # 🌟【重要】ここでお互いのタブ（◎○△）に応じた正しいペアデータを裏で抽出する！
+    current_pairs = []
+
     if rank == "best": # ◎ 最強
-        if target_food.get("good_pairs") and len(target_food["good_pairs"]) > 0:
-            base_boost = float(target_food["good_pairs"][0].get("boost", 1.2))
+        current_pairs = target_food.get("good_pairs", [])
+        if current_pairs and len(current_pairs) > 0:
+            base_boost = float(current_pairs[0].get("boost", 1.2))
         else:
             base_boost = 1.2
         chart_multiplier = base_boost 
 
     elif rank == "standard": # ○ 良好
-        if target_food.get("better_pairs") and len(target_food["better_pairs"]) > 0:
-            base_boost = float(target_food["better_pairs"][0].get("boost", 1.1))
+        current_pairs = target_food.get("better_pairs", [])
+        if current_pairs and len(current_pairs) > 0:
+            base_boost = float(current_pairs[0].get("boost", 1.1))
         else:
             base_boost = 1.1
         chart_multiplier = base_boost
 
-    elif rank == "single": # △ 普通
-        if target_food.get("bad_pairs") and len(target_food["bad_pairs"]) > 0:
-            base_boost = float(target_food["bad_pairs"][0].get("boost", 0.85))
+    elif rank == "single": # △ 普通（注意）
+        current_pairs = target_food.get("bad_pairs", [])
+        if current_pairs and len(current_pairs) > 0:
+            base_boost = float(current_pairs[0].get("boost", 0.85))
         else:
             base_boost = 0.95
         chart_multiplier = 1.0
@@ -146,41 +152,46 @@ def calculate_score():
     chart_enzyme = base_chart.get("酵素", 50) * chart_multiplier
     chart_antioxidant = base_chart.get("抗酸化", base_chart.get("糖質", 50)) * chart_multiplier
 
-    # 法則A：脂溶性ビタミン（トマトのリコピン、アボカドのビタミンE、にんじんのβカロテンなど）
+    # 法則A：脂溶性ビタミン（トマトのリコピン、にんじんのβカロテンなど）
     if any(n in item_nutrients for n in ["リコピン", "βカロテン", "ビタミンE", "ビタミンK"]):
-        # 油（オリーブオイルやマヨネーズ）を合わせると、劇的に「吸収」と「抗酸化」が膨らむ
         if dressing in ["オリーブオイル", "ごま油", "マヨネーズ"]:
             chart_absorption *= 1.35
             chart_antioxidant *= 1.15
-        # 野菜そのものの量を増やすと抗酸化と栄養がアップ
         chart_antioxidant *= (1.0 + (veg_portion - 1.0) * 0.2)
         chart_nutrition *= portion_factor
 
     # 法則B：ビタミンB1（豚肉など）
     if "ビタミンB1" in item_nutrients:
-        # 量で栄養・脂質がガッツリ増え、野菜（にんにくやネギ等のアリシンを想定）で吸収率が跳ね上がるあのロジック
         chart_nutrition *= (1.0 + (portion - 1.0) * 0.3)
         chart_lipid *= (1.0 + (portion - 1.0) * 0.2)
         chart_absorption *= (1.0 + (veg_portion - 1.0) * 0.25)
 
     # 法則C：鉄分（ほうれん草、牛肉など）
     if any(n in item_nutrients for n in ["鉄", "鉄分", "ヘム鉄", "非ヘム鉄"]):
-        # ビタミンC（野菜）を一緒に摂ることで鉄の吸収率がウネッと引き上げられる
         chart_absorption *= (1.0 + (veg_portion - 1.0) * 0.3)
         chart_nutrition *= portion_factor
 
-    # 法則D：カルシウム（牛乳、小松菜など）
-    if "カルシウム" in item_nutrients:
-        # カルシウムの吸収を助ける要素（別の食材）として、全体量や野菜とのバランスで吸収がマイルドに変化
-        chart_absorption *= veg_factor
+    # 🌟 新設！法則F：大豆製品（豆腐、納豆など）
+    if any(n in item_nutrients for n in ["大豆イソフラボン", "イソフラボン", "大豆タンパク質"]):
         chart_nutrition *= portion_factor
+        # 野菜（食物繊維＝善玉菌のエサ）を増やすと、大豆パワーと合わさって「酵素（腸活）」がウネッと跳ね上がる
+        chart_enzyme *= (1.0 + (veg_portion - 1.0) * 0.3)
+        chart_absorption *= veg_factor
 
-    # 法則E：タンパク質（鶏肉、魚、卵など）
-    if "たんぱく質" in item_nutrients or "タンパク質" in item_nutrients:
+    # 🌟 新設！法則G：ポリフェノール・カテキン類の特殊な飲み物（コーヒー、緑茶など）
+    if any(n in item_nutrients for n in ["ポリフェノール", "カテキン", "クロロゲン酸"]):
+        # 飲む量（本体スライダー）を増やすほど抗酸化力がグーンとアップ！
+        chart_antioxidant *= (1.0 + (portion - 1.0) * 0.35)
+        # 飲み物なので、量が増えても「脂質」は一切増えないようにガード
+        chart_lipid = min(5, chart_lipid)
+
+    # 法則E：一般的なタンパク質（鶏肉、魚、卵など）
+    # ※豆腐もこれに引っかかりますが、上記の大豆ロジックと綺麗に重複して強化されます
+    if "たんぱく質" in item_nutrients or "タンパク質" in item_nutrients or "レシチン" in item_nutrients:
         chart_nutrition *= (1.0 + (portion - 1.0) * 0.3)
         chart_absorption *= veg_factor
 
-    # 調味料による一律の脂質変化（マヨネーズはどの食材でもやっぱり脂質が上がる）
+    # 調味料による一律の脂質変化
     if dressing == "マヨネーズ":
         chart_lipid += 15
     elif dressing in ["オリーブオイル", "ごま油"]:
@@ -195,13 +206,14 @@ def calculate_score():
         "抗酸化": min(100, int(chart_antioxidant))
     }
 
-    # JSONでお返し
+    # 🌟 フロント（JavaScript）へ、新しく抽出した「選ばれたランクのペアリスト」も一緒に返してあげる
     return Response(
         json.dumps({
             "success": True,
             "nutritionScore": calculated_score,
             "boostRate": boost_rate_str,
-            "chart_data": updated_chart
+            "chart_data": updated_chart,
+            "current_pairs": current_pairs  # <-- これが○△コンビ復活のカギ！
         }, ensure_ascii=False),
         content_type="application/json; charset=utf-8"
     )

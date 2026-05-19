@@ -370,7 +370,19 @@ function updateDisplay(foodId, rankIndex = 0) {
   if (foodEmojiDisplay) renderFoodMedia(foodEmojiDisplay, food, "food-image-display");
 
   const foodNameLabel = document.getElementById("foodNameLabel");
-  if (foodNameLabel) foodNameLabel.textContent = `食材：${food.name}`;
+  if (foodNameLabel) {
+    // 👑 バックエンドの excellent, good, improve 内の targetData から正しいコンビ名を取得
+    if (targetData && targetData.suggestion) {
+      // △（改善）の時など、単体表示の場合はそのまま名前を出し、コンビがいる場合は「コンビ：〇〇」にする
+      if (targetData.suggestion.includes("単体") || targetData.suggestion.includes("避ける") || targetData.suggestion.includes("効率よく")) {
+        foodNameLabel.textContent = `食材：${food.name}`;
+      } else {
+        foodNameLabel.textContent = `コンビ：${targetData.suggestion.replace("をプラス", "")}`;
+      }
+    } else {
+      foodNameLabel.textContent = `食材：${food.name}`;
+    }
+  }
     
   const bestMethodTitle = document.getElementById("bestMethodTitle");
   if (bestMethodTitle) renderPairTitle(bestMethodTitle, displayPairTitle, food);
