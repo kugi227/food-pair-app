@@ -1,6 +1,9 @@
 // プログラム全体で使うデータの名前を定義します
 let foods = []; 
 
+// 🌟時間栄養学：選択された時間帯を記憶する変数（初期値は空っぽで自動判別モード）
+let selectedTiming = "";
+
 // static フォルダの直下を読みに行くように指定します
 fetch('/static/foods.json') 
   .then(response => {
@@ -423,7 +426,8 @@ async function fetchCalculatedScore() {
   }
 
   try {
-    const response = await fetch(`/calculate?food=${encodeURIComponent(currentFoodId)}&rank=${currentRank}&portion=${portion}&veg_portion=${vegPortion}&dressing=${encodeURIComponent(dressing)}`);
+    // 🌟 URLの末尾に「&timing=${selectedTiming}」を合流させました！
+    const response = await fetch(`/calculate?food=${encodeURIComponent(currentFoodId)}&rank=${currentRank}&portion=${portion}&veg_portion=${vegPortion}&dressing=${encodeURIComponent(dressing)}&timing=${selectedTiming}`);
     if (!response.ok) throw new Error(`サーバーエラー: ${response.status}`);
 
     const result = await response.json();
@@ -431,6 +435,15 @@ async function fetchCalculatedScore() {
     if (result.success) {
       if (document.getElementById("nutritionScore")) document.getElementById("nutritionScore").textContent = result.nutritionScore;
       if (document.getElementById("boostRate")) document.getElementById("boostRate").textContent = result.boostRate;
+
+      // 🌟【ここを追加！】サーバーから自動判別された時間帯が返ってきたら、該当するボタンを凹ませる（光らせる）
+      if (result.active_timing) {
+        document.querySelectorAll(".timing-btn").forEach(b => {
+          if (b.getAttribute("data-timing") === result.active_timing) {
+            b.classList.add("active");
+          }
+        });
+      }
 
       // 📊 Chart.js の描画・更新処理
       const chartValues = [
@@ -600,6 +613,23 @@ function setupSliderEvents() {
         const rank = parseInt(btn.dataset.rank);
         updateDisplay(currentFoodId, rank);
       }
+    };
+  });
+  // 🌟時間栄養学：ボタンが押されたときの切り替えイベント
+  document.querySelectorAll(".timing-btn").forEach(btn => {
+    btn.onclick = (e) => {
+      // 一度すべてのボタンから active クラス（白い丸）を消す
+      document.querySelectorAll(".timing-btn").forEach(b => b.classList.remove("active"));
+      
+      // 押されたボタンに active クラスをつけて目立たせる
+      const clickedBtn = e.currentTarget;
+      clickedBtn.classList.add("active");
+      
+      // 選択された時間（morning/noon/night）を変数に保存
+      selectedTiming = clickedBtn.getAttribute("data-timing");
+      
+      // 🕒 時間帯が変わったので、即座に再計算を実行！
+      fetchCalculatedScore();
     };
   });
 }

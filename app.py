@@ -70,8 +70,12 @@ def get_foods():
         content_type="application/json; charset=utf-8"
     )
 
+import datetime  # 👈 ファイルの最上部にない場合は、ここか最上部に追加してください
+
+# ...（省略：indexやget_foodsはそのまま）...
+
 # =========================================
-# 👑 完全版：豆腐・飲み物対応 ＆ ○△ペアデータも正しく返すAPI
+# 👑 完全版：豆腐・飲み物対応 ＆ ○△ペアデータも正しく返すAPI（時間栄養学強化版）
 # =========================================
 @app.route("/calculate")
 def calculate_score():
@@ -80,6 +84,18 @@ def calculate_score():
     portion = float(request.args.get("portion", 1))       # 量スライダー（1〜2倍）
     veg_portion = float(request.args.get("veg_portion", 1)) # 野菜の量（1〜3倍）
     dressing = request.args.get("dressing", "なし").strip() # 調味料名
+    
+    # 🌟時間栄養学：画面から送られてくる時間帯（morning / jiru / night など）を取得
+    # 指定がない場合は、サーバーの「現在の時刻」から自動で判別するスマート設計！
+    timing = request.args.get("timing", "").strip()
+    if not timing:
+        current_hour = datetime.datetime.now().hour
+        if 5 <= current_hour < 11:
+            timing = "morning"
+        elif 11 <= current_hour < 17:
+            timing = "noon"
+        else:
+            timing = "night"
 
     # 対象の食材データを検索
     target_food = None
@@ -142,8 +158,6 @@ def calculate_score():
 
     # 総合「栄養スコア」の計算
     calculated_score = int((100 * base_boost * portion_factor * veg_factor) + dressing_bonus)
-    final_boost_percent = int((calculated_score - 100))
-    boost_rate_str = f"+{final_boost_percent}%" if final_boost_percent >= 0 else f"{final_boost_percent}%"
 
     # 4. 🚀 【栄養素ファースト】仕込んだ栄養素に応じた個別ウネウネ自動分岐！
     chart_nutrition = base_chart.get("栄養", 70) * chart_multiplier
@@ -174,22 +188,56 @@ def calculate_score():
     # 🌟 新設！法則F：大豆製品（豆腐、納豆など）
     if any(n in item_nutrients for n in ["大豆イソフラボン", "イソフラボン", "大豆タンパク質"]):
         chart_nutrition *= portion_factor
-        # 野菜（食物繊維＝善玉菌のエサ）を増やすと、大豆パワーと合わさって「酵素（腸活）」がウネッと跳ね上がる
         chart_enzyme *= (1.0 + (veg_portion - 1.0) * 0.3)
         chart_absorption *= veg_factor
 
     # 🌟 新設！法則G：ポリフェノール・カテキン類の特殊な飲み物（コーヒー、緑茶など）
     if any(n in item_nutrients for n in ["ポリフェノール", "カテキン", "クロロゲン酸"]):
-        # 飲む量（本体スライダー）を増やすほど抗酸化力がグーンとアップ！
         chart_antioxidant *= (1.0 + (portion - 1.0) * 0.35)
-        # 飲み物なので、量が増えても「脂質」は一切増えないようにガード
         chart_lipid = min(5, chart_lipid)
 
     # 法則E：一般的なタンパク質（鶏肉、魚、卵など）
-    # ※豆腐もこれに引っかかりますが、上記の大豆ロジックと綺麗に重複して強化されます
     if "たんぱく質" in item_nutrients or "タンパク質" in item_nutrients or "レシチン" in item_nutrients:
         chart_nutrition *= (1.0 + (portion - 1.0) * 0.3)
         chart_absorption *= veg_factor
+
+
+    # 🌟🌟 5. 【新設！】時間栄養学ロジックのウネり味付け 🌟🌟
+    time_bonus_score = 0
+
+    if timing == "morning":
+        # 朝：エンジンをかける「タンパク質」や「即効性のエネルギー」が含まれていたらボーナス
+        if any(n in item_nutrients for n in ["たんぱく質", "タンパク質", "炭水化物", "レシチン"]):
+            chart_enzyme *= 1.25      # 代謝エンジンON！で「酵素」がウネる
+            chart_nutrition *= 1.15   # 栄養の吸収効率アップ
+            time_bonus_score += 15     # 総合スコアにもボーナス
+
+    elif timing == "noon":
+        # 昼：午後もバテないために「食物繊維（野菜の量）」をしっかり摂れているか
+        if veg_portion >= 1.5:
+            chart_absorption *= 1.2    # 血糖値が安定して「吸収」が綺麗にウネる
+            time_bonus_score += 10
+        # 逆に、昼に脂質や量が多すぎると「眠くなる（注意）」ということで、酵素（活性度）を少し縮める
+        if chart_lipid > 70 or portion >= 1.5:
+            chart_enzyme *= 0.85
+
+    elif timing == "night":
+        # 夜：寝ている間の「リカバリー・抗酸化」が主役
+        # ポリフェノールやビタミンC、鉄分など、体のサビを取る栄養素を大評価
+        if any(n in item_nutrients for n in ["ポリフェノール", "リコピン", "βカロテン", "ビタミンC", "鉄", "鉄分"]):
+            chart_antioxidant *= 1.3   # 夜のサビ落としで「抗酸化」が突き抜ける！
+            time_bonus_score += 15
+        # 夜遅くの「高すぎる脂質」には、ちょっぴりペナルティ（メーターが縮む）
+        if chart_lipid > 65:
+            chart_lipid *= 1.15        # 脂質メーターがさらに外側に尖って「注意」を促す
+            time_bonus_score -= 10
+
+
+    # 総合スコアに時間帯ボーナスを合算
+    calculated_score = max(0, calculated_score + time_bonus_score)
+    final_boost_percent = int((calculated_score - 100))
+    boost_rate_str = f"+{final_boost_percent}%" if final_boost_percent >= 0 else f"{final_boost_percent}%"
+
 
     # 調味料による一律の脂質変化
     if dressing == "マヨネーズ":
@@ -197,7 +245,7 @@ def calculate_score():
     elif dressing in ["オリーブオイル", "ごま油"]:
         chart_lipid += 10
 
-    # 5. 上限ガード（100点満点を超えないように）
+    # 6. 上限ガード（100点満点を超えないように）
     updated_chart = {
         "栄養": min(100, int(chart_nutrition)),
         "吸収": min(100, int(chart_absorption)),
@@ -206,14 +254,15 @@ def calculate_score():
         "抗酸化": min(100, int(chart_antioxidant))
     }
 
-    # 🌟 フロント（JavaScript）へ、新しく抽出した「選ばれたランクのペアリスト」も一緒に返してあげる
+    # フロント（JavaScript）へ、現在のモード（timing）も一緒に返してあげる
     return Response(
         json.dumps({
             "success": True,
             "nutritionScore": calculated_score,
             "boostRate": boost_rate_str,
             "chart_data": updated_chart,
-            "current_pairs": current_pairs  # <-- これが○△コンビ復活のカギ！
+            "current_pairs": current_pairs,
+            "active_timing": timing  # 👈 いまどの時間帯として計算したかを返す
         }, ensure_ascii=False),
         content_type="application/json; charset=utf-8"
     )

@@ -649,3 +649,10 @@ button {
     height: 140px;
   }
 }
+/* 🌟時間栄養学：選ばれているボタンのスタイル */
+.timing-btn.active {
+    background: #ffffff !important; /* 白い丸ボタンにする */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* ふんわり影をつけて浮かせる */
+    font-weight: bold;
+    color: #333;
+}
