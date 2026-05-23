@@ -634,6 +634,33 @@ function setupSliderEvents() {
   });
 }
 
+// 💡 時間栄養学：アコーディオン早見表の開閉制御
+const accordionToggleBtn = document.getElementById("accordionToggleBtn");
+const accordionContent = document.getElementById("accordionContent");
+
+if (accordionToggleBtn && accordionContent) {
+  accordionToggleBtn.addEventListener("click", () => {
+    // open クラスの付け外し（これでCSSの高さが変わります）
+    accordionContent.classList.toggle("open");
+    
+    // 矢印アイコン（▼）をクルッと反転させる演出
+    const icon = accordionToggleBtn.querySelector(".accordion-icon");
+    if (icon) {
+      if (accordionContent.classList.contains("open")) {
+        icon.style.transform = "rotate(180deg)"; // 開いたら上向き（▲）に
+        
+        // 🌟 開いたときに、早見表が見やすいように自動で少しスクロールする親切設計
+        setTimeout(() => {
+          accordionToggleBtn.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 300);
+        
+      } else {
+        icon.style.transform = "rotate(0deg)";   // 閉じたら下向き（▼）に
+      }
+    }
+  });
+}
+
 if (foodSearch) {
   foodSearch.onfocus = () => openFoodCandidatePanel();
   foodSearch.onclick = (e) => { e.stopPropagation(); openFoodCandidatePanel(); };

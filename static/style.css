@@ -656,3 +656,94 @@ button {
     font-weight: bold;
     color: #333;
 }
+/* 🌟時間栄養学：アコーディオン早見表のスタイル */
+.accordion-toggle-btn {
+    width: 100%;
+    background: #fffdf3;
+    border: 2px solid #f1c40f;
+    padding: 12px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.accordion-toggle-btn:hover {
+    background: #fef9e7;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.accordion-icon {
+    transition: transform 0.3s ease;
+    color: #f1c40f;
+}
+
+/* 初期状態は非表示（高さを0にして隠す） */
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background: #ffffff;
+    border-radius: 0 0 10px 10px;
+}
+
+/* 開いたときの状態 */
+.accordion-content.open {
+    max-height: 800px; /* 中身が余裕で収まる高さ */
+    margin-top: -2px;
+    border: 2px solid #f1c40f;
+    border-top: none;
+    padding: 20px;
+}
+
+/* タイムラインのおしゃれ装飾 */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.timeline-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: white;
+    white-space: nowrap;
+}
+
+.timeline-item.morning { background: #fff9f0; }
+.timeline-item.morning .timeline-badge { background: #ff9f43; }
+
+.timeline-item.noon { background: #f0f7ff; }
+.timeline-item.noon .timeline-badge { background: #2f80ed; }
+
+.timeline-item.night { background: #f5f0ff; }
+.timeline-item.night .timeline-badge { background: #9b51e0; }
+
+.timeline-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #333;
+}
+.timeline-text strong {
+    color: #111;
+}
+.timeline-text span {
+    color: #e74c3c;
+    font-weight: bold;
+}
